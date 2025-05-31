@@ -348,30 +348,39 @@
 }
 
 .level {
-  background: #e0e0e0;
+  background: #cacaca;
   border-radius: 20px;
-  padding: 4px 10px;
-  font-size: 9.25px;
+  padding: 6px 14px;
+  font-size: 11px;
   display: flex;
   align-items: center;
   font-family: 'Gilroy Semibold', sans-serif;
-  gap: 6px;
+  gap: 8px;
+}
+.level {
+  position: relative;
 }
 
 .level--beginner {
-  transform: rotate(-8deg) translateY(6px);
+  top: 8px;
+  left: 4px;
+  transform: rotate(-6deg);
 }
 
 .level--elementary {
-  transform: rotate(-4deg) translateY(2px);
+  top: 14px;
+  left: 10px;
+  transform: rotate(0deg);
 }
 
 .level--intermediate {
-  transform: rotate(5deg) translateY(-4px);
+  top: 6px;
+  left: 20px;
+  transform: rotate(6deg);
 }
 
 .level img {
-  height: 20px;
+  height: 23px;
 }
 
 .consultation__progress {
