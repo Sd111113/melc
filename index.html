@@ -52,7 +52,7 @@
     height: auto;
   }
 
-  .hero::before {
+    .hero::before {
     content: "";
     background: url('images/hero_bg.png') no-repeat center center;
     background-size: cover;
@@ -139,18 +139,20 @@
 
 .form-container {
   max-width: 500px;
-  margin: 0px auto 10px;
+  margin: 0 auto;
   background: white;
   border-radius: 24px;
   padding: 12px 20px 20px;
   z-index: 3;
   position: relative;
 }
+
   .form-wrapper {
   background: #f4f4f4;
-  padding: 0 0px 0px;
-  margin-top: -20px;
+  padding-bottom: 20px;
+  margin-top: -60px;
 }
+
   .form-container h2 {
     font-size: 17px;
     font-weight: 400;
@@ -203,7 +205,7 @@
   @media (max-width: 768px) {
     .hero {
       height: auto;
-      padding: 40px 24px;
+      padding: 40px 24px 80px;
     }
 
     .hero::before {
@@ -251,55 +253,52 @@
       </ul>
     </div>
   </section>
-<section class="form-wrapper">
-  <div class="form-container">
-    <h2>Запишитесь на 1 бесплатный урок<br>+консультация</h2>
-    <form id="tg-form">
-      <input type="text" id="name" placeholder="Имя" required />
-      <input type="tel" id="phone" placeholder="+7 (___) ___-__-__" required />
-      <button type="submit">Хочу на 1 бесплатный урок</button>
-    </form>
-  </div>
-</section>
-<section class="consultation">
-  <h2 class="consultation__title">Что будет на консультации?</h2>
-
-  <div class="consultation__item">
-    <p class="consultation__step">1. Определим ваш уровень английского</p>
-    <div class="consultation__levels">
-      <div class="level level--beginner">
-        <img src="images/bag_emoji.png" alt="Beginner">
-        <span>Beginner</span>
-      </div>
-      <div class="level level--elementary">
-        <img src="images/climbing_emoji.png" alt="Elementary">
-        <span>Elementary</span>
-      </div>
-      <div class="level level--intermediate">
-        <img src="images/intermediate.png" alt="Intermediate">
-        <span>Intermediate</span>
-      </div>
+  <section class="form-wrapper">
+    <div class="form-container">
+      <h2>Запишитесь на 1 бесплатный урок<br>+консультация</h2>
+      <form id="tg-form">
+        <input type="text" id="name" placeholder="Имя" required />
+        <input type="tel" id="phone" placeholder="+7 (___) ___-__-__" required />
+        <button type="submit">Хочу на 1 бесплатный урок</button>
+      </form>
     </div>
-  </div>
-
-  <div class="consultation__item">
-    <p class="consultation__step">2. Составим персональный план обучения</p>
-    <div class="consultation__progress">
-      <img src="images/flag_icon.png" class="start-icon" alt="flag">
-      <div class="progress-line">
-        <span class="dot green"></span>
-        <span class="dot blue"></span>
-        <span class="dot blue"></span>
-        <span class="dot blue"></span>
+    <section class="consultation">
+      <h2 class="consultation__title">Что будет на консультации?</h2>
+      <div class="consultation__item">
+        <p class="consultation__step">1. Определим ваш уровень английского</p>
+        <div class="consultation__levels">
+          <div class="level level--beginner">
+            <img src="images/bag_emoji.png" alt="Beginner">
+            <span>Beginner</span>
+          </div>
+          <div class="level level--elementary">
+            <img src="images/climbing_emoji.png" alt="Elementary">
+            <span>Elementary</span>
+          </div>
+          <div class="level level--intermediate">
+            <img src="images/intermediate.png" alt="Intermediate">
+            <span>Intermediate</span>
+          </div>
+        </div>
       </div>
-      <img src="images/hero_avatar.png" class="avatar-icon" alt="avatar">
-    </div>
-  </div>
-
-  <div class="consultation__item">
-    <p class="consultation__step">3. Поможем выбрать цель</p>
-  </div>
-</section>
+      <div class="consultation__item">
+        <p class="consultation__step">2. Составим персональный план обучения</p>
+        <div class="consultation__progress">
+          <img src="images/flag_icon.png" class="start-icon" alt="flag">
+          <div class="progress-line">
+            <span class="dot green"></span>
+            <span class="dot blue"></span>
+            <span class="dot blue"></span>
+            <span class="dot blue"></span>
+          </div>
+          <img src="images/hero_avatar.png" class="avatar-icon" alt="avatar">
+        </div>
+      </div>
+      <div class="consultation__item">
+        <p class="consultation__step">3. Поможем выбрать цель</p>
+      </div>
+    </section>
+  </section>
 
 <style>
  .consultation {
