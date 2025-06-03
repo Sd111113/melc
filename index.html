@@ -381,25 +381,51 @@
 }
 
 .consultation__progress {
+  position: relative;
+  margin-top: 14px;
+  padding-left: 26px;
+  padding-right: 12px;
+  height: 40px;
   display: flex;
   align-items: center;
-  position: relative;
-  gap: 12px;
 }
+
+.progress-line {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  background: linear-gradient(to right, #72e375 25%, #b4c4de 25%);
+  border-radius: 2px;
+}
+
+.dot {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dot:nth-child(1) { left: 0%; background: #72e375; }
+.dot:nth-child(2) { left: 25%; background: #8ca9d7; }
+.dot:nth-child(3) { left: 50%; background: #8ca9d7; }
+.dot:nth-child(4) { left: 75%; background: #8ca9d7; }
 
 .start-icon {
   height: 16px;
+  margin-right: 10px;
 }
 
 .avatar-icon {
-  height: 32px;
-  border-radius: 50%;
   position: absolute;
-  left: 44px;
-  top: -14px;
+  top: -18px;
+  left: 25%;
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
   z-index: 2;
 }
-
 .progress-line {
   display: flex;
   align-items: center;
