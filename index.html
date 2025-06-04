@@ -2,212 +2,230 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ELC | Быстрый английский</title>
-  <style>
-    @font-face {
-      font-family: 'Gilroy Regular';
-      src: url('fonts/Gilroy-Regular.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'Gilroy Semibold';
-      src: url('fonts/Gilroy-Semibold.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'Gilroy Bold';
-      src: url('fonts/Gilroy-Bold.ttf') format('truetype');
-    }
-    body {
-      margin: 0;
-      font-family: 'Gilroy Regular', sans-serif;
-      background-color: #ffffff;
-      -webkit-font-smoothing: antialiased;
-    }
-    header {
-      background-color: white;
-      padding: 7px 14px;
-      display: flex;
-      align-items: center;
-    }
-    header img {
-      height: 44px;
-    }
-    .hero {
-      position: relative;
-      background-color: #2184f9;
-      overflow: hidden;
-      padding: 20px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+
+  <!-- Шрифты Gilroy -->
+<style>
+  @font-face {
+    font-family: 'Gilroy Regular';
+    src: url('fonts/Gilroy-Regular.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Gilroy Semibold';
+    src: url('fonts/Gilroy-Semibold.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Gilroy Bold';
+    src: url('fonts/Gilroy-Bold.ttf') format('truetype');
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Gilroy Regular', sans-serif;
+    background-color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background-color: white;
+    padding: 7px 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  header img {
+    height: 44px;
+  }
+
+  .hero {
+    position: relative;
+    background-color: #2184f9;
+    overflow: hidden;
+    padding: 20px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+  }
+
     .hero::before {
-      content: "";
-      background: url('images/hero_bg.png') no-repeat center center;
+    content: "";
+    background: url('images/hero_bg.png') no-repeat center center;
+    background-size: cover;
+    opacity: 0.25;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+  }
+
+  .hero__overlay {
+    position: relative;
+    z-index: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .hero__badges {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-family: 'Gilroy Regular', sans-serif;
+  }
+
+  .badge img {
+    height: 16px;
+    margin-right: 6px;
+  }
+
+  .logo-2gis {
+    height: 10px;
+    margin-left: 6px;
+  }
+
+  h1 {
+    font-size: 30px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    color: #fff;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+    font-family: 'Gilroy Bold', sans-serif;
+  }
+
+  .hero__features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 640px;
+  }
+
+  .hero__features li {
+    font-size: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    color: white;
+    line-height: 1.4;
+    letter-spacing: -0.2px;
+    font-family: 'Gilroy Regular', sans-serif;
+  }
+
+  .hero__features li img {
+    height: 18px;
+    margin-right: 10px;
+  }
+
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 24px;
+  padding: 12px 20px 20px;
+  z-index: 3;
+  position: relative;
+}
+
+  .form-wrapper {
+  background: #f4f4f4;
+  padding-bottom: 20px;
+  margin-top: -60px;
+}
+
+  .form-container h2 {
+    font-size: 17px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: #222;
+    text-align: left;
+    line-height: 1.4;
+    font-family: 'Gilroy Semibold', sans-serif;
+    padding-left: 0px;
+  }
+
+  .form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .form-container input {
+    width: 100%;
+    display: block;
+    padding: 14px 16px;
+    font-size: 18px;
+    margin: 0;
+    border: none;
+    border-radius: 12px;
+    background: #f2f2f2;
+    box-sizing: border-box;
+    font-family: 'Gilroy Regular', sans-serif;
+    color: #838383;
+  }
+
+  .form-container input::placeholder {
+    color: #999999;
+    opacity: 1;
+  }
+
+  .form-container button {
+    width: 100%;
+    padding: 14px;
+    background: #FAC748;
+    color: black;
+    font-size: 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 400;
+    font-family: 'Gilroy Semibold', sans-serif;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      height: auto;
+      padding: 40px 24px 80px;
+    }
+
+    .hero::before {
+      background-position: center top;
       background-size: cover;
-      opacity: 0.25;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 0;
+      opacity: 0.2;
     }
-    .hero__overlay {
-      position: relative;
-      z-index: 1;
-      max-width: 1000px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 100%;
-    }
-    .hero__badges {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-    .badge {
-      background-color: rgba(255, 255, 255, 0.15);
-      padding: 6px 12px;
-      border-radius: 16px;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      color: #fff;
-    }
-    .badge img {
-      height: 16px;
-      margin-right: 6px;
-    }
-    .logo-2gis {
-      height: 10px;
-      margin-left: 6px;
-    }
+
     h1 {
-      font-size: 30px;
-      font-weight: 400;
-      margin-bottom: 20px;
-      color: #fff;
-      line-height: 1.2;
-      letter-spacing: -0.3px;
-      font-family: 'Gilroy Bold', sans-serif;
+      font-size: 31px;
     }
-    .hero__features {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      max-width: 640px;
-    }
+
     .hero__features li {
-      font-size: 15px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      color: white;
+      font-size: 14px;
     }
-    .hero__features li img {
-      height: 18px;
-      margin-right: 10px;
-    }
-    .form-container {
-      max-width: 500px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 24px;
-      padding: 12px 20px 20px;
-      z-index: 3;
-      position: relative;
-    }
-    .form-wrapper {
-      background: #f4f4f4;
-      padding-bottom: 20px;
-      margin-top: -60px;
-    }
+
     .form-container h2 {
-      font-size: 17px;
-      font-weight: 400;
-      margin-bottom: 10px;
-      color: #222;
-      text-align: left;
-      line-height: 1.4;
+      font-size: 16px;
     }
-    .form-container form {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .form-container input {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      background: #f2f2f2;
-      color: #838383;
-    }
-    .form-container button {
-      width: 100%;
-      padding: 14px;
-      background: #FAC748;
-      color: black;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-    }
-    .consultation {
-      padding: 10px 25px 48px;
-      background: #f4f4f4;
-    }
-    .consultation__item {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 6px 16px 12px 12px;
-      margin-bottom: 14px;
-    }
-    .consultation__progress {
-      position: relative;
-      margin-top: 20px;
-      padding-left: 40px;
-      padding-right: 16px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-    }
-    .start-icon {
-      height: 20px;
-      position: absolute;
-      left: 12px;
-      top: 20px;
-      border-radius: 4px;
-      background: #fff;
-    }
-    .progress-line {
-      position: relative;
-      flex: 1;
-      height: 4px;
-      background: linear-gradient(to right, #72e375 33%, #b4c4de 33%);
-      border-radius: 2px;
-      margin-left: 16px;
-    }
-    .dot {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 2px solid #ffffff;
-      box-sizing: border-box;
-      z-index: 2;
-    }
-    .dot:nth-child(1) { left: 10%; background: #72e375; }
-    .dot:nth-child(2) { left: 45%; background: #8ca9d7; }
-    .dot:nth-child(3) { left: 80%; background: #8ca9d7; }
-  </style>
+  }
+</style>
 </head>
 <body>
   <header>
@@ -247,17 +265,32 @@
       <h2 class="consultation__title">Что будет на консультации?</h2>
       <div class="consultation__item">
         <p class="consultation__step">1. Определим ваш уровень английского</p>
-        <!-- уровни -->
+        <div class="consultation__levels">
+          <div class="level level--beginner">
+            <img src="images/bag_emoji.png" alt="Beginner">
+            <span>Beginner</span>
+          </div>
+          <div class="level level--elementary">
+            <img src="images/climbing_emoji.png" alt="Elementary">
+            <span>Elementary</span>
+          </div>
+          <div class="level level--intermediate">
+            <img src="images/intermediate.png" alt="Intermediate">
+            <span>Intermediate</span>
+          </div>
+        </div>
       </div>
       <div class="consultation__item">
         <p class="consultation__step">2. Составим персональный план обучения</p>
         <div class="consultation__progress">
           <img src="images/flag_icon.png" class="start-icon" alt="flag">
           <div class="progress-line">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+            <span class="dot green"></span>
+            <span class="dot blue"></span>
+            <span class="dot blue"></span>
+            <span class="dot blue"></span>
           </div>
+          <img src="images/hero_avatar.png" class="avatar-icon" alt="avatar">
         </div>
       </div>
       <div class="consultation__item">
@@ -265,6 +298,151 @@
       </div>
     </section>
   </section>
+
+<style>
+ .consultation {
+  padding: 10px 25px 48px;
+  background: #f4f4f4;
+}
+
+.consultation__title {
+  font-family: 'Gilroy Bold', sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: #1a1a1a;
+  letter-spacing: -0.2px;
+  margin-bottom: 10px;
+  text-align: left;
+  padding-left: 4px;
+}
+
+.consultation__item {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 6px 16px 12px 12px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 116px;
+}
+
+.consultation__step {
+  font-family: 'Gilroy Semibold', sans-serif;
+  font-size: 17px;
+  margin: 0;
+  padding: 12px 0 2px 10px;
+  line-height: 1.2;
+}
+
+.consultation__levels,
+.consultation__progress,
+
+.consultation__levels {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.level {
+  background: #cacaca;
+  border-radius: 20px;
+  position: relative;
+  padding: 0px 6px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  font-family: 'Gilroy Semibold', sans-serif;
+  gap: 5px;
+}
+
+.level--beginner {
+  top: 28px;
+  left: 30px;
+  transform: rotate(6deg);
+}
+
+.level--elementary {
+  top: 15px;
+  left: 33px;
+  transform: rotate(-3deg);
+}
+
+.level--intermediate {
+  top: -25px;
+  left: 20px;
+  transform: rotate(-12deg);
+}
+
+.level img {
+  height: 23px;
+}
+
+.consultation__progress {
+  position: relative;
+  margin-top: 20px;
+  padding-left: 32px;
+  padding-right: 16px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.start-icon {
+  height: 23px;
+  position: absolute;
+  left: 28px;
+  top: 25px;
+}
+  
+.dot {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-sizing: border-box;
+}
+
+.dot:nth-child(1) { left: 10%; background: #72e375; }
+.dot:nth-child(2) { left: 35%; background: #8ca9d7; }
+.dot:nth-child(3) { left: 60%; background: #8ca9d7; }
+.dot:nth-child(4) { left: 85%; background: #8ca9d7; }
+
+.avatar-icon {
+  position: absolute;
+  top: -18px;
+  left: 25%;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.green {
+  background: #72e375;
+}
+
+.blue {
+  background: #8ca9d7;
+}
+
+.consultation__item .progress-line::before {
+  content: "";
+  height: 3px;
+  flex: 1;
+  background: linear-gradient(to right, #72e375 25%, #b4c4de 25%);
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+</style>
   <script src="https://unpkg.com/imask"></script>
   <script>
     const phoneMask = IMask(document.getElementById('phone'), {
