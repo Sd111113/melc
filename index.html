@@ -288,7 +288,6 @@
             <span class="dot green"></span>
             <span class="dot blue"></span>
             <span class="dot blue"></span>
-            <span class="dot blue"></span>
           </div>
           <img src="images/hero_avatar.png" class="avatar-icon" alt="avatar">
         </div>
@@ -394,23 +393,26 @@
   position: absolute;
   left: 28px;
   top: 25px;
+  background: white;
+  border-radius: 50%;
+  padding: 3px;
 }
   
 .dot {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  box-sizing: border-box;
+  border-radius: 50%;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid #ffffff;
-  box-sizing: border-box;
+  z-index: 2;
 }
 
-.dot:nth-child(1) { left: 10%; background: #72e375; }
-.dot:nth-child(2) { left: 35%; background: #8ca9d7; }
-.dot:nth-child(3) { left: 60%; background: #8ca9d7; }
-.dot:nth-child(4) { left: 85%; background: #8ca9d7; }
+.dot:nth-child(1) { left: 23%; background: #72e375; }
+.dot:nth-child(2) { left: 45%; background: #8ca9d7; }
+.dot:nth-child(3) { left: 90%; background: #8ca9d7; }
 
 .avatar-icon {
   position: absolute;
@@ -430,17 +432,15 @@
   background: #8ca9d7;
 }
 
-.consultation__item .progress-line::before {
-  content: "";
-  height: 3px;
-  flex: 1;
-  background: linear-gradient(to right, #72e375 25%, #b4c4de 25%);
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1;
+.consultation__item 
+  .progress-line {
+  position: relative;
+  width: 100%;
+  max-width: 240px;
+  height: 4px;
+  background: linear-gradient(to right, #72e375 33%, #b4c4de 33%);
+  border-radius: 2px;
+  margin-left: 60px;
 }
 </style>
   <script src="https://unpkg.com/imask"></script>
