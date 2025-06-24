@@ -224,6 +224,89 @@
     .form-container h2 {
       font-size: 16px;
     }
+/* КВИЗ */
+.quiz {
+  background: #ffeef3;
+  padding: 32px 20px;
+  font-family: 'Gilroy Regular', sans-serif;
+}
+.quiz-container {
+  max-width: 500px;
+  margin: 0 auto;
+  background: #ffc7d8;
+  border-radius: 20px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.quiz-progress {
+  position: relative;
+  height: 4px;
+  background: #ffeef3;
+  border-radius: 3px;
+  margin-bottom: 24px;
+}
+.quiz-progress-bar {
+  height: 4px;
+  background: #f88dad;
+  width: 0%;
+  border-radius: 3px;
+  transition: width 0.3s ease-in-out;
+}
+.quiz-progress-text {
+  font-size: 14px;
+  margin: 6px 0 12px;
+  color: #1a1a1a;
+}
+.quiz-step {
+  display: none;
+  animation: slideIn 0.4s forwards;
+}
+.quiz-step.active {
+  display: block;
+}
+@keyframes slideIn {
+  from {opacity: 0; transform: translateX(30px);}
+  to {opacity: 1; transform: translateX(0);}
+}
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.quiz-options li {
+  background: white;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 2px solid #1a1a1a;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.quiz-options li.selected {
+  background: #f88dad;
+}
+.quiz-step input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+.quiz-step button {
+  background: #1a1a1a;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.quiz-title {
+  font-family: 'Gilroy Bold', sans-serif;
+  font-size: 25pt;
+  margin-bottom: 20px;
   }
 </style>
 </head>
@@ -300,6 +383,7 @@
   </section>
 <!-- КВИЗ-БЛОК -->
 <section class="quiz">
+<h2 class="quiz-title">Опрос, чтобы лучше понять свою цель:</h2>
   <div class="quiz-container">
     <div class="quiz-progress">
       <div class="quiz-progress-bar" id="quizProgress"></div>
