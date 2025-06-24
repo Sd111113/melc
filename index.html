@@ -225,89 +225,73 @@
       font-size: 16px;
     }
 /* КВИЗ */
-.quiz {
-  background: #ffeef3;
-  padding: 32px 20px;
-  font-family: 'Gilroy Regular', sans-serif;
-}
-.quiz-container {
-  max-width: 500px;
-  margin: 0 auto;
-  background: #ffc7d8;
-  border-radius: 20px;
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
-}
-.quiz-progress {
-  position: relative;
-  height: 4px;
-  background: #ffeef3;
-  border-radius: 3px;
-  margin-bottom: 24px;
-}
-.quiz-progress-bar {
-  height: 4px;
-  background: #f88dad;
-  width: 0%;
-  border-radius: 3px;
-  transition: width 0.3s ease-in-out;
-}
-.quiz-progress-text {
-  font-size: 14px;
-  margin: 6px 0 12px;
-  color: #1a1a1a;
-}
-.quiz-step {
-  display: none;
-  animation: slideIn 0.4s forwards;
-}
-.quiz-step.active {
-  display: block;
-}
-@keyframes slideIn {
-  from {opacity: 0; transform: translateX(30px);}
-  to {opacity: 1; transform: translateX(0);}
-}
-.quiz-options {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.quiz-options li {
-  background: white;
-  margin-bottom: 12px;
-  padding: 12px;
-  border-radius: 16px;
-  border: 2px solid #1a1a1a;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-.quiz-options li.selected {
-  background: #f88dad;
-}
-.quiz-step input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  margin-bottom: 12px;
-  font-size: 16px;
-}
-.quiz-step button {
-  background: #1a1a1a;
-  color: white;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  cursor: pointer;
+.quiz-wrapper {
+  background-color: #f4f4f4;
+  padding: 40px 24px;
 }
 .quiz-title {
   font-family: 'Gilroy Bold', sans-serif;
-  font-size: 25pt;
+  font-size: 22px; /* такой же, как у заголовка "Что будет на консультации?" */
+  margin-bottom: 12px;
+  color: #1a1a1a;
+}
+.quiz-progress-text {
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 11pt;
+  margin-bottom: 6px;
+  color: #1a1a1a;
+}
+
+.quiz-progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #ffeef3;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.quiz-progress-fill {
+  height: 100%;
+  background-color: #f88dad;
+  transition: width 0.3s ease;
+}
+.quiz-card {
+  background-color: #ffc7d8;
+  padding: 24px;
+  border-radius: 20px;
+  max-width: 340px;
+  margin: 0 auto;
+}
+.quiz-question {
+  font-family: 'Gilroy Semibold', sans-serif;
+  font-size: 17pt;
   margin-bottom: 20px;
-  }
+  color: #1a1a1a;
+}
+.quiz-answer {
+  background-color: #ffeef3;
+  border: 2px solid #1a1a1a;
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 15pt;
+  padding: 10px 16px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.quiz-answer.selected {
+  background-color: #f88dad;
+}
+
+/* Радио-точка */
+.quiz-answer input[type="radio"] {
+  accent-color: #1a1a1a;
+  margin-right: 10px;
+}
 </style>
 </head>
 <body>
@@ -385,9 +369,9 @@
 <section class="quiz">
 <h2 class="quiz-title">Опрос, чтобы лучше понять свою цель:</h2>
   <div class="quiz-container">
-    <div class="quiz-progress">
-      <div class="quiz-progress-bar" id="quizProgress"></div>
-      <p class="quiz-progress-text" id="quizProgressText">Готово: 0%</p>
+<div class="quiz-progress-text">Готово: 16.6%</div>
+<div class="quiz-progress-bar">
+  <div class="quiz-progress-fill" style="width: 16.6%;"></div>
     </div>
     <div class="quiz-step active" data-step="1">
       <h3>Изучали Вы ранее английский язык?</h3>
@@ -474,9 +458,10 @@
   transition: width 0.3s ease-in-out;
 }
 .quiz-progress-text {
-  font-size: 14px;
-  margin: 6px 0 12px;
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 11pt;
   color: #1a1a1a;
+  margin-bottom: 6px;
 }
 .quiz-step {
   display: none;
