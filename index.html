@@ -298,6 +298,179 @@
       </div>
     </section>
   </section>
+<!-- КВИЗ-БЛОК -->
+<section class="quiz">
+  <div class="quiz-container">
+    <div class="quiz-progress">
+      <div class="quiz-progress-bar" id="quizProgress"></div>
+      <p class="quiz-progress-text" id="quizProgressText">Готово: 0%</p>
+    </div>
+    <div class="quiz-step active" data-step="1">
+      <h3>Изучали Вы ранее английский язык?</h3>
+      <ul class="quiz-options">
+        <li data-value="Школа">Да, в школе 🎒</li>
+        <li data-value="Курсы">Да, проходил(а) курсы 🇺🇸</li>
+        <li data-value="Репетитор">Да, с репетитором 👩🏻‍🏫</li>
+        <li data-value="Не учил">Нет, только хочу начать 🏁</li>
+      </ul>
+    </div>
+    <div class="quiz-step" data-step="2">
+      <h3>Для какой цели Вам нужны знания английского языка?</h3>
+      <ul class="quiz-options">
+        <li data-value="Работа">Для работы 👷🏻</li>
+        <li data-value="Путешествия">Для путешествий 🛩️</li>
+        <li data-value="Личное">В личных целях 🍿</li>
+        <li data-value="Просто хочу">Просто хочу знать 💡</li>
+      </ul>
+    </div>
+    <div class="quiz-step" data-step="3">
+      <h3>Сколько Вы готовы уделять времени изучению?</h3>
+      <ul class="quiz-options">
+        <li data-value="1 раз">Одно занятие в неделю 🕐</li>
+        <li data-value="2 раза">Два занятия в неделю 🕑</li>
+        <li data-value="3 раза">Три занятия в неделю 🕒</li>
+        <li data-value="4+">Четыре занятия в неделю и больше ♾️</li>
+      </ul>
+    </div>
+    <div class="quiz-step" data-step="4">
+      <h3>Выберите то, что больше подходит для Вас:</h3>
+      <ul class="quiz-options">
+        <li data-value="понимаю, не говорю">Я понимаю речь, но сам(а) говорить не могу 💡</li>
+        <li data-value="читаю, не слышу">Умею только читать, на слух не воспринимаю 📕</li>
+        <li data-value="трудно говорю">С трудом, но могу говорить на английском 🗣️</li>
+        <li data-value="начинающий">Не умею читать и говорить, но хочу 🔥</li>
+      </ul>
+    </div>
+    <div class="quiz-step" data-step="5">
+      <h3>Какое время Вам подходит для обучения?</h3>
+      <ul class="quiz-options">
+        <li data-value="Утро">Утро 🌅</li>
+        <li data-value="День">День 🏙️</li>
+        <li data-value="Вечер">Вечер 🌆</li>
+      </ul>
+    </div>
+    <div class="quiz-step" data-step="6">
+      <h3>Чтобы узнать результат и получить бесплатный урок, заполните форму:</h3>
+      <form id="quizForm">
+        <input type="text" name="name" placeholder="Имя" required>
+        <input type="tel" name="phone" placeholder="Телефон" required>
+        <button type="submit">Получить результат</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+.quiz {
+  background: #ffeef3;
+  padding: 32px 20px;
+  font-family: 'Gilroy Regular', sans-serif;
+}
+.quiz-container {
+  max-width: 500px;
+  margin: 0 auto;
+  background: #ffc7d8;
+  border-radius: 20px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.quiz-progress {
+  position: relative;
+  height: 4px;
+  background: #ffeef3;
+  border-radius: 3px;
+  margin-bottom: 24px;
+}
+.quiz-progress-bar {
+  height: 4px;
+  background: #f88dad;
+  width: 0%;
+  border-radius: 3px;
+  transition: width 0.3s ease-in-out;
+}
+.quiz-progress-text {
+  font-size: 14px;
+  margin: 6px 0 12px;
+  color: #1a1a1a;
+}
+.quiz-step {
+  display: none;
+  animation: slideIn 0.4s forwards;
+}
+.quiz-step.active {
+  display: block;
+}
+@keyframes slideIn {
+  from {opacity: 0; transform: translateX(30px);}
+  to {opacity: 1; transform: translateX(0);}
+}
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.quiz-options li {
+  background: white;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 2px solid #1a1a1a;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.quiz-options li.selected {
+  background: #f88dad;
+}
+.quiz-step input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+.quiz-step button {
+  background: #1a1a1a;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
+
+<script>
+const steps = document.querySelectorAll('.quiz-step');
+const progress = document.getElementById('quizProgress');
+const progressText = document.getElementById('quizProgressText');
+let currentStep = 0;
+
+function showStep(index) {
+  steps.forEach(s => s.classList.remove('active'));
+  steps[index].classList.add('active');
+  const percent = Math.round((index / (steps.length - 1)) * 100);
+  progress.style.width = percent + '%';
+  progressText.textContent = `Готово: ${percent}%`;
+}
+
+document.querySelectorAll('.quiz-options li').forEach(option => {
+  option.addEventListener('click', () => {
+    const parent = option.closest('.quiz-step');
+    parent.querySelectorAll('li').forEach(li => li.classList.remove('selected'));
+    option.classList.add('selected');
+    setTimeout(() => {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    }, 300);
+  });
+});
+
+showStep(currentStep);
+</script>
 
 <style>
  .consultation {
