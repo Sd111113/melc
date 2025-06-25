@@ -224,11 +224,7 @@
     .form-container h2 {
       font-size: 16px;
     }
-/* КВИЗ */
-body {
-  background-color: #f4f4f4;
-  font-family: 'Gilroy', sans-serif;
-
+  }
 </style>
 </head>
 <body>
@@ -302,20 +298,6 @@ body {
       </div>
     </section>
   </section>
-
-</section>
-
-<style>
-/* Общий фон всего блока */
-.quiz-section-wrapper {
-  background-color: #f4f4f4;
-  padding: 48px 20px;
-}
-
-
-
-showStep(currentStep);
-</script>
 
 <style>
  .consultation {
@@ -487,10 +469,10 @@ showStep(currentStep);
       e.preventDefault();
       const name = document.getElementById('name').value.trim();
       const phone = document.getElementById('phone').value.trim();
-      const message = `📩 Новая заявка:%0A👤 Имя: ${name}%0A📞 Телефон: ${phone}`;
+      const message = 📩 Новая заявка:%0A👤 Имя: ${name}%0A📞 Телефон: ${phone};
       const token = '7660930209:AAHx2T9toG1LID97XAlB8Ha1FOgeVfa53lM';
       const chat_id = '80267795';
-      const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${message}`;
+      const url = https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${message};
       try {
         await fetch(url);
         alert("Заявка отправлена!");
