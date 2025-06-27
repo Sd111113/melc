@@ -372,58 +372,47 @@
   let currentQuestion = 0;
 
   function renderQuizStep() {
-    const q = quizData[currentQuestion];
-    const questionEl = document.getElementById('quiz-question');
-    const answersEl = document.getElementById('quiz-answers');
-    const progressText = document.getElementById('quiz-progress-text');
-    const progressFill = document.getElementById('quiz-progress-fill');
+  const q = quizData[currentQuestion];
+  const questionEl = document.getElementById('quiz-question');
+  const answersEl = document.getElementById('quiz-answers');
+  const progressText = document.getElementById('quiz-progress-text');
+  const progressFill = document.getElementById('quiz-progress-fill');
 
-    // Correct progress calculation
-    const fillPercent = Math.round((currentQuestion) / (quizData.length - 1) * 100);
-    progressText.textContent = `Готово: ${fillPercent}%`;
-    progressFill.style.width = `${fillPercent}%`;
+  // ✅ Правильный прогресс
+  const fillPercent = Math.min(100, Math.round((currentQuestion) / (quizData.length - 1) * 100));
+  progressText.textContent = `Готово: ${fillPercent}%`;
+  progressFill.style.width = `${fillPercent}%`;
 
-    questionEl.innerHTML = q.question;
-    answersEl.innerHTML = '';
+  questionEl.innerHTML = q.question;
+  answersEl.innerHTML = '';
 
-    // Last step - show form inputs
-    if (currentQuestion === quizData.length - 1) {
-      q.answers.forEach(html => {
-        const div = document.createElement('div');
-        div.innerHTML = html;
-        answersEl.appendChild(div.firstChild);
-      });
-
-      // Optional: add submit handler
-      const submitBtn = answersEl.querySelector('.quiz__submit');
-      if (submitBtn) {
-        submitBtn.addEventListener('click', () => {
-          alert('Заявка отправлена!');
-          // Here you can send your data
-        });
-      }
-
-    } else {
-      // Normal questions with options
-      q.answers.forEach((answerText, idx) => {
-        const label = document.createElement('label');
-        label.className = 'quiz__answer';
-        label.style.animationDelay = `${idx * 0.05}s`;
-        label.innerHTML = `
-          <input type="radio" name="q${currentQuestion}" />
-          <span class="quiz__radio"></span>
-          ${answerText}`;
-        label.addEventListener('click', () => {
+  if (currentQuestion === quizData.length - 1) {
+    // Последний экран - форма
+    q.answers.forEach(html => {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      answersEl.appendChild(div.firstChild);
+    });
+  } else {
+    // Вопросы с вариантами
+    q.answers.forEach((answerText, idx) => {
+      const label = document.createElement('label');
+      label.className = 'quiz__answer';
+      label.style.animationDelay = `${idx * 0.05}s`;
+      label.innerHTML = `
+        <input type="radio" name="q${currentQuestion}" />
+        <span class="quiz__radio"></span>
+        ${answerText}`;
+      label.addEventListener('click', () => {
+        if (currentQuestion < quizData.length - 1) {
           currentQuestion++;
-          if (currentQuestion < quizData.length) {
-            setTimeout(renderQuizStep, 300);
-          }
-        });
-        answersEl.appendChild(label);
+          setTimeout(renderQuizStep, 300);
+        }
       });
-    }
+      answersEl.appendChild(label);
+    });
   }
-
+}
   window.addEventListener('DOMContentLoaded', renderQuizStep);
 </script>
 <style>
