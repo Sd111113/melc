@@ -298,7 +298,118 @@
       </div>
     </section>
   </section>
+<section class="quiz">
+  <h2 class="quiz__title">Опрос, чтобы лучше<br>понять свою цель:</h2>
 
+  <div class="quiz__card" id="quiz-card">
+    <div class="quiz__progress">
+      <span class="quiz__progress-text" id="quiz-progress-text">Готово: 0%</span>
+      <div class="quiz__progress-bar">
+        <div class="quiz__progress-fill" id="quiz-progress-fill" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="quiz__question" id="quiz-question"></div>
+    <div class="quiz__answers" id="quiz-answers"></div>
+  </div>
+</section>
+<script>
+  const quizData = [
+    {
+      question: "Изучали Вы ранее английский язык?",
+      answers: [
+        "Да, в школе 🎒",
+        "Да, проходил(а) курсы 🇺🇸",
+        "Да, с репетитором 👩🏻‍🏫",
+        "Нет, только хочу начать 🏁"
+      ]
+    },
+    {
+      question: "Для какой цели Вам нужны знания английского языка?",
+      answers: [
+        "Для работы 👷🏻",
+        "Для путешествий 🛩️",
+        "В личных целях 🍿",
+        "Просто хочу знать 💡"
+      ]
+    },
+    {
+      question: "Сколько Вы готовы уделять времени изучению?",
+      answers: [
+        "Одно занятие в неделю 🕐",
+        "Два занятия в неделю 🕑",
+        "Три занятия в неделю 🕒",
+        "Четыре занятия в неделю и больше ♾️"
+      ]
+    },
+    {
+      question: "Выберите то, что больше подходит для Вас:",
+      answers: [
+        "Я понимаю речь, но сам(а) говорить не могу 💡",
+        "Умею только читать, на слух не воспринимаю 📕",
+        "С трудом, но могу говорить на английском 🗣️",
+        "Не умею читать и не умею говорить, но хочу научится 🔥"
+      ]
+    },
+    {
+      question: "Какое время Вам подходит для обучения?",
+      answers: [
+        "Утро 🌅",
+        "День 🏙️",
+        "Вечер 🌆"
+      ]
+    },
+    {
+      question: "Чтобы узнать результат и посетить бесплатный пробный урок заполните форму ниже:",
+      answers: [
+        "<input type='text' placeholder='Имя' class='quiz__input'>",
+        "<input type='tel' placeholder='Телефон' class='quiz__input'>"
+      ]
+    }
+  ];
+
+  let currentQuestion = 0;
+
+  function renderQuizStep() {
+    const q = quizData[currentQuestion];
+    const questionEl = document.getElementById('quiz-question');
+    const answersEl = document.getElementById('quiz-answers');
+    const progressText = document.getElementById('quiz-progress-text');
+    const progressFill = document.getElementById('quiz-progress-fill');
+
+    const percent = Math.round((currentQuestion) / (quizData.length - 1) * 100);
+    progressText.textContent = `Готово: ${percent}%`;
+    progressFill.style.width = `${percent}%`;
+
+    questionEl.innerHTML = q.question;
+    answersEl.innerHTML = '';
+
+    q.answers.forEach((answerText, idx) => {
+      const label = document.createElement('label');
+      label.className = 'quiz__answer';
+      label.style.animationDelay = `${idx * 0.05}s`;
+
+      if (currentQuestion === quizData.length - 1) {
+        label.innerHTML = answerText;
+      } else {
+        label.innerHTML = `
+          <input type="radio" name="q${currentQuestion}" />
+          <span class="quiz__radio"></span>
+          ${answerText}`;
+        label.addEventListener('click', () => {
+          currentQuestion++;
+          if (currentQuestion < quizData.length) {
+            setTimeout(renderQuizStep, 300);
+          }
+        });
+      }
+
+      answersEl.appendChild(label);
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', renderQuizStep);
+</script>
 <style>
  .consultation {
   padding: 10px 25px 48px;
@@ -458,6 +569,117 @@
   height: 118px;
   z-index: 1;
 }
+.quiz {
+  background: #f4f4f4;
+  padding: 10px 25px 48px;
+}
+.quiz__title {
+  font-family: 'Gilroy Bold', sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: #1a1a1a;
+  letter-spacing: -0.2px;
+  margin-bottom: 10px;
+  text-align: left;
+  padding-left: 4px;
+}
+.quiz__card {
+  background: #ffc7d8;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.quiz__progress-text {
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 11pt;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+.quiz__progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #ffeef3;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.quiz__progress-fill {
+  background: #f88dad;
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+}
+.quiz__question {
+  font-family: 'Gilroy Semibold', sans-serif;
+  font-size: 17pt;
+  color: #1a1a1a;
+}
+.quiz__answers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.quiz__answer {
+  background: #ffc7d8;
+  border-radius: 16px;
+  border: 1px solid #b18c97;
+  padding: 12px 16px;
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 15pt;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s, transform 0.3s;
+  opacity: 0;
+  animation: slideIn 0.4s ease forwards;
+}
+.quiz__answer input[type="radio"] {
+  display: none;
+}
+.quiz__radio {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #1a1a1a;
+  flex-shrink: 0;
+  position: relative;
+}
+.quiz__answer:has(input:checked) {
+  background: #f88dad;
+  border-color: #1a1a1a;
+}
+.quiz__answer:has(input:checked) .quiz__radio::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1a1a1a;
+}
+.quiz__input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-family: 'Gilroy Medium';
+  color: #1a1a1a;
+  background: #ffeef3;
+  box-sizing: border-box;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 </style>
   <script src="https://unpkg.com/imask"></script>
   <script>
