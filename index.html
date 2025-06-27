@@ -378,14 +378,14 @@
     const progressFill = document.getElementById('quiz-progress-fill');
 
     let fillPercent;
-    if (currentQuestion < quizData.length - 1) {
-    fillPercent = Math.round((currentQuestion) / (quizData.length) * 90);
-    } else {
-    fillPercent = 90;
-    }
-    progressText.textContent = `Готово: ${percent}%`;
-    progressFill.style.width = `${percent}%`;
-
+if (currentQuestion < quizData.length - 1) {
+  fillPercent = Math.round((currentQuestion) / (quizData.length - 1) * 100);
+} else {
+  fillPercent = 100;
+}
+    progressText.textContent = `Готово: ${fillPercent}%`;
+    progressFill.style.width = `${fillPercent}%`;
+ 
     questionEl.innerHTML = q.question;
     answersEl.innerHTML = '';
 
