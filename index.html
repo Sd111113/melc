@@ -716,12 +716,42 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
   color: #1a1a1a;
   background: #ffeef3;
   box-sizing: border-box;
+
 }
 @keyframes slideIn {
   from { opacity: 0; transform: translateX(30px); }
   to { opacity: 1; transform: translateX(0); }
 }
+.quiz__description {
+  font-family: 'Gilroy Regular', sans-serif;
+  font-size: 14pt;
+  line-height: 1.4;
+  color: #1a1a1a;
+  margin-top: 12px;
+}
 
+.confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    #f88dad,
+    #f88dad 10px,
+    #ffeef3 10px,
+    #ffeef3 20px
+  );
+  opacity: 0.6;
+  animation: fadeOut 3s forwards;
+  pointer-events: none;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
 </style>
   <script src="https://unpkg.com/imask"></script>
   <script>
@@ -747,5 +777,13 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
       }
     });
   </script>
+<script>
+function launchConfetti() {
+  const confetti = document.createElement('div');
+  confetti.className = 'confetti';
+  document.body.appendChild(confetti);
+  setTimeout(() => confetti.remove(), 3000);
+}
+</script>
 </body>
 </html>
