@@ -313,8 +313,7 @@
     <div class="quiz__answers" id="quiz-answers"></div>
   </div>
 </section>
-<script>
-  const quizQuestions = [
+const quizQuestions = [
   {
     question: "Изучали Вы ранее английский язык?",
     answers: [
@@ -358,54 +357,91 @@
       "День 🏙️",
       "Вечер 🌆"
     ]
+  },
+  {
+    question: "Чтобы узнать результат и посетить бесплатный пробный урок заполните форму ниже:",
+    isForm: true
+  },
+  {
+    question: "Спасибо за прохождение нашего Quiz!",
+    isThankYou: true,
+    description: "Мы определим ваш уровень на нашем бесплатном пробном уроке. Скоро наш менеджер свяжется и подберет время!"
   }
 ];
-const totalSteps = quizQuestions.length;
-const quizFinalStep = {
-  question: "Чтобы узнать результат и посетить бесплатный пробный урок заполните форму ниже:",
-  answers: [
-    "<input type='text' placeholder='Имя' class='quiz__input'>",
-    "<input type='tel' placeholder='Телефон' class='quiz__input'>",
-    "<button class='quiz__submit'>Отправить заявку</button>"
-  ]
 };
   let currentQuestion = 0;
-  function renderQuizStep() {
-  const questionEl = document.getElementById('quiz-question');
-  const answersEl = document.getElementById('quiz-answers');
+const totalSteps = quizQuestions.length;
+
+function updateProgress() {
   const progressText = document.getElementById('quiz-progress-text');
   const progressFill = document.getElementById('quiz-progress-fill');
+  const percent = Math.round((currentQuestion) / (totalSteps - 1) * 100);
+  progressText.textContent = `Готово: ${percent}%`;
+  progressFill.style.width = `${percent}%`;
+}
 
-  // Считаем прогресс только по вопросам
-  const fillPercent = Math.round(Math.min(currentQuestion, totalSteps) / totalSteps * 100);
-  progressText.textContent = `Готово: ${fillPercent}%`;
-  progressFill.style.width = `${fillPercent}%`;
-
-  // если вопросы закончились — рендерим форму
-  if (currentQuestion >= totalSteps) {
-    questionEl.innerHTML = quizFinalStep.question;
-    answersEl.innerHTML = '';
-    quizFinalStep.answers.forEach(html => {
-      const div = document.createElement('div');
-      div.innerHTML = html;
-      answersEl.appendChild(div.firstChild);
-    });
-    return;
-  }
-
-  // иначе рендерим вопрос
+function renderQuizStep() {
+  const questionEl = document.getElementById('quiz-question');
+  const answersEl = document.getElementById('quiz-answers');
   const q = quizQuestions[currentQuestion];
+
+  updateProgress();
+
   questionEl.innerHTML = q.question;
   answersEl.innerHTML = '';
 
-  q.answers.forEach((answerText, idx) => {
+  if (q.isThankYou) {
+    const desc = document.createElement('p');
+    desc.className = 'quiz__description';
+    desc.textContent = q.description;
+    answersEl.appendChild(desc);
+
+    launchConfetti();
+    return;
+  }
+
+  if (q.isForm) {
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = 'Имя';
+    nameInput.className = 'quiz__input';
+    nameInput.id = 'quiz-name';
+
+    const phoneInput = document.createElement('input');
+    phoneInput.type = 'tel';
+    phoneInput.placeholder = 'Телефон';
+    phoneInput.className = 'quiz__input';
+    phoneInput.id = 'quiz-phone';
+
+    const submitBtn = document.createElement('button');
+    submitBtn.className = 'quiz__submit';
+    submitBtn.textContent = 'УЗНАТЬ РЕЗУЛЬТАТЫ';
+
+    submitBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!nameInput.value.trim() || !phoneInput.value.trim()) {
+        alert('Пожалуйста, заполните все поля!');
+        return;
+      }
+      currentQuestion++;
+      renderQuizStep();
+    });
+
+    answersEl.appendChild(nameInput);
+    answersEl.appendChild(phoneInput);
+    answersEl.appendChild(submitBtn);
+
+    return;
+  }
+
+  q.answers.forEach((answer, idx) => {
     const label = document.createElement('label');
     label.className = 'quiz__answer';
     label.style.animationDelay = `${idx * 0.05}s`;
     label.innerHTML = `
       <input type="radio" name="q${currentQuestion}" />
       <span class="quiz__radio"></span>
-      ${answerText}`;
+      ${answer}`;
     label.addEventListener('click', () => {
       currentQuestion++;
       setTimeout(renderQuizStep, 300);
@@ -413,8 +449,8 @@ const quizFinalStep = {
     answersEl.appendChild(label);
   });
 }
-  window.addEventListener('DOMContentLoaded', renderQuizStep);
-</script>
+
+window.addEventListener('DOMContentLoaded', renderQuizStep);
 </script>
 <style>
  .consultation {
