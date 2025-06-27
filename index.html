@@ -374,7 +374,6 @@ const quizQuestions = [
     description: "Мы определим ваш уровень на нашем бесплатном пробном уроке. Скоро наш менеджер свяжется и подберет время!"
   }
 ];
-
 let currentStep = 0;
 const totalSteps = quizQuestions.length;
 
@@ -385,6 +384,7 @@ function updateProgress() {
   progressText.textContent = `Готово: ${percent}%`;
   progressFill.style.width = `${percent}%`;
 }
+let isBlocked = false;
 
 function renderQuizStep() {
   const questionEl = document.getElementById('quiz-question');
@@ -395,8 +395,13 @@ function renderQuizStep() {
   questionEl.innerHTML = '';
   answersEl.innerHTML = '';
 
+  if (currentStep >= quizQuestions.length) {
+    return;
+  }
+
   if (step.type === 'question') {
     questionEl.textContent = step.text;
+
     step.answers.forEach((answer, idx) => {
       const label = document.createElement('label');
       label.className = 'quiz__answer';
@@ -404,16 +409,26 @@ function renderQuizStep() {
         <input type="radio" name="q${currentStep}">
         <span class="quiz__radio"></span>
         ${answer}`;
+
       label.addEventListener('click', () => {
+        if (isBlocked) return;
+        isBlocked = true;
+
         currentStep++;
         renderQuizStep();
+
+        setTimeout(() => {
+          isBlocked = false;
+        }, 1000);  // блокировка на 1 секунду
       });
+
       answersEl.appendChild(label);
     });
   }
 
   else if (step.type === 'form') {
     questionEl.textContent = "Чтобы узнать результат и записаться на бесплатный пробный урок, заполните форму ниже:";
+
     const nameInput = document.createElement('input');
     nameInput.type = 'text';
     nameInput.placeholder = 'Имя';
@@ -436,8 +451,6 @@ function renderQuizStep() {
         alert('Пожалуйста, заполните все поля!');
         return;
       }
-      // здесь можно отправить форму в Telegram, например
-      // sendFormData(nameInput.value, phoneInput.value);
 
       currentStep++;
       renderQuizStep();
@@ -457,7 +470,6 @@ function renderQuizStep() {
     launchConfetti();
   }
 }
-
 function launchConfetti() {
   confetti({
     particleCount: 150,
