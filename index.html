@@ -377,7 +377,12 @@
     const progressText = document.getElementById('quiz-progress-text');
     const progressFill = document.getElementById('quiz-progress-fill');
 
-    const percent = Math.round((currentQuestion) / (quizData.length - 1) * 100);
+    let fillPercent;
+    if (currentQuestion < quizData.length - 1) {
+    fillPercent = Math.round((currentQuestion) / (quizData.length) * 90);
+    } else {
+    fillPercent = 90;
+    }
     progressText.textContent = `Готово: ${percent}%`;
     progressFill.style.width = `${percent}%`;
 
@@ -571,7 +576,7 @@
 }
 .quiz {
   background: #f4f4f4;
-  padding: 10px 25px 48px;
+  padding: -20px 25px 48px;
 }
 .quiz__title {
   font-family: 'Gilroy Bold', sans-serif;
@@ -594,7 +599,7 @@
 }
 .quiz__progress-text {
   font-family: 'Gilroy Medium', sans-serif;
-  font-size: 11pt;
+  font-size: 7pt;
   color: #1a1a1a;
   margin-bottom: 6px;
 }
@@ -612,7 +617,7 @@
 }
 .quiz__question {
   font-family: 'Gilroy Semibold', sans-serif;
-  font-size: 17pt;
+  font-size: 9pt;
   color: #1a1a1a;
 }
 .quiz__answers {
@@ -626,7 +631,7 @@
   border: 1px solid #b18c97;
   padding: 12px 16px;
   font-family: 'Gilroy Medium', sans-serif;
-  font-size: 15pt;
+  font-size: 8pt;
   color: #1a1a1a;
   display: flex;
   align-items: center;
