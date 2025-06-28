@@ -792,31 +792,31 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
 }
 </style>
   <script src="https://unpkg.com/imask"></script>
-  <script>
+<script>
   const phoneInput = document.getElementById('phone');
   const phoneMask = IMask(phoneInput, {
     mask: '+{7} (000) 000-00-00',
     lazy: false,
     placeholderChar: ' '
   });
+
+  document.getElementById('tg-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const message = `📩 Новая заявка:%0A👤 Имя: ${name}%0A📞 Телефон: ${phone}`;
+    const token = '7660930209:AAHx2T9toG1LID97XAlB8Ha1FOgeVfa53lM';
+    const chat_id = '80267795';
+    const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${message}`;
+    try {
+      await fetch(url);
+      alert("Заявка отправлена!");
+      document.getElementById('tg-form').reset();
+    } catch (error) {
+      alert("Ошибка при отправке. Попробуйте ещё раз.");
+      console.error(error);
+    }
+  });
 </script>
-    document.getElementById('tg-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const message = 📩 Новая заявка:%0A👤 Имя: ${name}%0A📞 Телефон: ${phone};
-      const token = '7660930209:AAHx2T9toG1LID97XAlB8Ha1FOgeVfa53lM';
-      const chat_id = '80267795';
-      const url = https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${message};
-      try {
-        await fetch(url);
-        alert("Заявка отправлена!");
-        document.getElementById('tg-form').reset();
-      } catch (error) {
-        alert("Ошибка при отправке. Попробуйте ещё раз.");
-        console.error(error);
-      }
-    });
-  </script>
 </body>
 </html>
