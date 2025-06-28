@@ -793,25 +793,36 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
 </style>
 <script src="https://unpkg.com/imask"></script>
 <script>
-   const phoneInput = document.getElementById('phone');
-  const maskOptions = {
-    mask: '+{7} (000) 000-00-00',
-    lazy: false,               // <-- важно!
-    placeholderChar: '_'
-  };
-  const phoneMask = IMask(phoneInput, maskOptions);
+const phoneInput = document.getElementById('phone');
+  let phoneMask = null;
 
-  // Цвет по умолчанию (серый) при неактивном состоянии
-  phoneInput.style.color = '#838383';
+  const defaultMask = '+{7} (000) 000-00-00';
+  const focusMask = '+{7} (   )   -  -  '; // твой фокус-плейсхолдер
 
+  // функция для применения маски
+  function applyMask(maskPattern) {
+    if (phoneMask) phoneMask.destroy();
+    phoneMask = IMask(phoneInput, {
+      mask: maskPattern,
+      lazy: false,
+      placeholderChar: '_'
+    });
+  }
+
+  // начальная маска
+  applyMask(defaultMask);
+
+  // события focus / blur
   phoneInput.addEventListener('focus', () => {
     phoneInput.style.color = '#1a1a1a';
+    applyMask(focusMask);
   });
 
   phoneInput.addEventListener('blur', () => {
-    if (!phoneInput.value.trim() || phoneInput.value === '+7 (___) ___-__-__') {
+    if (!phoneInput.value.trim() || phoneInput.value === '+7 (   )   -  -  ') {
       phoneInput.style.color = '#838383';
     }
+    applyMask(defaultMask);
   });
 
   document.getElementById('tg-form').addEventListener('submit', async function(e) {
