@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ELC | Быстрый английский</title>
+
+  <!-- Шрифты Gilroy -->
+<style>
+  @font-face {
+    font-family: 'Gilroy Regular';
+    src: url('fonts/Gilroy-Regular.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Gilroy Semibold';
+    src: url('fonts/Gilroy-Semibold.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Gilroy Bold';
+    src: url('fonts/Gilroy-Bold.ttf') format('truetype');
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Gilroy Regular', sans-serif;
+    background-color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background-color: white;
+    padding: 7px 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  header img {
+    height: 44px;
+  }
+
+  .hero {
+    position: relative;
+    background-color: #2184f9;
+    overflow: hidden;
+    padding: 20px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+  }
+
+    .hero::before {
+    content: "";
+    background: url('images/hero_bg.png') no-repeat center center;
+    background-size: cover;
+    opacity: 0.25;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+  }
+
+  .hero__overlay {
+    position: relative;
+    z-index: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .hero__badges {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-family: 'Gilroy Regular', sans-serif;
+  }
+
+  .badge img {
+    height: 16px;
+    margin-right: 6px;
+  }
+
+  .logo-2gis {
+    height: 10px;
+    margin-left: 6px;
+  }
+
+  h1 {
+    font-size: 30px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    color: #fff;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+    font-family: 'Gilroy Bold', sans-serif;
+  }
+
+  .hero__features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 640px;
+  }
+
+  .hero__features li {
+    font-size: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    color: white;
+    line-height: 1.4;
+    letter-spacing: -0.2px;
+    font-family: 'Gilroy Regular', sans-serif;
+  }
+
+  .hero__features li img {
+    height: 18px;
+    margin-right: 10px;
+  }
+
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 24px;
+  padding: 12px 20px 20px;
+  z-index: 3;
+  position: relative;
+}
+
+  .form-wrapper {
+  background: #f4f4f4;
+  padding-bottom: 20px;
+  margin-top: -60px;
+}
+
+  .form-container h2 {
+    font-size: 17px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: #222;
+    text-align: left;
+    line-height: 1.4;
+    font-family: 'Gilroy Semibold', sans-serif;
+    padding-left: 0px;
+  }
+
+  .form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .form-container input {
+    width: 100%;
+    display: block;
+    padding: 14px 16px;
+    font-size: 18px;
+    margin: 0;
+    border: none;
+    border-radius: 12px;
+    background: #f2f2f2;
+    box-sizing: border-box;
+    font-family: 'Gilroy Regular', sans-serif;
+    color: #838383;
+  }
+
+  .form-container input::placeholder {
+    color: #999999;
+    opacity: 1;
+  }
+
+  .form-container button {
+    width: 100%;
+    padding: 14px;
+    background: #FAC748;
+    color: black;
+    font-size: 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 400;
+    font-family: 'Gilroy Semibold', sans-serif;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      height: auto;
+      padding: 40px 24px 80px;
+    }
+
+    .hero::before {
+      background-position: center top;
+      background-size: cover;
+      opacity: 0.2;
+    }
+
+    h1 {
+      font-size: 31px;
+    }
+
+    .hero__features li {
+      font-size: 14px;
+    }
+
+    .form-container h2 {
+      font-size: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <img src="images/ELC_logo.png" alt="ELC Logo">
+  </header>
+  <section class="hero">
+    <div class="hero__overlay">
+      <div class="hero__badges">
+        <div class="badge">
+          <img src="images/heart_icon.png" alt="Heart">
+          <span>10.000+ выпускников</span>
+        </div>
+        <div class="badge">
+          <img src="images/star_icon.png" alt="Star">
+          <span>4.9 из 5</span>
+          <img src="images/2GIS_logo.png" alt="2GIS" class="logo-2gis">
+        </div>
+      </div>
+      <h1>Быстрый английский<br>за 2 месяца</h1>
+      <ul class="hero__features">
+        <li><img src="images/lightning_icon.png" alt="">Гарантия результата: +1 уровень за 2 месяца</li>
+        <li><img src="images/lightning_icon.png" alt="">Бесплатная консультация с топовым преподавателем ELC</li>
+        <li><img src="images/lightning_icon.png" alt="">Составим план обучения</li>
+      </ul>
+    </div>
+  </section>
+  <section class="form-wrapper">
+    <div class="form-container">
+      <h2>Запишитесь на 1 бесплатный урок<br>+консультация</h2>
+      <form id="tg-form">
+        <input type="text" id="name" placeholder="Имя" required />
+        <input type="tel" id="phone" placeholder="+7 (___) ___-__-__" required />
+        <button type="submit">Хочу на 1 бесплатный урок</button>
+      </form>
+    </div>
+    <section class="consultation">
+      <h2 class="consultation__title">Что будет на консультации?</h2>
+      <div class="consultation__item">
+        <p class="consultation__step">1. Определим ваш уровень &nbsp;&nbsp;&nbsp;&nbsp;английского</p>
+        <div class="consultation__levels">
+          <div class="level level--beginner">
+            <img src="images/bag_emoji.png" alt="Beginner">
+            <span>Beginner</span>
+          </div>
+          <div class="level level--elementary">
+            <img src="images/climbing_emoji.png" alt="Elementary">
+            <span>Elementary</span>
+          </div>
+          <div class="level level--intermediate">
+            <img src="images/intermediate.png" alt="Intermediate">
+            <span>Intermediate</span>
+          </div>
+        </div>
+      </div>
+      <div class="consultation__item">
+        <p class="consultation__step">2. Составим персональный<br>&nbsp;&nbsp;&nbsp;&nbsp;план обучения</p>        <div class="consultation__progress">
+          <img src="images/flag_icon.png" class="start-icon" alt="flag">
+          <div class="progress-line">
+            <span class="dot green"></span>
+            <span class="dot blue"></span>
+            <span class="dot blue"></span>
+          </div>
+          <img src="images/hero_avatar.png" class="avatar-icon" alt="avatar">
+        </div>
+      </div>
+<div class="consultation__item">
+  <p class="consultation__step">3. Поможем выбрать цель</p>
+  <img src="images/mountain_emoji.png" class="mountain-icon" alt="цель">
+
+      </div>
+    </section>
+  </section>
+<section class="quiz">
+  <h2 class="quiz__title">Опрос, чтобы лучше<br>понять свою цель:</h2>
+
+  <div class="quiz__card" id="quiz-card">
+    <div class="quiz__progress">
+      <span class="quiz__progress-text" id="quiz-progress-text">Готово: 0%</span>
+      <div class="quiz__progress-bar">
+        <div class="quiz__progress-fill" id="quiz-progress-fill" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="quiz__question" id="quiz-question"></div>
+    <div class="quiz__answers" id="quiz-answers"></div>
+  </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+const quizQuestions = [
+  {
+    type: "question",
+    text: "Изучали Вы ранее английский язык?",
+    answers: [
+      "Да, в школе 🎒",
+      "Да, проходил(а) курсы 🇺🇸",
+      "Да, с репетитором 👩🏻‍🏫",
+      "Нет, только хочу начать 🏁"
+    ]
+  },
+  {
+    type: "question",
+    text: "Для какой цели Вам нужны знания английского языка?",
+    answers: [
+      "Для работы 👷🏻",
+      "Для путешествий 🛩️",
+      "В личных целях 🍿",
+      "Просто хочу знать 💡"
+    ]
+  },
+  {
+    type: "question",
+    text: "Сколько Вы готовы уделять времени изучению?",
+    answers: [
+      "Одно занятие в неделю 🕐",
+      "Два занятия в неделю 🕑",
+      "Три занятия в неделю 🕒",
+      "Четыре занятия в неделю и больше ♾️"
+    ]
+  },
+  {
+    type: "question",
+    text: "Выберите то, что больше подходит для Вас:",
+    answers: [
+      "Я понимаю речь, но сам(а) говорить не могу 💡",
+      "Умею только читать, на слух не воспринимаю 📕",
+      "С трудом, но могу говорить на английском 🗣️",
+      "Не умею читать и не умею говорить, но хочу научиться 🔥"
+    ]
+  },
+  {
+    type: "question",
+    text: "Какое время Вам подходит для обучения?",
+    answers: [
+      "Утро 🌅",
+      "День 🏙️",
+      "Вечер 🌆"
+    ]
+  },
+  {
+    type: "form"
+  },
+  {
+    type: "thankyou",
+    text: "Спасибо за прохождение нашего Quiz!",
+    description: "Мы определим ваш уровень на нашем бесплатном пробном уроке. Скоро наш менеджер свяжется и подберет время!"
+  }
+];
+let currentStep = 0;
+const totalSteps = quizQuestions.length;
+
+function updateProgress() {
+  const progressText = document.getElementById('quiz-progress-text');
+  const progressFill = document.getElementById('quiz-progress-fill');
+  const percent = Math.round((currentStep) / (totalSteps - 1) * 100);
+  progressText.textContent = `Готово: ${percent}%`;
+  progressFill.style.width = `${percent}%`;
+}
+let isBlocked = false;
+
+function renderQuizStep() {
+  const questionEl = document.getElementById('quiz-question');
+  const answersEl = document.getElementById('quiz-answers');
+  const step = quizQuestions[currentStep];
+
+  updateProgress();
+  questionEl.innerHTML = '';
+  answersEl.innerHTML = '';
+
+  if (currentStep >= quizQuestions.length) {
+    return;
+  }
+
+  if (step.type === 'question') {
+    questionEl.textContent = step.text;
+
+    step.answers.forEach((answer, idx) => {
+      const label = document.createElement('label');
+      label.className = 'quiz__answer';
+      label.innerHTML = `
+        <input type="radio" name="q${currentStep}">
+        <span class="quiz__radio"></span>
+        ${answer}`;
+
+      label.addEventListener('click', () => {
+  if (isBlocked) return;
+  isBlocked = true;
+
+  label.classList.add('active');  // Добавляем сразу активный цвет
+
+  setTimeout(() => {
+    currentStep++;
+    renderQuizStep();
+    isBlocked = false;
+  }, 100);  // короткая пауза чтобы покраска успела сработать
+});
+
+      answersEl.appendChild(label);
+    });
+  }
+
+  else if (step.type === 'form') {
+    questionEl.textContent = "Чтобы узнать результат, заполните форму ниже:";
+
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = 'Имя';
+    nameInput.className = 'quiz__input';
+    nameInput.id = 'quiz-name';
+
+    const phoneInput = document.createElement('input');
+    phoneInput.type = 'tel';
+    phoneInput.placeholder = 'Телефон';
+    phoneInput.className = 'quiz__input';
+    phoneInput.id = 'quiz-phone';
+
+    const submitBtn = document.createElement('button');
+    submitBtn.className = 'quiz__submit';
+    submitBtn.textContent = 'ПОЛУЧИТЬ 1 БЕСПЛАТНЫЙ УРОК';
+
+    submitBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!nameInput.value.trim() || !phoneInput.value.trim()) {
+        alert('Пожалуйста, заполните все поля!');
+        return;
+      }
+
+      currentStep++;
+      renderQuizStep();
+    });
+
+    answersEl.appendChild(nameInput);
+    answersEl.appendChild(phoneInput);
+    answersEl.appendChild(submitBtn);
+  }
+
+  else if (step.type === 'thankyou') {
+    questionEl.textContent = step.text;
+    const desc = document.createElement('p');
+    desc.className = 'quiz__description';
+    desc.textContent = step.description;
+    answersEl.appendChild(desc);
+    launchConfetti();
+  }
+}
+function launchConfetti() {
+  confetti({
+    particleCount: 150,
+    spread: 70,
+    origin: { y: 0.6 }
+  });
+}
+
+window.addEventListener('DOMContentLoaded', renderQuizStep);
+</script>
+<style>
+ .consultation {
+  padding: 10px 25px 20px;
+  background: #f4f4f4;
+}
+
+.consultation__title {
+  font-family: 'Gilroy Bold', sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: #1a1a1a;
+  letter-spacing: -0.2px;
+  margin-bottom: 10px;
+  text-align: left;
+  padding-left: 4px;
+}
+
+.consultation__item {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 6px 16px 12px 12px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 116px;
+  position: relative;
+  overflow: hidden;
+}
+
+.consultation__step {
+  font-family: 'Gilroy Semibold', sans-serif;
+  font-size: 17px;
+  margin: 0;
+ padding: 12px 12px 4px 12px;
+  line-height: 1.2;
+}
+
+.consultation__levels,
+.consultation__progress,
+
+.consultation__levels {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.level {
+  background: #cacaca;
+  border-radius: 20px;
+  position: relative;
+  padding: 0px 6px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  font-family: 'Gilroy Semibold', sans-serif;
+  gap: 5px;
+}
+
+.level--beginner {
+  top: 28px;
+  left: 30px;
+  transform: rotate(6deg);
+}
+
+.level--elementary {
+  top: 15px;
+  left: 33px;
+  transform: rotate(-3deg);
+}
+
+.level--intermediate {
+  top: -25px;
+  left: 20px;
+  transform: rotate(-12deg);
+}
+
+.level img {
+  height: 23px;
+}
+
+.consultation__progress {
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  padding-left: 32px;
+  padding-right: 16px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.start-icon {
+  height: 22px;
+  position: absolute;
+  left: 28px;
+  top: 7px;
+  background: white;
+  border-radius: 50%;
+  padding: 0.2px;
+  z-index: 3;
+}
+  
+.dot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ffffff;
+  box-sizing: border-box;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.dot:nth-child(1) { left: 25%; background: #72e375; }
+.dot:nth-child(2) { left: 57%; background: #8ca9d7; }
+.dot:nth-child(3) { left: 90%; background: #8ca9d7; }
+
+.avatar-icon {
+  position: absolute;
+  top: -12px;
+  left: 34%;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.green {
+  background: #72e375;
+}
+
+.blue {
+  background: #8ca9d7;
+}
+
+.consultation__item 
+  .progress-line {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  height: 4px;
+   background: linear-gradient(to right,
+    #72e375 25%,
+    #8ca9d7 26%,
+    #8ca9d7 85%,
+    rgba(255, 255, 255, 0) 100%);
+  border-radius: 3px;
+  margin-left: 15px;
+}
+.mountain-icon {
+  position: absolute;
+  right: 15px;
+  bottom: -20px;
+  height: 118px;
+  z-index: 1;
+}
+.quiz {
+  background: #f4f4f4;
+  padding: 10px 25px 10px;
+}
+.quiz__title {
+  font-family: 'Gilroy Bold', sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: #1a1a1a;
+  letter-spacing: -0.2px;
+  margin-bottom: 10px;
+  text-align: left;
+  padding-left: 4px;
+}
+.quiz__card {
+  background: #ffc7d8;
+  border-radius: 20px;
+  padding: 8px 20px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.quiz__progress-text {
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 8pt;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+.quiz__progress-bar {
+  width: 100%;
+  height: 4px;
+  background: #ffeef3;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.quiz__progress-fill {
+  background: #f88dad;
+  height: 100%;
+  
+  transition: width 0.3s ease-in-out;
+}
+.quiz__question {
+  font-family: 'Gilroy Semibold', sans-serif;
+  font-size: 13pt;
+  color: #1a1a1a;
+}
+.quiz__answers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.quiz__answer {
+  background: #ffc7d8;
+  border-radius: 16px;
+  border: 1px solid #b18c97;
+  padding: 8px 16px;
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 10pt;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s, transform 0.3s;
+  opacity: 0;
+  animation: slideIn 0.4s ease forwards;
+}
+.quiz__answer input[type="radio"] {
+  display: none;
+}
+.quiz__radio {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid #1a1a1a;
+  flex-shrink: 0;
+  position: relative;
+}
+.quiz__answer:has(input:checked) {
+  background: #f88dad;
+  border-color: #1a1a1a;
+}
+.quiz__answer:has(input:checked) .quiz__radio::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1a1a1a;
+}
+.quiz__input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-family: 'Gilroy Medium';
+  color: #1a1a1a;
+  background: #ffeef3;
+  box-sizing: border-box;
+
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.quiz__description {
+  font-family: 'Gilroy Regular', sans-serif;
+  font-size: 14pt;
+  line-height: 1.4;
+  color: #1a1a1a;
+  margin-top: 12px;
+}
+</style>
+  <script src="https://unpkg.com/imask"></script>
+  <script>
+    const phoneMask = IMask(document.getElementById('phone'), {
+      mask: '+{7} (000) 000-00-00'
+    });
+
+    document.getElementById('tg-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const message = 📩 Новая заявка:%0A👤 Имя: ${name}%0A📞 Телефон: ${phone};
+      const token = '7660930209:AAHx2T9toG1LID97XAlB8Ha1FOgeVfa53lM';
+      const chat_id = '80267795';
+      const url = https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${message};
+      try {
+        await fetch(url);
+        alert("Заявка отправлена!");
+        document.getElementById('tg-form').reset();
+      } catch (error) {
+        alert("Ошибка при отправке. Попробуйте ещё раз.");
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
