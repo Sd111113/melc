@@ -411,16 +411,17 @@ function renderQuizStep() {
         ${answer}`;
 
       label.addEventListener('click', () => {
-        if (isBlocked) return;
-        isBlocked = true;
+  if (isBlocked) return;
+  isBlocked = true;
 
-        currentStep++;
-        renderQuizStep();
+  label.classList.add('active');  // Добавляем сразу активный цвет
 
-        setTimeout(() => {
-          isBlocked = false;
-        }, 1000);  // блокировка на 1 секунду
-      });
+  setTimeout(() => {
+    currentStep++;
+    renderQuizStep();
+    isBlocked = false;
+  }, 100);  // короткая пауза чтобы покраска успела сработать
+});
 
       answersEl.appendChild(label);
     });
