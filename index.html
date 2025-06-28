@@ -793,14 +793,15 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
 </style>
 <script src="https://unpkg.com/imask"></script>
 <script>
-  const phoneInput = document.getElementById('phone');
-  const phoneMask = IMask(phoneInput, {
+   const phoneInput = document.getElementById('phone');
+  const maskOptions = {
     mask: '+{7} (000) 000-00-00',
-    lazy: true,
+    lazy: false,               // <-- важно!
     placeholderChar: '_'
-  });
+  };
+  const phoneMask = IMask(phoneInput, maskOptions);
 
-  // Цвет по умолчанию
+  // Цвет по умолчанию (серый) при неактивном состоянии
   phoneInput.style.color = '#838383';
 
   phoneInput.addEventListener('focus', () => {
