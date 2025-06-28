@@ -180,14 +180,27 @@
     background: #f2f2f2;
     box-sizing: border-box;
     font-family: 'Gilroy Regular', sans-serif;
-    color: #838383;
+    color: #1a1a1a;
   }
 
   .form-container input::placeholder {
-    color: #999999;
-    opacity: 1;
-  }
+  color: #999999;
+  opacity: 1;
+}
 
+.form-container input:focus {
+  color: #1a1a1a;
+}
+
+.form-container input:-webkit-autofill,
+.form-container input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #1a1a1a;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.form-container input[type="tel"] {
+  color: #1a1a1a;
+}
   .form-container button {
     width: 100%;
     padding: 14px;
@@ -780,10 +793,13 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
 </style>
   <script src="https://unpkg.com/imask"></script>
   <script>
-    const phoneMask = IMask(document.getElementById('phone'), {
-      mask: '+{7} (000) 000-00-00'
-    });
-
+  const phoneInput = document.getElementById('phone');
+  const phoneMask = IMask(phoneInput, {
+    mask: '+{7} (000) 000-00-00',
+    lazy: false,
+    placeholderChar: ' '
+  });
+</script>
     document.getElementById('tg-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       const name = document.getElementById('name').value.trim();
