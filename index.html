@@ -796,10 +796,23 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
   const phoneInput = document.getElementById('phone');
   const phoneMask = IMask(phoneInput, {
     mask: '+{7} (000) 000-00-00',
-    lazy: false,
-    placeholderChar: ' '
+    lazy: true,           // важно! placeholder исчезает, когда не набираешь
+    placeholderChar: '_'  // задаёт символ подчеркивания
   });
 
+  // Цвет по умолчанию (серый) при неактивном состоянии
+  phoneInput.style.color = '#838383';
+
+  phoneInput.addEventListener('focus', () => {
+    phoneInput.style.color = '#1a1a1a';
+  });
+
+  phoneInput.addEventListener('blur', () => {
+    if (!phoneInput.value.trim() || phoneInput.value === '+7 (___) ___-__-__') {
+      phoneInput.style.color = '#838383';
+    }
+  });
+</script>
   document.getElementById('tg-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const name = document.getElementById('name').value.trim();
