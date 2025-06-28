@@ -483,14 +483,66 @@ function renderQuizStep() {
     answersEl.appendChild(desc);
     launchConfetti();
   }
-}
-function launchConfetti() {
-  confetti({
-    particleCount: 150,
-    spread: 70,
-    origin: { y: 0.6 }
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+  // 🎯 1️⃣ Задаем список эмодзи для конфетти
+  const emojis = ['🎉', '🎈', '⭐️', '❤️', '🎁'];
+
+  // 2️⃣ Генерируем шейпы из эмодзи с одинаковым масштабом
+  const emojiShapes = emojis.map(e => confetti.shapeFromText({ text: e, scalar: 1.8 }));
+
+  // 3️⃣ Базовые параметры для всех запусков
+  const count = 200;
+  const defaults = {
+    origin: { y: 0.7 },
+    gravity: 0.85,
+    decay: 0.9,
+    shapes: emojiShapes,
+    // Цвет заливки эмодзи не нужен - они сами по себе цветные
+  };
+
+  // 4️⃣ Одна функция выстрела
+  function fire(particleRatio, opts) {
+    confetti({
+      ...defaults,
+      ...opts,
+      particleCount: Math.floor(count * particleRatio)
+    });
+  }
+
+  // 5️⃣ Последовательные залпы с разной физикой
+  function launchEmojiConfetti() {
+    fire(0.25, {
+      spread: 25,
+      startVelocity: 60
+    });
+    fire(0.2, {
+      spread: 45,
+      startVelocity: 50
+    });
+    fire(0.35, {
+      spread: 70,
+      decay: 0.91,
+      scalar: 0.9
+    });
+    fire(0.1, {
+      spread: 90,
+      startVelocity: 35,
+      decay: 0.92,
+      scalar: 1.2
+    });
+    fire(0.1, {
+      spread: 90,
+      startVelocity: 50
+    });
+  }
+
+  // 6️⃣ Автозапуск при загрузке
+  window.addEventListener('load', () => {
+    launchEmojiConfetti();
   });
-}
+
+</script>
 
 window.addEventListener('DOMContentLoaded', renderQuizStep);
 </script>
