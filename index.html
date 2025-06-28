@@ -845,7 +845,7 @@ phoneInput.addEventListener('blur', () => {
     phoneInput.style.color = '#838383';
   }
 });
-  document.getElementById('tg-form').addEventListener('submit', async function(e) {
+  document.getElementById('tg-form').addEventListener('submit', function(e) {
   e.preventDefault();
 
   const name = document.getElementById('name').value.trim();
@@ -856,26 +856,11 @@ phoneInput.addEventListener('blur', () => {
     return;
   }
 
-  const message = `📩 Новая заявка:%0A👤 Имя: ${name}%0A📞 Телефон: ${phone}`;
-  const token = 'ТВОЙ_ТОКЕН';
-  const chat_id = 'ТВОЙ_CHAT_ID';
-  const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${message}`;
+  launchEmojiConfetti();
 
-  try {
-    await fetch(url);
-
-    // Вызываем эмодзи-конфетти сразу после успешной отправки
-    launchEmojiConfetti();
-
-    // Через 1 секунду редирект
-    setTimeout(() => {
-      window.location.href = 'thanks.html';
-    }, 1000);
-
-  } catch (error) {
-    alert("Ошибка при отправке. Попробуйте ещё раз.");
-    console.error(error);
-  }
+  setTimeout(() => {
+    window.location.href = 'thanks.html';
+  }, 1000);
 });
 </script>
 </body>
