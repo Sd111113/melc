@@ -817,30 +817,41 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
 </style>
 <script src="https://unpkg.com/imask"></script>
 <script>
-const phoneInput = document.getElementById('phone');
+document.addEventListener('DOMContentLoaded', () => {
+  const phoneInput = document.getElementById('phone');
 
-const maskOptions = {
-  mask: '+{7} (000) 000-00-00',
-  lazy: false, // чтобы маска всегда была видна полностью
-  placeholderChar: ' ', // символ подчеркивания
-  overwrite: true, // чтобы цифры заменяли плейсхолдер
-  definitions: {
-    '0': /[0-9]/,
-  }
-};
+  // Маска с фиксированным +7
+  const maskOptions = {
+    mask: '+{7} (000) 000-00-00',
+    lazy: false,               // маска всегда видна
+    placeholderChar: ' ',      // пробел вместо _
+    overwrite: true,
+    definitions: {
+      '0': /[0-9]/,
+    }
+  };
 
-const mask = IMask(phoneInput, maskOptions);
+  const mask = IMask(phoneInput, maskOptions);
 
-// Задаём изначальный цвет светло-серый
-phoneInput.style.color = '#838383';
+  // При фокусе — делаем текст черным
+  phoneInput.addEventListener('focus', () => {
+    phoneInput.style.color = '#1a1a1a';
+  });
 
-// При фокусе — делаем текст чёрным
-phoneInput.addEventListener('focus', () => {
-  phoneInput.style.color = '#1a1a1a';
-});
+  // При блюре — возвращаем серый, если только +7
+  phoneInput.addEventListener('blur', () => {
+    const onlyCode = '+7 (   )    -  -  ';
+    if (phoneInput.value.trim() === onlyCode) {
+      phoneInput.style.color = '#838383';
+    }
+  });
 
-// При блюре — возвращаем серый если пусто
-phoneInput.addEventListener('blur', () => {
+  // При вводе — всегда делаем текст черным
+  phoneInput.addEventListener('input', () => {
+    phoneInput.style.color = '#1a1a1a';
+  });
+
+  // При загрузке — если поле пустое, серый
   if (mask.unmaskedValue === '') {
     phoneInput.style.color = '#838383';
   }
@@ -856,18 +867,19 @@ phoneInput.addEventListener('blur', () => {
     return;
   }
 
-  const message = 📩 Новая заявка:%0A👤 Имя: ${name}%0A📞 Телефон: ${phone};
+  // ✅ Твои данные
+  const message = `📩 Новая заявка:%0A👤 Имя: ${name}%0A📞 Телефон: ${phone}`;
   const token = '7660930209:AAHx2T9toG1LID97XAlB8Ha1FOgeVfa53lM';
   const chat_id = '80267795';
-  const url = https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${message};
+  const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${message}`;
 
   try {
     await fetch(url);
 
-    // Вызываем эмодзи-конфетти сразу после успешной отправки
+    // ✅ Запуск конфетти
     launchEmojiConfetti();
 
-    // Через 1 секунду редирект
+    // ✅ Редирект через 1 секунду
     setTimeout(() => {
       window.location.href = 'thanks.html';
     }, 1000);
