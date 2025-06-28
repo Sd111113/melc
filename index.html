@@ -427,7 +427,7 @@ function renderQuizStep() {
   }
 
   else if (step.type === 'form') {
-    questionEl.textContent = "Чтобы узнать результат и записаться на бесплатный пробный урок, заполните форму ниже:";
+    questionEl.textContent = "Чтобы узнать результат, заполните форму ниже:";
 
     const nameInput = document.createElement('input');
     nameInput.type = 'text';
@@ -443,7 +443,7 @@ function renderQuizStep() {
 
     const submitBtn = document.createElement('button');
     submitBtn.className = 'quiz__submit';
-    submitBtn.textContent = 'УЗНАТЬ РЕЗУЛЬТАТЫ';
+    submitBtn.textContent = 'ПОЛУЧИТЬ 1 БЕСПЛАТНЫЙ УРОК';
 
     submitBtn.addEventListener('click', (e) => {
       e.preventDefault();
