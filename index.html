@@ -794,37 +794,33 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
 <script src="https://unpkg.com/imask"></script>
 <script>
 const phoneInput = document.getElementById('phone');
-  let phoneMask = null;
 
-  const defaultMask = '+{7} (000) 000-00-00';
-  const focusMask = '+{7} (   )   -  -  '; // твой фокус-плейсхолдер
-
-  // функция для применения маски
-  function applyMask(maskPattern) {
-    if (phoneMask) phoneMask.destroy();
-    phoneMask = IMask(phoneInput, {
-      mask: maskPattern,
-      lazy: false,
-      placeholderChar: '_'
-    });
+const maskOptions = {
+  mask: '+{7} (000) 000-00-00',
+  lazy: false, // чтобы маска всегда была видна полностью
+  placeholderChar: '_', // символ подчеркивания
+  overwrite: true, // чтобы цифры заменяли плейсхолдер
+  definitions: {
+    '0': /[0-9]/,
   }
+};
 
-  // начальная маска
-  applyMask(defaultMask);
+const mask = IMask(phoneInput, maskOptions);
 
-  // события focus / blur
-  phoneInput.addEventListener('focus', () => {
-    phoneInput.style.color = '#1a1a1a';
-    applyMask(focusMask);
-  });
+// Задаём изначальный цвет светло-серый
+phoneInput.style.color = '#838383';
 
-  phoneInput.addEventListener('blur', () => {
-    if (!phoneInput.value.trim() || phoneInput.value === '+7 (   )   -  -  ') {
-      phoneInput.style.color = '#838383';
-    }
-    applyMask(defaultMask);
-  });
+// При фокусе — делаем текст чёрным
+phoneInput.addEventListener('focus', () => {
+  phoneInput.style.color = '#1a1a1a';
+});
 
+// При блюре — возвращаем серый если пусто
+phoneInput.addEventListener('blur', () => {
+  if (mask.unmaskedValue === '') {
+    phoneInput.style.color = '#838383';
+  }
+});
   document.getElementById('tg-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const name = document.getElementById('name').value.trim();
