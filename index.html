@@ -873,21 +873,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = `📩 Новая заявка:\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
     const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
 
-    try {
+   try {
   const response = await fetch(url);
   const data = await response.json();
 
-  console.log('Telegram API response:', data);
+  // Покажем полный ответ в alert
+  alert('Ответ от Telegram:\n' + JSON.stringify(data, null, 2));
 
-  if (!data.ok) throw new Error('Telegram API error');
+  if (!data.ok) throw new Error('Telegram API error: ' + data.description);
 
   launchEmojiConfetti();
 
   setTimeout(() => {
     window.location.href = 'thanks.html';
   }, 1000);
+
 } catch (error) {
-  alert("Ошибка при отправке. Попробуйте ещё раз.");
+  alert("Ошибка при отправке: " + error.message);
   console.error(error);
 }
   });
