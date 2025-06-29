@@ -862,38 +862,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+  document.addEventListener('DOMContentLoaded', () => {
+  const phoneInput = document.getElementById('phone');
+  const emptyMask = '+7 (   )   -  -  ';
+
+  const mask = IMask(phoneInput, {
+    mask: '+{7} (000) 000-00-00',
+    lazy: false,
+    placeholderChar: ' ',
+    overwrite: true,
+    definitions: { '0': /[0-9]/ }
+  });
+
+  function updatePhoneColor() {
+    if (phoneInput.value === emptyMask) {
+      phoneInput.style.color = '#838383';
+    } else {
+      phoneInput.style.color = '#1a1a1a';
+    }
+  }
+
+  phoneInput.addEventListener('focus', () => phoneInput.style.color = '#1a1a1a');
+  phoneInput.addEventListener('blur', updatePhoneColor);
+  phoneInput.addEventListener('input', updatePhoneColor);
+
+  updatePhoneColor();
+
   document.getElementById('tg-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  const name = document.getElementById('name').value.trim();
-  const phone = document.getElementById('phone').value.trim();
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
 
-  if (!name || !phone) {
-    alert('Пожалуйста, заполните все поля!');
-    return;
-  }
+    if (!name || phone === emptyMask) {
+      alert('Пожалуйста, заполните все поля!');
+      return;
+    }
 
-  // ✅ Твои данные
-  const message = `📩 Новая заявка:%0A👤 Имя: ${name}%0A📞 Телефон: ${phone}`;
-  const token = '7660930209:AAHx2T9toG1LID97XAlB8Ha1FOgeVfa53lM';
-  const chat_id = '80267795';
-  const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${message}`;
+    const token = '7660930209:AAHx2T9toG1LID97XAlB8Ha1FOgeVfa53lM';
+    const chat_id = '80267795';
+    const message = `📩 Новая заявка:\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
+    const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
 
-  try {
-    await fetch(url);
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Bad response');
 
-    // ✅ Запуск конфетти
-    launchEmojiConfetti();
+      launchEmojiConfetti();
 
-    // ✅ Редирект через 1 секунду
-    setTimeout(() => {
-      window.location.href = 'thanks.html';
-    }, 1000);
-
-  } catch (error) {
-    alert("Ошибка при отправке. Попробуйте ещё раз.");
-    console.error(error);
-  }
+      setTimeout(() => {
+        window.location.href = 'thanks.html';
+      }, 1000);
+    } catch (error) {
+      alert("Ошибка при отправке. Попробуйте ещё раз.");
+      console.error(error);
+    }
+  });
 });
 </script>
 </body>
