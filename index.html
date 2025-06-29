@@ -829,16 +829,14 @@ document.addEventListener('DOMContentLoaded', () => {
     overwrite: true
   });
 
-  // При старте - серый цвет
+  // Цвет placeholder
   phoneInput.style.color = '#838383';
 
-  // При фокусе - черный и раскрыть маску
   phoneInput.addEventListener('focus', () => {
     mask.updateOptions({ lazy: false });
     phoneInput.style.color = '#1a1a1a';
   });
 
-  // При блюре
   phoneInput.addEventListener('blur', () => {
     if (!mask.unmaskedValue) {
       mask.updateOptions({ lazy: true });
@@ -848,7 +846,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // При вводе
   phoneInput.addEventListener('input', () => {
     if (!mask.unmaskedValue) {
       phoneInput.style.color = '#838383';
@@ -869,58 +866,30 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Твои реальные данные
     const token = '7660930209:AAHx2T9toG1LID97XAlB8Ha1FOgeVfa53lM';
     const chat_id = '80267795';
+
     const message = `📩 Новая заявка:\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
     const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
 
     try {
       const response = await fetch(url);
-      if (!response.ok) throw new Error('Bad response');
+      if (!response.ok) throw new Error(`Telegram response: ${response.status}`);
 
+      // Успех → конфетти и редирект
       launchEmojiConfetti();
 
       setTimeout(() => {
         window.location.href = 'thanks.html';
       }, 1000);
+
     } catch (error) {
       alert("Ошибка при отправке. Попробуйте ещё раз.");
       console.error(error);
     }
   });
 });
-</script>
-<script>
-  document.getElementById('tg-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-
-    if (!name || phone === emptyMask) {
-      alert('Пожалуйста, заполните все поля!');
-      return;
-    }
-
-    const token = '7660930209:AAHx2T9toG1LID97XAlB8Ha1FOgeVfa53lM';
-    const chat_id = '80267795';
-    const message = `📩 Новая заявка:\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
-    const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Bad response');
-
-      launchEmojiConfetti();
-
-      setTimeout(() => {
-        window.location.href = 'thanks.html';
-      }, 1000);
-    } catch (error) {
-      alert("Ошибка при отправке. Попробуйте ещё раз.");
-      console.error(error);
-    }
-  });
 </script>
 </body>
 </html>
