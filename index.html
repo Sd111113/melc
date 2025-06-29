@@ -813,62 +813,6 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
   color: #1a1a1a;
   margin-top: 12px;
 }
-</style>
-<script src="https://unpkg.com/imask"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const phoneInput = document.getElementById('phone');
-  const form = document.getElementById('tg-form');
-
-  // Маска
-  const mask = IMask(phoneInput, {
-    mask: '+7 (000) 000-00-00',
-    lazy: true,
-    placeholderChar: '_',
-    overwrite: true
-  });
-
-  // Цвет placeholder
-  phoneInput.style.color = '#838383';
-
-  phoneInput.addEventListener('focus', () => {
-    mask.updateOptions({ lazy: false });
-    phoneInput.style.color = '#1a1a1a';
-  });
-
-  phoneInput.addEventListener('blur', () => {
-    if (!mask.unmaskedValue) {
-      mask.updateOptions({ lazy: true });
-      phoneInput.style.color = '#838383';
-    } else {
-      phoneInput.style.color = '#1a1a1a';
-    }
-  });
-
-  phoneInput.addEventListener('input', () => {
-    if (!mask.unmaskedValue) {
-      phoneInput.style.color = '#838383';
-    } else {
-      phoneInput.style.color = '#1a1a1a';
-    }
-  });
-
-  // Отправка формы
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById('name').value.trim();
-    const phone = phoneInput.value.trim();
-
-    if (!name || !mask.unmaskedValue) {
-      alert('Пожалуйста, заполните все поля!');
-      return;
-    }
-
-    sendLeadToTelegram(name, phone);
-  });
-});
-</script>
     <script>
 const TELEGRAM_SETTINGS = {
   token: '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE',
