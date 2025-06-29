@@ -819,42 +819,48 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const phoneInput = document.getElementById('phone');
+  const placeholder = '+7 (___) ___-__-__';
+  phoneInput.placeholder = placeholder;
+  phoneInput.value = '';
+  phoneInput.style.color = '#838383';
 
-  // Маска с фиксированным +7
   const maskOptions = {
-    mask: '+{7} (000) 000-00-00',
-    lazy: false,               // маска всегда видна
-    placeholderChar: ' ',      // пробел вместо _
+    mask: '+7 (000) 000-00-00',
+    lazy: false,
     overwrite: true,
+    placeholderChar: ' ',
     definitions: {
-      '0': /[0-9]/,
+      '0': /[0-9]/
     }
   };
 
   const mask = IMask(phoneInput, maskOptions);
 
-  // При фокусе — делаем текст черным
-  phoneInput.addEventListener('focus', () => {
-    phoneInput.style.color = '#1a1a1a';
-  });
-
-  // При блюре — возвращаем серый, если только +7
-  phoneInput.addEventListener('blur', () => {
-    const onlyCode = '+7 (   )    -  -  ';
-    if (phoneInput.value.trim() === onlyCode) {
+  // Цвет при вводе
+  phoneInput.addEventListener('input', () => {
+    const unmasked = mask.unmaskedValue;
+    if (unmasked && unmasked.length > 0) {
+      phoneInput.style.color = '#1a1a1a';
+    } else {
       phoneInput.style.color = '#838383';
     }
   });
 
-  // При вводе — всегда делаем текст черным
-  phoneInput.addEventListener('input', () => {
-    phoneInput.style.color = '#1a1a1a';
+  // Цвет при фокусе
+  phoneInput.addEventListener('focus', () => {
+    if (!mask.unmaskedValue) {
+      phoneInput.style.color = '#838383';
+    } else {
+      phoneInput.style.color = '#1a1a1a';
+    }
   });
 
-  // При загрузке — если поле пустое, серый
-  if (mask.unmaskedValue === '') {
-    phoneInput.style.color = '#838383';
-  }
+  // Цвет при блюре
+  phoneInput.addEventListener('blur', () => {
+    if (!mask.unmaskedValue) {
+      phoneInput.style.color = '#838383';
+    }
+  });
 });
   document.getElementById('tg-form').addEventListener('submit', async function(e) {
   e.preventDefault();
