@@ -875,15 +875,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const response = await fetch(url);
-      if (!response.ok) throw new Error(`Telegram response: ${response.status}`);
+const data = await response.json();
 
-      // Успех → конфетти и редирект
-      launchEmojiConfetti();
+if (!data.ok) throw new Error('Telegram API error');
 
-      setTimeout(() => {
-        window.location.href = 'thanks.html';
-      }, 1000);
-
+launchEmojiConfetti();
+setTimeout(() => window.location.href = 'thanks.html', 1000);
     } catch (error) {
       alert("Ошибка при отправке. Попробуйте ещё раз.");
       console.error(error);
