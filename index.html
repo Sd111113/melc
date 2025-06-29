@@ -183,8 +183,8 @@
     color: #1a1a1a;
   }
 
-  .form-container input::placeholder {
-  color: #999999;
+.form-container input::placeholder {
+  color: #838383;
   opacity: 1;
 }
 
@@ -819,61 +819,42 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const phoneInput = document.getElementById('phone');
-  const placeholder = '+7 (___) ___-__-__';
-  phoneInput.placeholder = placeholder;
-  phoneInput.value = '';
-  phoneInput.style.color = '#838383';
 
-  const maskOptions = {
+  const mask = IMask(phoneInput, {
     mask: '+7 (000) 000-00-00',
-    lazy: false,
+    lazy: true,
+    placeholderChar: '_',
     overwrite: true,
-    placeholderChar: ' ',
     definitions: {
       '0': /[0-9]/
     }
-  };
-
-  const mask = IMask(phoneInput, maskOptions);
-
-  // Цвет при вводе
-  phoneInput.addEventListener('input', () => {
-    const unmasked = mask.unmaskedValue;
-    if (unmasked && unmasked.length > 0) {
-      phoneInput.style.color = '#1a1a1a';
-    } else {
-      phoneInput.style.color = '#838383';
-    }
   });
 
-  // Цвет при фокусе
+  // При загрузке страницы — серый цвет
+  phoneInput.style.color = '#838383';
+
   phoneInput.addEventListener('focus', () => {
-    if (!mask.unmaskedValue) {
-      phoneInput.style.color = '#838383';
-    } else {
-      phoneInput.style.color = '#1a1a1a';
-    }
+    mask.updateOptions({ lazy: false }); // раскрываем маску
+    phoneInput.style.color = '#1a1a1a';
   });
 
-  // Цвет при блюре
   phoneInput.addEventListener('blur', () => {
     if (!mask.unmaskedValue) {
+      mask.updateOptions({ lazy: true }); // свернуть маску
       phoneInput.style.color = '#838383';
+    } else {
+      phoneInput.style.color = '#1a1a1a';
+    }
+  });
+
+  phoneInput.addEventListener('input', () => {
+    if (!mask.unmaskedValue) {
+      phoneInput.style.color = '#838383';
+    } else {
+      phoneInput.style.color = '#1a1a1a';
     }
   });
 });
-  document.addEventListener('DOMContentLoaded', () => {
-  const phoneInput = document.getElementById('phone');
-  const emptyMask = '+7 (   )   -  -  ';
-
-  const mask = IMask(phoneInput, {
-    mask: '+{7} (000) 000-00-00',
-    lazy: false,
-    placeholderChar: ' ',
-    overwrite: true,
-    definitions: { '0': /[0-9]/ }
-  });
-
   function updatePhoneColor() {
     if (phoneInput.value === emptyMask) {
       phoneInput.style.color = '#838383';
