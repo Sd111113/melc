@@ -831,19 +831,23 @@ document.addEventListener('DOMContentLoaded', () => {
     chat_id: '-1002856948789'
   };
 
-  async function sendLeadToTelegram(name, phone) {
-    const message = `📩 Новая заявка:\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
-    const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
-
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (!data.ok) {
-      alert('Ошибка отправки в Telegram:\n' + JSON.stringify(data, null, 2));
-      throw new Error(data.description);
-    }
+  async function sendLeadToTelegram(name, phone, answersText = '') {
+  let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
+  
+  if (answersText) {
+    message += `\n\n📝 Ответы на вопросы:\n${answersText}`;
   }
 
+  const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+
+  if (!data.ok) {
+    alert('Ошибка отправки в Telegram:\n' + JSON.stringify(data, null, 2));
+    throw new Error(data.description);
+  }
+}
   // =========================
   // ОСНОВНАЯ ФОРМА (ПОД ГЕРОЕМ)
   // =========================
@@ -946,26 +950,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ===== Обработка отправки =====
         quizSubmit.onclick = async (e) => {
-          e.preventDefault();
+  e.preventDefault();
 
-          const name = quizNameInput.value.trim();
-          const phone = quizPhoneInput.value.trim();
+  const name = quizNameInput.value.trim();
+  const phone = quizPhoneInput.value.trim();
 
-          if (!name || !quizMask.unmaskedValue) {
-            alert('Пожалуйста, заполните все поля!');
-            return;
-          }
+  if (!name || !quizMask.unmaskedValue) {
+    alert('Пожалуйста, заполните все поля!');
+    return;
+  }
 
-          await sendLeadToTelegram(name, phone);
+  // ==== Составляем текст с ответами ====
+  let answersText = userAnswers.map((item, index) =>
+    `${index + 1}. ${item.question}\n➡️ ${item.answer}`
+  ).join('\n\n');
 
-          if (typeof launchEmojiConfetti === 'function') {
-            launchEmojiConfetti();
-          }
+  // ==== Вызываем отправку в телеграм ====
+  await sendLeadToTelegram(name, phone, answersText);
 
-          setTimeout(() => {
-            window.location.href = 'thanks.html';
-          }, 1000);
-        });
+  if (typeof launchEmojiConfetti === 'function') {
+    launchEmojiConfetti();
+  }
+
+  setTimeout(() => {
+    window.location.href = 'thanks.html';
+  }, 1000);
+};
       }
     }
   });
