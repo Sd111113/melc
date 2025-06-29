@@ -854,7 +854,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Отправка формы
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const name = document.getElementById('name').value.trim();
@@ -865,6 +865,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    sendLeadToTelegram(name, phone);
+  });
+});
+</script>
     <script>
   const TELEGRAM_SETTINGS = {
     token: '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE',
