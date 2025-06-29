@@ -855,20 +855,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
-  function updatePhoneColor() {
-    if (phoneInput.value === emptyMask) {
-      phoneInput.style.color = '#838383';
-    } else {
-      phoneInput.style.color = '#1a1a1a';
-    }
-  }
-
-  phoneInput.addEventListener('focus', () => phoneInput.style.color = '#1a1a1a');
-  phoneInput.addEventListener('blur', updatePhoneColor);
-  phoneInput.addEventListener('input', updatePhoneColor);
-
-  updatePhoneColor();
-
   document.getElementById('tg-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
