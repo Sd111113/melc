@@ -153,7 +153,8 @@
 }
 
   .form-container h2 {
-    font-size: 19px;
+    font-size: 17px;
+font-weight: 400;
     margin-bottom: 10px;
     color: #1a1a1a;
     text-align: left;
@@ -816,19 +817,49 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
 <script src="https://unpkg.com/imask"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // =========== ОСНОВНАЯ ФОРМА (ПОД ГЕРОЕМ) ===============
+
+  // =========================
+  // НАСТРОЙКИ TELEGRAM
+  // =========================
+  const TELEGRAM_SETTINGS = {
+    token: '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE',
+    chat_id: '-1002856948789'
+  };
+
+  async function sendLeadToTelegram(name, phone) {
+    const message = `📩 Новая заявка:\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
+    const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!data.ok) {
+      alert('Ошибка отправки в Telegram:\n' + JSON.stringify(data, null, 2));
+      throw new Error(data.description);
+    }
+  }
+
+  // =========================
+  // ОСНОВНАЯ ФОРМА (ПОД ГЕРОЕМ)
+  // =========================
+  const mainForm = document.getElementById('tg-form');
   const mainPhoneInput = document.getElementById('phone');
-  if (mainPhoneInput) {
+  const mainNameInput = document.getElementById('name');
+
+  if (mainPhoneInput && mainForm) {
     const mainMask = IMask(mainPhoneInput, {
       mask: '+{7} (000) 000-00-00',
       lazy: true,
       placeholderChar: '_',
     });
+
     mainPhoneInput.style.color = '#838383';
+
     mainPhoneInput.addEventListener('focus', () => {
       mainMask.updateOptions({ lazy: false, placeholderChar: ' ' });
       mainPhoneInput.style.color = '#1a1a1a';
     });
+
     mainPhoneInput.addEventListener('blur', () => {
       if (!mainMask.unmaskedValue) {
         mainMask.updateOptions({ lazy: true, placeholderChar: '_' });
@@ -837,17 +868,41 @@ document.addEventListener('DOMContentLoaded', () => {
         mainPhoneInput.style.color = '#1a1a1a';
       }
     });
+
+    mainForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = mainNameInput.value.trim();
+      const phone = mainPhoneInput.value.trim();
+
+      if (!name || !mainMask.unmaskedValue) {
+        alert('Пожалуйста, заполните все поля!');
+        return;
+      }
+
+      await sendLeadToTelegram(name, phone);
+
+      if (typeof launchEmojiConfetti === 'function') {
+        launchEmojiConfetti();
+      }
+
+      setTimeout(() => {
+        window.location.href = 'thanks.html';
+      }, 1000);
+    });
   }
 
-  // =========== ФОРМА В КВИЗЕ ===============
-  // Эта часть специально для формы на последнем шаге квиза
+  // =========================
+  // ФОРМА НА КВИЗЕ
+  // =========================
+  // Подключаем через MutationObserver, чтобы работать даже когда форма появляется динамически
   const quizObserver = new MutationObserver(() => {
     const quizPhoneInput = document.getElementById('quiz-phone');
     const quizNameInput = document.getElementById('quiz-name');
     const quizSubmit = document.querySelector('.quiz__submit');
 
     if (quizPhoneInput && !quizPhoneInput.dataset.masked) {
-      // Маска
+      // ===== Маска для поля телефона =====
       const quizMask = IMask(quizPhoneInput, {
         mask: '+{7} (000) 000-00-00',
         lazy: true,
@@ -861,6 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
         quizMask.updateOptions({ lazy: false, placeholderChar: ' ' });
         quizPhoneInput.style.color = '#1a1a1a';
       });
+
       quizPhoneInput.addEventListener('blur', () => {
         if (!quizMask.unmaskedValue) {
           quizMask.updateOptions({ lazy: true, placeholderChar: '_' });
@@ -870,7 +926,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Кнопка
+      // ===== Кнопка =====
       if (quizSubmit) {
         quizSubmit.textContent = "Узнать результаты";
         quizSubmit.style.width = '100%';
@@ -883,7 +939,7 @@ document.addEventListener('DOMContentLoaded', () => {
         quizSubmit.style.cursor = 'pointer';
         quizSubmit.style.fontFamily = "'Gilroy Semibold', sans-serif";
 
-        // Обработчик отправки
+        // ===== Обработка отправки =====
         quizSubmit.addEventListener('click', async (e) => {
           e.preventDefault();
 
@@ -909,26 +965,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Наблюдаем за DOM на появление квиз формы
   quizObserver.observe(document.body, { childList: true, subtree: true });
 
-  // ======= Telegram отправка ========
-  const TELEGRAM_SETTINGS = {
-    token: '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE',
-    chat_id: '-1002856948789'
-  };
-
-  async function sendLeadToTelegram(name, phone) {
-    const message = `📩 Новая заявка:\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
-    const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
-
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (!data.ok) {
-      alert('Ошибка отправки в Telegram:\n' + JSON.stringify(data, null, 2));
-      throw new Error(data.description);
-    }
-  }
 });
 </script>
 </body>
