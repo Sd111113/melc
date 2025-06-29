@@ -389,6 +389,8 @@ const quizQuestions = [
 ];
 let currentStep = 0;
 const totalSteps = quizQuestions.length;
+let userAnswers = [];
+const userAnswers = [];
 
 function updateProgress() {
   const progressText = document.getElementById('quiz-progress-text');
@@ -423,19 +425,23 @@ function renderQuizStep() {
         <span class="quiz__radio"></span>
         ${answer}`;
 
-      label.addEventListener('click', () => {
+label.addEventListener('click', () => {
   if (isBlocked) return;
   isBlocked = true;
 
-  label.classList.add('active');  // Добавляем сразу активный цвет
+  userAnswers.push({
+    question: step.text,
+    answer: answer
+  });
+
+  label.classList.add('active');
 
   setTimeout(() => {
     currentStep++;
     renderQuizStep();
     isBlocked = false;
-  }, 100);  // короткая пауза чтобы покраска успела сработать
+  }, 100);
 });
-
       answersEl.appendChild(label);
     });
   }
