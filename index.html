@@ -940,7 +940,7 @@ document.addEventListener('DOMContentLoaded', () => {
         quizSubmit.style.fontFamily = "'Gilroy Semibold', sans-serif";
 
         // ===== Обработка отправки =====
-        quizSubmit.addEventListener('click', async (e) => {
+        quizSubmit.onclick = async (e) => {
           e.preventDefault();
 
           const name = quizNameInput.value.trim();
