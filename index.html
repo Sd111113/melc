@@ -326,7 +326,7 @@
     <div class="quiz__answers" id="quiz-answers"></div>
   </div>
 </section>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
 const quizQuestions = [
   {
@@ -487,33 +487,32 @@ function renderQuizStep() {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
-  // ✅ Определяем эмодзи и shapes сразу
-  const emojis = ['🎉', ‘🇺🇸’, ‘✨’, '❤️', ‘🇬🇧’];
-  const emojiShapes = emojis.map(e => confetti.shapeFromText({ text: e, scalar: 1.8 }));
+const emojis = ['🎉', '🇺🇸', '✨', '❤️', '🇬🇧'];
+const emojiShapes = emojis.map(e => confetti.shapeFromText({ text: e, scalar: 1.8 }));
 
-  const count = 200;
-  const defaults = {
-    origin: { y: 0.7 },
-    gravity: 0.85,
-    decay: 0.9,
-    shapes: emojiShapes,
-  };
+const count = 200;
+const defaults = {
+  origin: { y: 0.7 },
+  gravity: 0.85,
+  decay: 0.9,
+  shapes: emojiShapes,
+};
 
-  function fire(particleRatio, opts) {
-    confetti({
-      ...defaults,
-      ...opts,
-      particleCount: Math.floor(count * particleRatio)
-    });
-  }
+function fire(particleRatio, opts) {
+  confetti({
+    ...defaults,
+    ...opts,
+    particleCount: Math.floor(count * particleRatio)
+  });
+}
 
-  function launchEmojiConfetti() {
-    fire(0.25, { spread: 25, startVelocity: 60 });
-    fire(0.2, { spread: 45, startVelocity: 50 });
-    fire(0.35, { spread: 70, decay: 0.91, scalar: 0.9 });
-    fire(0.1, { spread: 90, startVelocity: 35, decay: 0.92, scalar: 1.2 });
-    fire(0.1, { spread: 90, startVelocity: 50 });
-  }
+function launchEmojiConfetti() {
+  fire(0.25, { spread: 25, startVelocity: 60 });
+  fire(0.2, { spread: 45, startVelocity: 50 });
+  fire(0.35, { spread: 70, decay: 0.91, scalar: 0.9 });
+  fire(0.1, { spread: 90, startVelocity: 35, decay: 0.92, scalar: 1.2 });
+  fire(0.1, { spread: 90, startVelocity: 50 });
+}
 </script>
 <script>
 window.addEventListener('DOMContentLoaded', renderQuizStep);
