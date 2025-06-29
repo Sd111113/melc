@@ -985,5 +985,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 </script>
+<script>
+/*
+  =========================
+  ПРОКРУТКА ДО БЛОКА
+  =========================
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.location.hash) {
+    const id = window.location.hash.substring(1);
+    const target = document.getElementById(id);
+
+    if (target) {
+      // Задержка для корректного рендера страницы перед скроллом
+      setTimeout(() => {
+        const yOffset = -80; // отступ сверху в пикселях
+        const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }, 200);
+    }
+  }
+});
+</script>
 </body>
 </html>
