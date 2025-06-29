@@ -451,7 +451,7 @@ function renderQuizStep() {
 
     const phoneInput = document.createElement('input');
     phoneInput.type = 'tel';
-    phoneInput.placeholder = 'Телефон';
+    phoneInput.placeholder = '+7 (___) ___-__-__';
     phoneInput.className = 'quiz__input';
     phoneInput.id = 'quiz-phone';
 
@@ -910,7 +910,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       quizPhoneInput.dataset.masked = "true";
-      quizPhoneInput.style.color = '#838383';
+      quizPhoneInput.style.color = '#f88dad';
 
       quizPhoneInput.addEventListener('focus', () => {
         quizMask.updateOptions({ lazy: false, placeholderChar: ' ' });
