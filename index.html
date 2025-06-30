@@ -857,80 +857,128 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   async function sendLeadToTelegram(name, phone, answersText = '') {
-  let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
-  
-  if (answersText) {
-    message += `\n\n📝 Ответы на вопросы:\n${answersText}`;
+    let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
+    if (answersText) {
+      message += `\n\n📝 Ответы на вопросы:\n${answersText}`;
+    }
+
+    const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!data.ok) {
+      alert('Ошибка отправки в Telegram:\n' + JSON.stringify(data, null, 2));
+      throw new Error(data.description);
+    }
   }
 
-  const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
-
-  const response = await fetch(url);
-  const data = await response.json();
-
-  if (!data.ok) {
-    alert('Ошибка отправки в Telegram:\n' + JSON.stringify(data, null, 2));
-    throw new Error(data.description);
-  }
-}
   // =========================
-  // ОСНОВНАЯ ФОРМА (ПОД ГЕРОЕМ)
+  // УНИВЕРСАЛЬНАЯ функция маски
+  // =========================
+  function applyPhoneMask(input) {
+    const mask = IMask(input, {
+      mask: '+{7} (000) 000-00-00',
+      lazy: true,
+      placeholderChar: '_',
+    });
+
+    // стартовый цвет
+    input.style.color = '#838383';
+
+    input.addEventListener('focus', () => {
+      mask.updateOptions({
+        lazy: false,
+        placeholderChar: ' ',
+      });
+      input.style.color = '#1a1a1a';
+    });
+
+    input.addEventListener('blur', () => {
+      if (!mask.unmaskedValue) {
+        mask.updateOptions({
+          lazy: true,
+          placeholderChar: '_',
+        });
+        input.style.color = '#838383';
+      } else {
+        input.style.color = '#1a1a1a';
+      }
+    });
+
+    return mask;
+  }
+
+  // =========================
+  // Главная форма под героем
   // =========================
   const mainForm = document.getElementById('tg-form');
-  const mainPhoneInput = document.getElementById('phone');
-  const mainNameInput = document.getElementById('name');
+  if (mainForm) {
+    const mainPhone = document.getElementById('phone');
+    const mainName = document.getElementById('name');
+    const mainMask = applyPhoneMask(mainPhone);
 
-  if (mainPhoneInput && mainForm) {
-  const mainMask = IMask(mainPhoneInput, {
-    mask: '+{7} (000) 000-00-00',
-    lazy: true,
-    placeholderChar: '_',
-  });
+    mainForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-  // начальный цвет серый
-  mainPhoneInput.style.color = '#838383';
+      if (!mainName.value.trim() || !mainMask.unmaskedValue) {
+        alert('Пожалуйста, заполните все поля!');
+        return;
+      }
 
-  mainPhoneInput.addEventListener('focus', () => {
-    mainMask.updateOptions({
-      lazy: false,
-      placeholderChar: ' ',
+      await sendLeadToTelegram(mainName.value.trim(), mainPhone.value.trim());
+      if (typeof launchEmojiConfetti === 'function') {
+        launchEmojiConfetti();
+      }
+
+      setTimeout(() => {
+        window.location.href = 'thanks.html';
+      }, 1000);
     });
-    mainPhoneInput.style.color = '#1a1a1a';
-  });
+  }
 
-  mainPhoneInput.addEventListener('blur', () => {
-    if (!mainMask.unmaskedValue) {
-      mainMask.updateOptions({
-        lazy: true,
-        placeholderChar: '_',
-      });
-      mainPhoneInput.style.color = '#838383';
-    } else {
-      mainPhoneInput.style.color = '#1a1a1a';
+  // =========================
+  // Квиз форма
+  // =========================
+  const quizObserver = new MutationObserver(() => {
+    const quizPhone = document.getElementById('quiz-phone');
+    const quizName = document.getElementById('quiz-name');
+    const quizButton = document.querySelector('.quiz__submit');
+
+    if (quizPhone && !quizPhone.dataset.masked) {
+      const quizMask = applyPhoneMask(quizPhone);
+      quizPhone.dataset.masked = "true";
+
+      if (quizButton) {
+        // Синяя кнопка с белым текстом
+        quizButton.textContent = "Узнать результаты";
+        quizButton.classList.add('quiz__submit--blue');
+
+        quizButton.addEventListener('click', async (e) => {
+          e.preventDefault();
+
+          if (!quizName.value.trim() || !quizMask.unmaskedValue) {
+            alert('Пожалуйста, заполните все поля!');
+            return;
+          }
+
+          let answersText = '';
+          if (window.userAnswers && Array.isArray(userAnswers)) {
+            answersText = userAnswers.map((item, index) =>
+              `${index + 1}. ${item.question}\n➡️ ${item.answer}`
+            ).join('\n\n');
+          }
+
+          await sendLeadToTelegram(quizName.value.trim(), quizPhone.value.trim(), answersText);
+          if (typeof launchEmojiConfetti === 'function') {
+            launchEmojiConfetti();
+          }
+        });
+      }
     }
   });
 
-  mainForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const name = mainNameInput.value.trim();
-    const phone = mainPhoneInput.value.trim();
-
-    if (!name || !mainMask.unmaskedValue) {
-      alert('Пожалуйста, заполните все поля!');
-      return;
-    }
-
-    await sendLeadToTelegram(name, phone);
-
-    if (typeof launchEmojiConfetti === 'function') {
-      launchEmojiConfetti();
-    }
-
-    setTimeout(() => {
-      window.location.href = 'thanks.html';
-    }, 1000);
-  });
+  quizObserver.observe(document.body, { childList: true, subtree: true });
+});
 </script>
 <script>
   =========================
