@@ -818,6 +818,17 @@ window.addEventListener('DOMContentLoaded', renderQuizStep);
   color: #1a1a1a;
   margin-top: 12px;
 }
+.quiz__submit--blue {
+  width: 100%;
+  padding: 14px;
+  background: #1d2f6f;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Gilroy Semibold', sans-serif;
+}
 </style>
 <script src="https://unpkg.com/imask"></script>
 <script>
@@ -856,54 +867,58 @@ document.addEventListener('DOMContentLoaded', () => {
   const mainNameInput = document.getElementById('name');
 
   if (mainPhoneInput && mainForm) {
-    const mainMask = IMask(mainPhoneInput, {
-      mask: '+{7} (000) 000-00-00',
-      lazy: true,
-      placeholderChar: '_',
+  const mainMask = IMask(mainPhoneInput, {
+    mask: '+{7} (000) 000-00-00',
+    lazy: true,
+    placeholderChar: '_',
+  });
+
+  // начальный цвет серый
+  mainPhoneInput.style.color = '#838383';
+
+  mainPhoneInput.addEventListener('focus', () => {
+    mainMask.updateOptions({
+      lazy: false,
+      placeholderChar: ' ',
     });
+    mainPhoneInput.style.color = '#1a1a1a';
+  });
 
-    mainPhoneInput.style.color = '#838383';
-
-    mainPhoneInput.addEventListener('focus', () => {
-      mainMask.updateOptions({ lazy: false, placeholderChar: ' ' });
+  mainPhoneInput.addEventListener('blur', () => {
+    if (!mainMask.unmaskedValue) {
+      mainMask.updateOptions({
+        lazy: true,
+        placeholderChar: '_',
+      });
+      mainPhoneInput.style.color = '#838383';
+    } else {
       mainPhoneInput.style.color = '#1a1a1a';
-    });
+    }
+  });
 
-    mainPhoneInput.addEventListener('blur', () => {
-      if (!mainMask.unmaskedValue) {
-        mainMask.updateOptions({ lazy: true, placeholderChar: '_' });
-        mainPhoneInput.style.color = '#838383';
-      } else {
-        mainPhoneInput.style.color = '#1a1a1a';
-      }
-    });
+  mainForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-    mainForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    const name = mainNameInput.value.trim();
+    const phone = mainPhoneInput.value.trim();
 
-      const name = mainNameInput.value.trim();
-      const phone = mainPhoneInput.value.trim();
+    if (!name || !mainMask.unmaskedValue) {
+      alert('Пожалуйста, заполните все поля!');
+      return;
+    }
 
-      if (!name || !mainMask.unmaskedValue) {
-        alert('Пожалуйста, заполните все поля!');
-        return;
-      }
+    await sendLeadToTelegram(name, phone);
 
-      await sendLeadToTelegram(name, phone);
+    if (typeof launchEmojiConfetti === 'function') {
+      launchEmojiConfetti();
+    }
 
-      if (typeof launchEmojiConfetti === 'function') {
-        launchEmojiConfetti();
-      }
-
-      setTimeout(() => {
-        window.location.href = 'thanks.html';
-      }, 1000);
-    });
-  }
+    setTimeout(() => {
+      window.location.href = 'thanks.html';
+    }, 1000);
+  });
+}
 <script>
-// =========================
-// КВИЗ: маска, кнопка и отправка
-// =========================
 document.addEventListener('DOMContentLoaded', () => {
   const quizObserver = new MutationObserver(() => {
     const quizPhoneInput = document.getElementById('quiz-phone');
@@ -911,6 +926,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizSubmit = document.querySelector('.quiz__submit');
 
     if (quizPhoneInput && !quizPhoneInput.dataset.masked) {
+      // IMask маска
       const quizMask = IMask(quizPhoneInput, {
         mask: '+{7} (000) 000-00-00',
         lazy: true,
@@ -940,17 +956,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
+      // Стилизуем кнопку
       if (quizSubmit) {
         quizSubmit.textContent = "Узнать результаты";
-        quizSubmit.style.width = '100%';
-        quizSubmit.style.padding = '14px';
-        quizSubmit.style.background = '#1d2f6f';
-        quizSubmit.style.color = 'white';
-        quizSubmit.style.fontSize = '18px';
-        quizSubmit.style.border = 'none';
-        quizSubmit.style.borderRadius = '12px';
-        quizSubmit.style.cursor = 'pointer';
-        quizSubmit.style.fontFamily = "'Gilroy Semibold', sans-serif";
+        quizSubmit.classList.add('quiz__submit--blue');
 
         quizSubmit.onclick = async (e) => {
           e.preventDefault();
@@ -972,8 +981,6 @@ document.addEventListener('DOMContentLoaded', () => {
           if (typeof launchEmojiConfetti === 'function') {
             launchEmojiConfetti();
           }
-
-          // Без редиректа
         };
       }
     }
