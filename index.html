@@ -900,11 +900,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1000);
     });
   }
-<!-- ПРОВЕРЕННЫЙ КОД ДЛЯ ФОРМЫ КВИЗА -->
-<script src="https://unpkg.com/imask"></script>
 <script>
 // =========================
-// КВИЗ: маска и кнопка
+// КВИЗ: маска, кнопка и отправка
 // =========================
 document.addEventListener('DOMContentLoaded', () => {
   const quizObserver = new MutationObserver(() => {
@@ -913,7 +911,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizSubmit = document.querySelector('.quiz__submit');
 
     if (quizPhoneInput && !quizPhoneInput.dataset.masked) {
-      // ---------- Маска для квиз-инпута ----------
+      // ---------- Маска ----------
       const quizMask = IMask(quizPhoneInput, {
         mask: '+{7} (000) 000-00-00',
         lazy: true,
@@ -943,7 +941,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // ---------- Кнопка ----------
+      // ---------- Стили кнопки ----------
       if (quizSubmit) {
         quizSubmit.textContent = "Узнать результаты";
         quizSubmit.style.width = '100%';
@@ -955,43 +953,41 @@ document.addEventListener('DOMContentLoaded', () => {
         quizSubmit.style.borderRadius = '12px';
         quizSubmit.style.cursor = 'pointer';
         quizSubmit.style.fontFamily = "'Gilroy Semibold', sans-serif";
-      }
-    }
-  });
 
-  quizObserver.observe(document.body, { childList: true, subtree: true });
-});
-</script>
-<script>
-        // ===== Обработка отправки =====
+        // ---------- Обработка клика ----------
         quizSubmit.onclick = async (e) => {
-  e.preventDefault();
+          e.preventDefault();
 
-  const name = quizNameInput.value.trim();
-  const phone = quizPhoneInput.value.trim();
+          const name = quizNameInput.value.trim();
+          const phone = quizPhoneInput.value.trim();
 
-  if (!name || !quizMask.unmaskedValue) {
-    alert('Пожалуйста, заполните все поля!');
-    return;
-  }
+          if (!name || !quizMask.unmaskedValue) {
+            alert('Пожалуйста, заполните все поля!');
+            return;
+          }
 
-  // ==== Составляем текст с ответами ====
-  let answersText = userAnswers.map((item, index) =>
-    `${index + 1}. ${item.question}\n➡️ ${item.answer}`
-  ).join('\n\n');
+          // ==== Составляем текст с ответами ====
+          let answersText = userAnswers.map((item, index) =>
+            `${index + 1}. ${item.question}\n➡️ ${item.answer}`
+          ).join('\n\n');
 
-  // ==== Вызываем отправку в телеграм ====
-  await sendLeadToTelegram(name, phone, answersText);
+          // ==== Отправка в Telegram ====
+          await sendLeadToTelegram(name, phone, answersText);
 
-  if (typeof launchEmojiConfetti === 'function') {
-    launchEmojiConfetti();
+          if (typeof launchEmojiConfetti === 'function') {
+            launchEmojiConfetti();
+          }
+
+          // Здесь убираем редирект! Не отправляем на index.html
+          // setTimeout(() => {
+          //   window.location.href = 'thanks.html';
+          // }, 1000);
+        };
       }
     }
   });
 
-  // Наблюдаем за DOM на появление квиз формы
   quizObserver.observe(document.body, { childList: true, subtree: true });
-
 });
 </script>
 <script>
