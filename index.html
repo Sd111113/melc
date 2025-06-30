@@ -464,30 +464,34 @@ label.addEventListener('click', () => {
     submitBtn.className = 'quiz__submit';
     submitBtn.textContent = 'ПОЛУЧИТЬ 1 БЕСПЛАТНЫЙ УРОК';
 
-    submitBtn.addEventListener('click', async (e) => {
+    quizSubmit.onclick = async (e) => {
   e.preventDefault();
 
-  const name = nameInput.value.trim();
-  const phone = phoneInput.value.trim();
+  const name = quizNameInput.value.trim();
+  const phone = quizPhoneInput.value.trim();
 
   if (!name || !quizMask.unmaskedValue) {
     alert('Пожалуйста, заполните все поля!');
     return;
   }
 
+  // Собираем ответы квиза
   let answersText = userAnswers.map((item, index) =>
     `${index + 1}. ${item.question}\n➡️ ${item.answer}`
   ).join('\n\n');
 
+  // Отправляем в Telegram
   await sendLeadToTelegram(name, phone, answersText);
 
+  // Конфетти
   if (typeof launchEmojiConfetti === 'function') {
     launchEmojiConfetti();
   }
 
+  // Переход на экран спасибо
   currentStep++;
   renderQuizStep();
-});
+};
 
     answersEl.appendChild(nameInput);
     answersEl.appendChild(phoneInput);
