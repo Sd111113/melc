@@ -464,7 +464,7 @@ label.addEventListener('click', () => {
     submitBtn.className = 'quiz__submit';
     submitBtn.textContent = 'ПОЛУЧИТЬ 1 БЕСПЛАТНЫЙ УРОК';
 
-    quizSubmit.onclick = async (e) => {
+    submitBtn.addEventListener('click', async (e) => {
   e.preventDefault();
 
   const name = quizNameInput.value.trim();
