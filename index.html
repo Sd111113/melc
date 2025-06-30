@@ -911,7 +911,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizSubmit = document.querySelector('.quiz__submit');
 
     if (quizPhoneInput && !quizPhoneInput.dataset.masked) {
-      // ---------- Маска ----------
       const quizMask = IMask(quizPhoneInput, {
         mask: '+{7} (000) 000-00-00',
         lazy: true,
@@ -941,7 +940,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // ---------- Стили кнопки ----------
       if (quizSubmit) {
         quizSubmit.textContent = "Узнать результаты";
         quizSubmit.style.width = '100%';
@@ -954,7 +952,6 @@ document.addEventListener('DOMContentLoaded', () => {
         quizSubmit.style.cursor = 'pointer';
         quizSubmit.style.fontFamily = "'Gilroy Semibold', sans-serif";
 
-        // ---------- Обработка клика ----------
         quizSubmit.onclick = async (e) => {
           e.preventDefault();
 
@@ -966,22 +963,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
           }
 
-          // ==== Составляем текст с ответами ====
           let answersText = userAnswers.map((item, index) =>
             `${index + 1}. ${item.question}\n➡️ ${item.answer}`
           ).join('\n\n');
 
-          // ==== Отправка в Telegram ====
           await sendLeadToTelegram(name, phone, answersText);
 
           if (typeof launchEmojiConfetti === 'function') {
             launchEmojiConfetti();
           }
 
-          // Здесь убираем редирект! Не отправляем на index.html
-          // setTimeout(() => {
-          //   window.location.href = 'thanks.html';
-          // }, 1000);
+          // Без редиректа
         };
       }
     }
