@@ -843,81 +843,113 @@ document.addEventListener('DOMContentLoaded', () => {
       throw new Error(data.description);
     }
   }
-
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Универсальная функция маски и очистки
+  // =========================
+  // УНИВЕРСАЛЬНАЯ функция маски
+  // =========================
   function applyPhoneMask(input) {
-  // создаем маску
-  const mask = IMask(input, {
-    mask: '+{7} (000) 000-00-00',
-    lazy: true,
-    placeholderChar: '_',
-  });
-
-  // стартовое состояние плейсхолдера
-  input.style.color = '#838383';
-
-  input.addEventListener('focus', () => {
-    mask.updateOptions({
-      lazy: false,
-      placeholderChar: ' ',
+    const mask = IMask(input, {
+      mask: '+{7} (000) 000-00-00',
+      lazy: true,
+      placeholderChar: '_',
     });
-    input.style.color = '#1a1a1a';
-  });
 
-  input.addEventListener('blur', () => {
-    if (!mask.unmaskedValue) {
-      mask.updateOptions({
-        lazy: true,
-        placeholderChar: '_',
-      });
-      input.style.color = '#838383';
-    } else {
+    input.style.color = '#838383';
+
+    // =========================
+    // Нормализация вводимого номера
+    // =========================
+    function normalizeKzPhone(raw) {
+      let digits = raw.replace(/\D/g, '');
+      if (digits.startsWith('8')) {
+        digits = digits.slice(1);
+      } else if (digits.startsWith('7')) {
+        digits = digits.slice(1);
+      }
+      if (digits.length > 10) {
+        digits = digits.slice(-10);
+      }
+      return digits;
+    }
+
+    // форматируем в маску
+    function formatKzPhone(digits) {
+      const part1 = digits.slice(0, 3);
+      const part2 = digits.slice(3, 6);
+      const part3 = digits.slice(6, 8);
+      const part4 = digits.slice(8, 10);
+      return `+7 (${part1}) ${part2}-${part3}-${part4}`;
+    }
+
+    // focus / blur
+    input.addEventListener('focus', () => {
+      mask.updateOptions({ lazy: false, placeholderChar: ' ' });
       input.style.color = '#1a1a1a';
+    });
+
+    input.addEventListener('blur', () => {
+      if (!mask.unmaskedValue) {
+        mask.updateOptions({ lazy: true, placeholderChar: '_' });
+        input.style.color = '#838383';
+      } else {
+        input.style.color = '#1a1a1a';
+      }
+    });
+
+    // paste
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      let pasted = (e.clipboardData || window.clipboardData).getData('text');
+      let cleaned = normalizeKzPhone(pasted);
+      if (cleaned.length > 0) {
+        input.value = formatKzPhone(cleaned);
+        mask.updateValue();
+      }
+    });
+
+    // input
+    input.addEventListener('input', () => {
+      let raw = input.value;
+      let cleaned = normalizeKzPhone(raw);
+      if (cleaned.length === 10) {
+        input.value = formatKzPhone(cleaned);
+        mask.updateValue();
+      }
+    });
+
+    return mask;
+  }
+
+  // =========================
+  // Универсальная проверка формы
+  // =========================
+  function validateAndGetPhone(mask) {
+    const unmasked = mask.unmaskedValue || "";
+    if (unmasked.length !== 10) {
+      return null;
     }
-  });
+    return '+7' + unmasked;
+  }
 
-  // Обработка вставки
-  input.addEventListener('paste', (e) => {
-    e.preventDefault();
-    let pasted = (e.clipboardData || window.clipboardData).getData('text');
-    let cleaned = pasted.replace(/\D/g, '').slice(-10);
-    if (cleaned.length > 0) {
-      input.value = `+7 (${cleaned.slice(0,3)}) ${cleaned.slice(3,6)}-${cleaned.slice(6,8)}-${cleaned.slice(8,10)}`;
-      mask.updateValue();
-    }
-  });
-
-  // Обработка ввода (устойчиво под iOS)
-  input.addEventListener('input', () => {
-    // просто синхронизация маски
-    mask.updateValue();
-  });
-
-  return mask;
-}
-
-  // Применяем к форме под героем
-  const mainForm = document.getElementById('tg-form');
-  if (mainForm) {
-    const mainPhone = document.getElementById('phone');
-    const mainName = document.getElementById('name');
-
-    // Применяем маску
-    const mainMask = applyPhoneMask(mainPhone);
-
-    // Отправка формы
-    mainForm.addEventListener('submit', async (e) => {
+  // =========================
+  // Универсальная функция обработки формы
+  // =========================
+  async function handleFormSubmit(form, nameInput, phoneInput, mask, extraAnswers = '') {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      if (!mainName.value.trim() || mainMask.unmaskedValue.length !== 10) {
+      const name = nameInput.value.trim();
+      const phone = validateAndGetPhone(mask);
+
+      if (!name || !phone) {
         alert('Пожалуйста, заполните все поля корректно!');
         return;
       }
 
-      await sendLeadToTelegram(mainName.value.trim(), '+7' + mainMask.unmaskedValue);
+      await sendLeadToTelegram(name, phone, extraAnswers);
       if (typeof launchEmojiConfetti === 'function') {
         launchEmojiConfetti();
       }
@@ -926,6 +958,67 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'thanks.html';
       }, 1000);
     });
+  }
+
+  // =========================
+  // Главная форма под героем
+  // =========================
+  const mainForm = document.getElementById('tg-form');
+  if (mainForm) {
+    const mainPhone = document.getElementById('phone');
+    const mainName = document.getElementById('name');
+    const mainMask = applyPhoneMask(mainPhone);
+
+    handleFormSubmit(mainForm, mainName, mainPhone, mainMask);
+  }
+
+  // =========================
+  // Наблюдатель для появления формы в quiz
+  // =========================
+  const quizObserver = new MutationObserver(() => {
+    const quizPhone = document.getElementById('quiz-phone');
+    const quizName = document.getElementById('quiz-name');
+    const quizButton = document.querySelector('.quiz__submit');
+
+    if (quizPhone && !quizPhone.dataset.masked) {
+      const quizMask = applyPhoneMask(quizPhone);
+      quizPhone.dataset.masked = "true";
+
+      if (quizButton) {
+        // заменим текст и стиль кнопки
+        quizButton.textContent = "Узнать результаты";
+        quizButton.classList.add('quiz__submit--blue');
+
+        quizButton.addEventListener('click', async (e) => {
+          e.preventDefault();
+
+          const name = quizName.value.trim();
+          const phone = validateAndGetPhone(quizMask);
+
+          if (!name || !phone) {
+            alert('Пожалуйста, заполните все поля корректно!');
+            return;
+          }
+
+          let answersText = '';
+          if (window.userAnswers && Array.isArray(userAnswers)) {
+            answersText = userAnswers.map((item, index) =>
+              `${index + 1}. ${item.question}\n➡️ ${item.answer}`
+            ).join('\n\n');
+          }
+
+          await sendLeadToTelegram(name, phone, answersText);
+          if (typeof launchEmojiConfetti === 'function') {
+            launchEmojiConfetti();
+          }
+        });
+      }
+    }
+  });
+
+  quizObserver.observe(document.body, { childList: true, subtree: true });
+
+});
 </script>
 <script>
 // Скролл по якорю
