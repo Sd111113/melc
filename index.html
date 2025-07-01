@@ -882,34 +882,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     return mask;
   }
+ function validateAndGetPhone(mask, input) {
+  mask.updateValue(); // force sync from input
+  let unmasked = mask.unmaskedValue || "";
+  unmasked = unmasked.replace(/\D/g, '');
+  return unmasked.length === 10 ? '+7' + unmasked : null;
+}
 
-  // Проверка телефона
-  function validateAndGetPhone(mask) {
-    const unmasked = mask.unmaskedValue || "";
-    return unmasked.length === 10 ? '+7' + unmasked : null;
-  }
+async function handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers = '') {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  // Обработка сабмита
-  async function handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers = '') {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    const name = nameInput.value.trim();
+    const phone = validateAndGetPhone(mask, phoneInput);
 
-      const name = nameInput.value.trim();
-      const phone = validateAndGetPhone(mask);
+    if (!name || !phone) {
+      alert('Пожалуйста, заполните все поля корректно!');
+      return;
+    }
 
-      if (!name || !phone) {
-        alert('Пожалуйста, заполните все поля корректно!');
-        return;
-      }
+    await sendLeadToTelegram(name, phone, extraAnswers);
+    if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
 
-      await sendLeadToTelegram(name, phone, extraAnswers);
-      if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
-
-      setTimeout(() => {
-        window.location.href = 'thanks.html';
-      }, 1000);
-    });
-  }
+    setTimeout(() => {
+      window.location.href = 'thanks.html';
+    }, 1000);
+  });
+}
 
   // =========================
   // Подключаем маску и отправку к главной форме
