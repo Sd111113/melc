@@ -877,41 +877,34 @@ let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Те�
     }
   }
 </script>
+<script src="https://unpkg.com/imask"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ===============================
-  // Только для вставки! Умная очистка
-  // ===============================
-  function normalizeKazakhstanPhoneOnPaste(raw) {
+  // ================
+  // Формат красивый
+  // ================
+  function formatPhonePretty(phone) {
+    let digits = phone.replace(/\D/g, '');
+    if (digits.length !== 11 || !digits.startsWith('7')) return phone;
+
+    return `+7 (${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7,9)}-${digits.slice(9,11)}`;
+  }
+
+  // =================
+  // Paste-normalizer
+  // =================
+  function normalizeOnPaste(raw) {
     let digits = raw.replace(/\D/g, '');
-
-    // Если начинается на 8 → меняем на 7
-    if (digits.startsWith('8')) {
-      digits = '7' + digits.slice(1);
-    }
-
-    // Если начинается на 7 и длиннее → оставляем последние 11 (без лишнего +7 в начале)
-    if (digits.startsWith('7') && digits.length > 11) {
-      digits = digits.slice(-11);
-    }
-
-    // оставляем последние 11, если вдруг лишнее
-    if (digits.length > 11) {
-      digits = digits.slice(-11);
-    }
-
-    // В маске мы заполняем только 10 цифр после +7 → убираем первую "7" если есть
-    if (digits.startsWith('7') && digits.length === 11) {
-      digits = digits.slice(1);
-    }
-
+    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+    if (digits.length > 11) digits = digits.slice(-11);
+    if (digits.startsWith('7') && digits.length === 11) return digits.slice(1);
     return digits;
   }
 
-  // ===============================
-  // Маска с умной вставкой (только на paste)
-  // ===============================
+  // ====================
+  // IMask with smart paste
+  // ====================
   function applyPhoneMask(input) {
     const mask = IMask(input, {
       mask: '+{7} (000) 000-00-00',
@@ -919,16 +912,13 @@ document.addEventListener('DOMContentLoaded', () => {
       placeholderChar: '_',
     });
 
-    // начальный цвет серый
     input.style.color = '#838383';
 
-    // фокус
     input.addEventListener('focus', () => {
       mask.updateOptions({ lazy: false, placeholderChar: ' ' });
       input.style.color = '#1a1a1a';
     });
 
-    // блюр
     input.addEventListener('blur', () => {
       if (!mask.unmaskedValue) {
         mask.updateOptions({ lazy: true, placeholderChar: '_' });
@@ -938,40 +928,59 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // умная вставка
     input.addEventListener('paste', (e) => {
       e.preventDefault();
       let pasted = (e.clipboardData || window.clipboardData).getData('text') || '';
-      let normalized = normalizeKazakhstanPhoneOnPaste(pasted);
-
-      if (normalized.length === 10) {
-        mask.unmaskedValue = normalized;
-      } else {
-        alert('При вставке номер должен содержать ровно 10 цифр после +7.');
-      }
+      let normalized = normalizeOnPaste(pasted);
+      if (normalized.length === 10) mask.unmaskedValue = normalized;
     });
 
     return mask;
   }
 
-  // ===============================
-  // Проверка перед отправкой
-  // ===============================
+  // =====================
+  // Проверка на отправку
+  // =====================
   function validateAndGetPhone(mask) {
     mask.updateValue();
-    let unmasked = mask.unmaskedValue.replace(/\D/g, '');
-
-    // Нужны ровно 11 цифр (начиная с 7) для отправки
-    if (unmasked.length === 11 && unmasked.startsWith('7')) {
-      return '+' + unmasked;
+    let digits = mask.unmaskedValue.replace(/\D/g, '');
+    if (digits.length === 10) {
+      return '+7' + digits;
     }
-
     return null;
   }
 
-  // ===============================
+  // =====================
+  // Отправка в Telegram
+  // =====================
+  async function sendLeadToTelegram(name, phone, answersText = '') {
+    let prettyPhone = formatPhonePretty(phone);
+    let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${prettyPhone}`;
+    if (answersText) {
+      message += `\n\n📝 Ответы на вопросы:\n${answersText}`;
+    }
+
+    const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!data.ok) {
+      alert('Ошибка отправки в Telegram:\n' + JSON.stringify(data, null, 2));
+      throw new Error(data.description);
+    }
+  }
+
+  // =========================
+  // TELEGRAM SETTINGS
+  // =========================
+  const TELEGRAM_SETTINGS = {
+    token: '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE',
+    chat_id: '-1002856948789'
+  };
+
+  // =====================
   // Отправка формы
-  // ===============================
+  // =====================
   async function handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers = '') {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -983,22 +992,6 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Пожалуйста, заполните все поля корректно!');
         return;
       }
-function formatPhonePretty(phone) {
-  // Убираем всё кроме цифр
-  let digits = phone.replace(/\D/g, '');
-  
-  // Проверка на длину
-  if (digits.length !== 11 || !digits.startsWith('7')) {
-    return phone; // вернем как есть если что-то не то
-  }
-
-  const code = digits.slice(1, 4);
-  const part1 = digits.slice(4, 7);
-  const part2 = digits.slice(7, 9);
-  const part3 = digits.slice(9, 11);
-
-  return `+7 (${code}) ${part1}-${part2}-${part3}`;
-}
 
       await sendLeadToTelegram(name, phone, extraAnswers);
       if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
@@ -1009,9 +1002,9 @@ function formatPhonePretty(phone) {
     });
   }
 
-  // ===============================
-  // Подключение к главной форме
-  // ===============================
+  // ================================
+  // Применить к главной форме
+  // ================================
   const mainForm = document.getElementById('tg-form');
   if (mainForm) {
     const mainPhone = document.getElementById('phone');
@@ -1020,9 +1013,9 @@ function formatPhonePretty(phone) {
     handleFormSubmission(mainForm, mainName, mainPhone, mainMask);
   }
 
-  // ===============================
-  // Подключение к quiz форме
-  // ===============================
+  // ================================
+  // Применить к quiz форме
+  // ================================
   const quizObserver = new MutationObserver(() => {
     const quizPhone = document.getElementById('quiz-phone');
     const quizName = document.getElementById('quiz-name');
@@ -1053,22 +1046,6 @@ function formatPhonePretty(phone) {
               `${index + 1}. ${item.question}\n➡️ ${item.answer}`
             ).join('\n\n');
           }
-function formatPhonePretty(phone) {
-  // Убираем всё кроме цифр
-  let digits = phone.replace(/\D/g, '');
-  
-  // Проверка на длину
-  if (digits.length !== 11 || !digits.startsWith('7')) {
-    return phone; // вернем как есть если что-то не то
-  }
-
-  const code = digits.slice(1, 4);
-  const part1 = digits.slice(4, 7);
-  const part2 = digits.slice(7, 9);
-  const part3 = digits.slice(9, 11);
-
-  return `+7 (${code}) ${part1}-${part2}-${part3}`;
-}
 
           await sendLeadToTelegram(name, phone, answersText);
           if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
