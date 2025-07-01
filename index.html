@@ -879,133 +879,124 @@ let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Те�
 </script>
 <script src="https://unpkg.com/imask"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+// Умное форматирование красивого номера
+function formatPhonePretty(phone) {
+  let digits = phone.replace(/\D/g, '');
+  if (digits.length !== 11 || !digits.startsWith('7')) return phone;
+  return `+7 (${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7,9)}-${digits.slice(9,11)}`;
+}
 
-  // ================
-  // Формат красивый
-  // ================
-  function formatPhonePretty(phone) {
-    let digits = phone.replace(/\D/g, '');
-    if (digits.length !== 11 || !digits.startsWith('7')) return phone;
+// Paste-нормализация только при вставке
+function normalizeOnPaste(raw) {
+  let digits = raw.replace(/\D/g, '');
+  if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+  if (digits.length > 11) digits = digits.slice(-11);
+  if (digits.startsWith('7') && digits.length === 11) return digits.slice(1);
+  return digits;
+}
 
-    return `+7 (${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7,9)}-${digits.slice(9,11)}`;
-  }
+// Маска для инпута с умной вставкой
+function applyPhoneMask(input) {
+  const mask = IMask(input, {
+    mask: '+{7} (000) 000-00-00',
+    lazy: true,
+    placeholderChar: '_',
+  });
 
-  // =================
-  // Paste-normalizer
-  // =================
-  function normalizeOnPaste(raw) {
-    let digits = raw.replace(/\D/g, '');
-    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-    if (digits.length > 11) digits = digits.slice(-11);
-    if (digits.startsWith('7') && digits.length === 11) return digits.slice(1);
-    return digits;
-  }
+  input.style.color = '#838383';
 
-  // ====================
-  // IMask with smart paste
-  // ====================
-  function applyPhoneMask(input) {
-    const mask = IMask(input, {
-      mask: '+{7} (000) 000-00-00',
-      lazy: true,
-      placeholderChar: '_',
-    });
+  input.addEventListener('focus', () => {
+    mask.updateOptions({ lazy: false, placeholderChar: ' ' });
+    input.style.color = '#1a1a1a';
+  });
 
-    input.style.color = '#838383';
-
-    input.addEventListener('focus', () => {
-      mask.updateOptions({ lazy: false, placeholderChar: ' ' });
+  input.addEventListener('blur', () => {
+    if (!mask.unmaskedValue) {
+      mask.updateOptions({ lazy: true, placeholderChar: '_' });
+      input.style.color = '#838383';
+    } else {
       input.style.color = '#1a1a1a';
-    });
-
-    input.addEventListener('blur', () => {
-      if (!mask.unmaskedValue) {
-        mask.updateOptions({ lazy: true, placeholderChar: '_' });
-        input.style.color = '#838383';
-      } else {
-        input.style.color = '#1a1a1a';
-      }
-    });
-
-    input.addEventListener('paste', (e) => {
-      e.preventDefault();
-      let pasted = (e.clipboardData || window.clipboardData).getData('text') || '';
-      let normalized = normalizeOnPaste(pasted);
-      if (normalized.length === 10) mask.unmaskedValue = normalized;
-    });
-
-    return mask;
-  }
-
-  // =====================
-  // Проверка на отправку
-  // =====================
-  function validateAndGetPhone(mask) {
-    mask.updateValue();
-    let digits = mask.unmaskedValue.replace(/\D/g, '');
-    if (digits.length === 10) {
-      return '+7' + digits;
     }
-    return null;
-  }
+  });
 
-  // =====================
-  // Отправка в Telegram
-  // =====================
-  async function sendLeadToTelegram(name, phone, answersText = '') {
-    let prettyPhone = formatPhonePretty(phone);
-    let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${prettyPhone}`;
-    if (answersText) {
-      message += `\n\n📝 Ответы на вопросы:\n${answersText}`;
+  input.addEventListener('paste', (e) => {
+    e.preventDefault();
+    let pasted = (e.clipboardData || window.clipboardData).getData('text') || '';
+    let normalized = normalizeOnPaste(pasted);
+    if (normalized.length === 10) mask.unmaskedValue = normalized;
+  });
+
+  return mask;
+}
+
+// Минимальная проверка перед отправкой
+function validateAndGetPhone(mask) {
+  mask.updateValue();
+  let digits = mask.unmaskedValue.replace(/\D/g, '');
+  if (digits.length === 10) {
+    return '+7' + digits;
+  }
+  return null;
+}
+
+// Конфетти эффект
+function launchEmojiConfetti() {
+  if (typeof confetti === 'undefined') return;
+  const emojis = ['🎉', '🇺🇸', '✨', '❤️', '🇬🇧'];
+  const emojiShapes = emojis.map(e => confetti.shapeFromText({ text: e, scalar: 1.8 }));
+  const count = 200;
+  const defaults = { origin: { y: 0.7 }, gravity: 0.85, decay: 0.9, shapes: emojiShapes };
+  function fire(ratio, opts) {
+    confetti({ ...defaults, ...opts, particleCount: Math.floor(count * ratio) });
+  }
+  fire(0.25, { spread: 25, startVelocity: 60 });
+  fire(0.2, { spread: 45, startVelocity: 50 });
+  fire(0.35, { spread: 70, decay: 0.91, scalar: 0.9 });
+  fire(0.1, { spread: 90, startVelocity: 35, decay: 0.92, scalar: 1.2 });
+  fire(0.1, { spread: 90, startVelocity: 50 });
+}
+
+// Отправка в Telegram
+async function sendLeadToTelegram(name, phone, answersText = '') {
+  const prettyPhone = formatPhonePretty(phone);
+  const message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${prettyPhone}` + (answersText ? `\n\n📝 Ответы на вопросы:\n${answersText}` : '');
+  const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  if (!data.ok) {
+    alert('Ошибка отправки в Telegram:\n' + JSON.stringify(data, null, 2));
+    throw new Error(data.description);
+  }
+}
+
+// Основной обработчик формы
+async function handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers = '') {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = nameInput.value.trim();
+    const phone = validateAndGetPhone(mask);
+
+    if (!name || !phone) {
+      alert('Пожалуйста, заполните все поля корректно!');
+      return;
     }
 
-    const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
-    const response = await fetch(url);
-    const data = await response.json();
+    launchEmojiConfetti();
 
-    if (!data.ok) {
-      alert('Ошибка отправки в Telegram:\n' + JSON.stringify(data, null, 2));
-      throw new Error(data.description);
+    try {
+      await sendLeadToTelegram(name, phone, extraAnswers);
+    } catch (err) {
+      console.error(err);
     }
-  }
 
-  // =========================
-  // TELEGRAM SETTINGS
-  // =========================
-  const TELEGRAM_SETTINGS = {
-    token: '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE',
-    chat_id: '-1002856948789'
-  };
+    setTimeout(() => {
+      window.location.href = 'thanks.html';
+    }, 1000);
+  });
+}
 
-  // =====================
-  // Отправка формы
-  // =====================
-  async function handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers = '') {
-    form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const name = nameInput.value.trim();
-  const phone = validateAndGetPhone(mask);
-
-  if (!name || !phone) {
-    alert('Пожалуйста, заполните все поля корректно!');
-    return;
-  }
-
-  if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
-
-  await sendLeadToTelegram(name, phone, extraAnswers);
-
-  setTimeout(() => {
-    window.location.href = 'thanks.html';
-  }, 1000);
-});
-  }
-
-  // ================================
-  // Применить к главной форме
-  // ================================
+// После загрузки
+document.addEventListener('DOMContentLoaded', () => {
   const mainForm = document.getElementById('tg-form');
   if (mainForm) {
     const mainPhone = document.getElementById('phone');
@@ -1014,9 +1005,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleFormSubmission(mainForm, mainName, mainPhone, mainMask);
   }
 
-  // ================================
-  // Применить к quiz форме
-  // ================================
+  // Для quiz
   const quizObserver = new MutationObserver(() => {
     const quizPhone = document.getElementById('quiz-phone');
     const quizName = document.getElementById('quiz-name');
@@ -1032,7 +1021,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         quizButton.addEventListener('click', async (e) => {
           e.preventDefault();
-
           const name = quizName.value.trim();
           const phone = validateAndGetPhone(quizMask);
 
@@ -1041,6 +1029,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
           }
 
+          launchEmojiConfetti();
+
           let answersText = '';
           if (window.userAnswers && Array.isArray(window.userAnswers)) {
             answersText = window.userAnswers.map((item, index) =>
@@ -1048,32 +1038,18 @@ document.addEventListener('DOMContentLoaded', () => {
             ).join('\n\n');
           }
 
-          await sendLeadToTelegram(name, phone, answersText);
-          if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
-await sendLeadToTelegram(name, phone, answersText);
+          try {
+            await sendLeadToTelegram(name, phone, answersText);
+          } catch (err) {
+            console.error(err);
+          }
         });
       }
     }
   });
 
   quizObserver.observe(document.body, { childList: true, subtree: true });
-
 });
-</script>
-<script>
-// Скролл по якорю
-if (window.location.hash) {
-  const id = window.location.hash.substring(1);
-  const target = document.getElementById(id);
-
-  if (target) {
-    setTimeout(() => {
-      const yOffset = -80;
-      const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }, 200);
-  }
-}
 </script>
 </body>
 </html>
