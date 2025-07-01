@@ -644,6 +644,20 @@ function launchEmojiConfetti() {
   cursor: pointer;
   font-family: 'Gilroy Semibold', sans-serif;
 }
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.quiz__answer {
+  animation: slideInRight 0.4s ease forwards;
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
@@ -746,7 +760,7 @@ function renderQuizStep() {
         setTimeout(() => {
           renderQuizStep();
           isBlocked = false;
-        }, 800);
+        }, 500);
       });
       answersEl.appendChild(label);
     });
@@ -769,7 +783,14 @@ function renderQuizStep() {
 
     const submitBtn = document.createElement('button');
     submitBtn.className = 'quiz__submit';
-    submitBtn.textContent = 'ПОЛУЧИТЬ 1 БЕСПЛАТНЫЙ УРОК';
+    submitBtn.textContent = 'УЗНАТЬ РЕЗУЛЬТАТЫ';
+
+    answersEl.appendChild(nameInput);
+    answersEl.appendChild(phoneInput);
+    answersEl.appendChild(submitBtn);
+
+    // Маска телефона
+    applyPhoneMask(phoneInput);
 
     submitBtn.addEventListener('click', async (e) => {
       e.preventDefault();
@@ -779,18 +800,16 @@ function renderQuizStep() {
         alert('Пожалуйста, заполните все поля!');
         return;
       }
+
       let answersText = userAnswers.map((item, index) =>
         `${index + 1}. ${item.question}\n➡️ ${item.answer}`
       ).join('\n\n');
+
       await sendLeadToTelegram(name, phone, answersText);
       launchEmojiConfetti();
       currentStep++;
       renderQuizStep();
     });
-
-    answersEl.appendChild(nameInput);
-    answersEl.appendChild(phoneInput);
-    answersEl.appendChild(submitBtn);
   }
 
   else if (step.type === 'thankyou') {
