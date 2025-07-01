@@ -983,23 +983,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // =====================
   async function handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers = '') {
     form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  e.preventDefault();
 
-      const name = nameInput.value.trim();
-      const phone = validateAndGetPhone(mask);
+  const name = nameInput.value.trim();
+  const phone = validateAndGetPhone(mask);
 
-      if (!name || !phone) {
-        alert('Пожалуйста, заполните все поля корректно!');
-        return;
-      }
+  if (!name || !phone) {
+    alert('Пожалуйста, заполните все поля корректно!');
+    return;
+  }
 
-      await sendLeadToTelegram(name, phone, extraAnswers);
-      if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
+  if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
 
-      setTimeout(() => {
-        window.location.href = 'thanks.html';
-      }, 1000);
-    });
+  await sendLeadToTelegram(name, phone, extraAnswers);
+
+  setTimeout(() => {
+    window.location.href = 'thanks.html';
+  }, 1000);
+});
   }
 
   // ================================
@@ -1049,6 +1050,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           await sendLeadToTelegram(name, phone, answersText);
           if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
+await sendLeadToTelegram(name, phone, answersText);
         });
       }
     }
