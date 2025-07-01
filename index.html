@@ -270,7 +270,7 @@ font-weight: 400;
       <h2>Запишитесь на 1 бесплатный урок<br>+консультация</h2>
       <form id="tg-form">
         <input type="text" id="name" placeholder="Имя" required />
-        <input type="tel" id="phone" placeholder="+7 (___) ___-__-__" required />
+<input type="text" inputmode="tel" id="phone" placeholder="+7 (___) ___-__-__" required />
         <button type="submit">Хочу на 1 бесплатный урок</button>
       </form>
     </div>
@@ -849,68 +849,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Универсальная функция маски и очистки
   function applyPhoneMask(input) {
-    const mask = IMask(input, {
-      mask: '+{7} (000) 000-00-00',
-      lazy: true,
-      placeholderChar: '_',
+  // создаем маску
+  const mask = IMask(input, {
+    mask: '+{7} (000) 000-00-00',
+    lazy: true,
+    placeholderChar: '_',
+  });
+
+  // стартовое состояние плейсхолдера
+  input.style.color = '#838383';
+
+  input.addEventListener('focus', () => {
+    mask.updateOptions({
+      lazy: false,
+      placeholderChar: ' ',
     });
+    input.style.color = '#1a1a1a';
+  });
 
-    input.style.color = '#838383';
-
-    function normalizeKzPhone(raw) {
-      let digits = raw.replace(/\D/g, '');
-      if (digits.startsWith('8') || digits.startsWith('7')) {
-        digits = digits.slice(1);
-      }
-      if (digits.length > 10) {
-        digits = digits.slice(-10);
-      }
-      return digits;
-    }
-
-    function formatKzPhone(digits) {
-      const part1 = digits.slice(0, 3);
-      const part2 = digits.slice(3, 6);
-      const part3 = digits.slice(6, 8);
-      const part4 = digits.slice(8, 10);
-      return `+7 (${part1}) ${part2}-${part3}-${part4}`;
-    }
-
-    input.addEventListener('focus', () => {
-      mask.updateOptions({ lazy: false, placeholderChar: ' ' });
+  input.addEventListener('blur', () => {
+    if (!mask.unmaskedValue) {
+      mask.updateOptions({
+        lazy: true,
+        placeholderChar: '_',
+      });
+      input.style.color = '#838383';
+    } else {
       input.style.color = '#1a1a1a';
-    });
+    }
+  });
 
-    input.addEventListener('blur', () => {
-      if (!mask.unmaskedValue) {
-        mask.updateOptions({ lazy: true, placeholderChar: '_' });
-        input.style.color = '#838383';
-      } else {
-        input.style.color = '#1a1a1a';
-      }
-    });
+  // Обработка вставки
+  input.addEventListener('paste', (e) => {
+    e.preventDefault();
+    let pasted = (e.clipboardData || window.clipboardData).getData('text');
+    let cleaned = pasted.replace(/\D/g, '').slice(-10);
+    if (cleaned.length > 0) {
+      input.value = `+7 (${cleaned.slice(0,3)}) ${cleaned.slice(3,6)}-${cleaned.slice(6,8)}-${cleaned.slice(8,10)}`;
+      mask.updateValue();
+    }
+  });
 
-    input.addEventListener('paste', (e) => {
-      e.preventDefault();
-      let pasted = (e.clipboardData || window.clipboardData).getData('text');
-      let cleaned = normalizeKzPhone(pasted);
-      if (cleaned.length > 0) {
-        input.value = formatKzPhone(cleaned);
-        mask.updateValue();
-      }
-    });
+  // Обработка ввода (устойчиво под iOS)
+  input.addEventListener('input', () => {
+    // просто синхронизация маски
+    mask.updateValue();
+  });
 
-    input.addEventListener('input', () => {
-      let raw = input.value;
-      let cleaned = normalizeKzPhone(raw);
-      if (cleaned.length === 10) {
-        input.value = formatKzPhone(cleaned);
-        mask.updateValue();
-      }
-    });
-
-    return mask;
-  }
+  return mask;
+}
 
   // Применяем к форме под героем
   const mainForm = document.getElementById('tg-form');
