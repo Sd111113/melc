@@ -420,8 +420,6 @@ function renderQuizStep() {
         label.innerHTML = `<input type="radio"><span class="quiz__radio"></span>${answer}`;
         label.addEventListener('click', () => {
           userAnswers.push({ question: step.text, answer: answer });
-          currentStep++;
-          renderQuizStep();
         });
         answersEl.appendChild(label);
       });
@@ -492,10 +490,6 @@ function renderQuizStep() {
   if (typeof launchEmojiConfetti === 'function') {
     launchEmojiConfetti();
   }
-
-  // Переход на экран спасибо
-  currentStep++;
-  renderQuizStep();
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
@@ -526,9 +520,6 @@ function launchEmojiConfetti() {
   fire(0.1, { spread: 90, startVelocity: 35, decay: 0.92, scalar: 1.2 });
   fire(0.1, { spread: 90, startVelocity: 50 });
 }
-</script>
-<script>
-window.addEventListener('DOMContentLoaded', renderQuizStep);
 </script>
 <style>
  .consultation {
@@ -1032,7 +1023,6 @@ renderQuizStep();
   });
 
   quizObserver.observe(document.body, { childList: true, subtree: true });
-renderQuizStep();
 });
 </script>
 <script>
