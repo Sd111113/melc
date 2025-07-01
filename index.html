@@ -853,17 +853,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function normalizeKazakhstanPhone(raw) {
     let digits = raw.replace(/\D/g, '');
 
-    // Если начинается на 8 (замена на 7)
+    // Удаляем ведущие +7 или 8
     if (digits.startsWith('8')) {
-      digits = '7' + digits.slice(1);
+      digits = digits.slice(1);
+    } else if (digits.startsWith('7')) {
+      digits = digits.slice(1);
     }
 
-    // Если начинается на 77 или 7 и >10 цифр
-    if (digits.startsWith('7') && digits.length > 10) {
-      digits = digits.slice(-10);
-    }
-
-    // Если длина всё ещё больше 10, оставляем последние 10
+    // Оставляем последние 10 цифр
     if (digits.length > 10) {
       digits = digits.slice(-10);
     }
@@ -884,13 +881,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Начальный серый цвет
     input.style.color = '#838383';
 
-    // Фокус: черный цвет и раскрытая маска
+    // Фокус
     input.addEventListener('focus', () => {
       mask.updateOptions({ lazy: false, placeholderChar: ' ' });
       input.style.color = '#1a1a1a';
     });
 
-    // Блюр: серый если пусто
+    // Блюр
     input.addEventListener('blur', () => {
       if (!mask.unmaskedValue) {
         mask.updateOptions({ lazy: true, placeholderChar: '_' });
@@ -909,7 +906,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (normalized.length === 10) {
         mask.unmaskedValue = normalized;
       } else {
-        alert('Пожалуйста, вставьте корректный номер с 10 цифрами после +7.');
+        alert('Номер телефона должен содержать 10 цифр после +7.');
       }
     });
 
@@ -920,14 +917,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // Проверка перед отправкой
   // ===============================
   function validateAndGetPhone(mask) {
-    mask.updateValue(); 
+    mask.updateValue();
     let digits = mask.unmaskedValue.replace(/\D/g, '');
 
-    if (digits.length !== 10) {
-      return null;
+    // Разрешаем только если ровно 10 цифр
+    if (digits.length === 10) {
+      return '+7' + digits;
     }
 
-    return '+7' + digits;
+    return null;
   }
 
   // ===============================
