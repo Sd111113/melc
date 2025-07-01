@@ -458,7 +458,6 @@ function renderQuizStep() {
         await sendLeadToTelegram(name, phone, answersText);
         launchEmojiConfetti();
         currentStep++;
-        renderQuizStep();
       });
 
       answersEl.appendChild(nameInput);
