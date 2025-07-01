@@ -847,9 +847,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-  // =========================
-  // УНИВЕРСАЛЬНАЯ функция маски
-  // =========================
+  // Универсальная маска
   function applyPhoneMask(input) {
     const mask = IMask(input, {
       mask: '+{7} (000) 000-00-00',
@@ -859,32 +857,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     input.style.color = '#838383';
 
-    // =========================
-    // Нормализация вводимого номера
-    // =========================
-    function normalizeKzPhone(raw) {
-      let digits = raw.replace(/\D/g, '');
-      if (digits.startsWith('8')) {
-        digits = digits.slice(1);
-      } else if (digits.startsWith('7')) {
-        digits = digits.slice(1);
-      }
-      if (digits.length > 10) {
-        digits = digits.slice(-10);
-      }
-      return digits;
-    }
-
-    // форматируем в маску
-    function formatKzPhone(digits) {
-      const part1 = digits.slice(0, 3);
-      const part2 = digits.slice(3, 6);
-      const part3 = digits.slice(6, 8);
-      const part4 = digits.slice(8, 10);
-      return `+7 (${part1}) ${part2}-${part3}-${part4}`;
-    }
-
-    // focus / blur
     input.addEventListener('focus', () => {
       mask.updateOptions({ lazy: false, placeholderChar: ' ' });
       input.style.color = '#1a1a1a';
@@ -899,45 +871,26 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // paste
     input.addEventListener('paste', (e) => {
       e.preventDefault();
-      let pasted = (e.clipboardData || window.clipboardData).getData('text');
-      let cleaned = normalizeKzPhone(pasted);
-      if (cleaned.length > 0) {
-        input.value = formatKzPhone(cleaned);
-        mask.updateValue();
-      }
-    });
-
-    // input
-    input.addEventListener('input', () => {
-      let raw = input.value;
-      let cleaned = normalizeKzPhone(raw);
-      if (cleaned.length === 10) {
-        input.value = formatKzPhone(cleaned);
-        mask.updateValue();
+      let pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+      if (pasted.length >= 10) {
+        pasted = pasted.slice(-10);
+        mask.unmaskedValue = pasted;
       }
     });
 
     return mask;
   }
 
-  // =========================
-  // Универсальная проверка формы
-  // =========================
+  // Проверка телефона
   function validateAndGetPhone(mask) {
     const unmasked = mask.unmaskedValue || "";
-    if (unmasked.length !== 10) {
-      return null;
-    }
-    return '+7' + unmasked;
+    return unmasked.length === 10 ? '+7' + unmasked : null;
   }
 
-  // =========================
-  // Универсальная функция обработки формы
-  // =========================
-  async function handleFormSubmit(form, nameInput, phoneInput, mask, extraAnswers = '') {
+  // Обработка сабмита
+  async function handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers = '') {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -950,9 +903,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       await sendLeadToTelegram(name, phone, extraAnswers);
-      if (typeof launchEmojiConfetti === 'function') {
-        launchEmojiConfetti();
-      }
+      if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
 
       setTimeout(() => {
         window.location.href = 'thanks.html';
@@ -961,19 +912,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================
-  // Главная форма под героем
+  // Подключаем маску и отправку к главной форме
   // =========================
   const mainForm = document.getElementById('tg-form');
   if (mainForm) {
     const mainPhone = document.getElementById('phone');
     const mainName = document.getElementById('name');
     const mainMask = applyPhoneMask(mainPhone);
-
-    handleFormSubmit(mainForm, mainName, mainPhone, mainMask);
+    handleFormSubmission(mainForm, mainName, mainPhone, mainMask);
   }
 
   // =========================
-  // Наблюдатель для появления формы в quiz
+  // Подключаем маску и отправку к quiz форме
   // =========================
   const quizObserver = new MutationObserver(() => {
     const quizPhone = document.getElementById('quiz-phone');
@@ -985,7 +935,6 @@ document.addEventListener('DOMContentLoaded', () => {
       quizPhone.dataset.masked = "true";
 
       if (quizButton) {
-        // заменим текст и стиль кнопки
         quizButton.textContent = "Узнать результаты";
         quizButton.classList.add('quiz__submit--blue');
 
@@ -1001,16 +950,14 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           let answersText = '';
-          if (window.userAnswers && Array.isArray(userAnswers)) {
-            answersText = userAnswers.map((item, index) =>
+          if (window.userAnswers && Array.isArray(window.userAnswers)) {
+            answersText = window.userAnswers.map((item, index) =>
               `${index + 1}. ${item.question}\n➡️ ${item.answer}`
             ).join('\n\n');
           }
 
           await sendLeadToTelegram(name, phone, answersText);
-          if (typeof launchEmojiConfetti === 'function') {
-            launchEmojiConfetti();
-          }
+          if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
         });
       }
     }
