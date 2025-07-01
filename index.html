@@ -1044,23 +1044,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  renderQuizStep();
+// Скролл по якорю
+if (window.location.hash) {
+  const id = window.location.hash.substring(1);
+  const target = document.getElementById(id);
 
-  // Скролл по якорю
-  if (window.location.hash) {
-    const id = window.location.hash.substring(1);
-    const target = document.getElementById(id);
-
-    if (target) {
-      setTimeout(() => {
-        const yOffset = -80;
-        const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }, 200);
-    }
+  if (target) {
+    setTimeout(() => {
+      const yOffset = -80;
+      const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }, 200);
   }
-});
+}
 </script>
 </body>
 </html>
