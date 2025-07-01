@@ -636,49 +636,9 @@ font-weight: 400;
 }
 </style>
 <script>
-  const quizObserver = new MutationObserver(() => {
-    const quizPhone = document.getElementById('quiz-phone');
-    const quizName = document.getElementById('quiz-name');
-    const quizButton = document.querySelector('.quiz__submit');
-
-    if (quizPhone && !quizPhone.dataset.masked) {
-      const quizMask = applyPhoneMask(quizPhone);
-      quizPhone.dataset.masked = "true";
-
-      if (quizButton) {
-        // Синяя кнопка с белым текстом
-        quizButton.textContent = "Узнать результаты";
-        quizButton.classList.add('quiz__submit--blue');
-
-        quizButton.addEventListener('click', async (e) => {
-          e.preventDefault();
-
-          if (!quizName.value.trim() || !quizMask.unmaskedValue) {
-            alert('Пожалуйста, заполните все поля!');
-            return;
-          }
-
-          let answersText = '';
-          if (window.userAnswers && Array.isArray(userAnswers)) {
-            answersText = userAnswers.map((item, index) =>
-              ${index + 1}. ${item.question}\n➡️ ${item.answer}
-            ).join('\n\n');
-          }
-
-          await sendLeadToTelegram(quizName.value.trim(), quizPhone.value.trim(), answersText);
-          if (typeof launchEmojiConfetti === 'function') {
-            launchEmojiConfetti();
-          }
-        });
-      }
-    }
-  });
-
-  quizObserver.observe(document.body, { childList: true, subtree: true });
-});
+document.addEventListener('DOMContentLoaded', () => {
 </script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
   let currentStep = 0;
   const userAnswers = [];
   let isBlocked = false;
