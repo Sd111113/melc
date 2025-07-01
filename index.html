@@ -517,51 +517,54 @@ function launchEmojiConfetti() {
 <style>
 .quiz {
   background: #f4f4f4;
-  padding: 20px 25px;
+  padding: 10px 25px 10px;
 }
 
 .quiz__title {
   font-family: 'Gilroy Bold', sans-serif;
-  font-size: 24px;
+  font-size: 25px;
+  font-weight: 400;
   line-height: 1.3;
   color: #1a1a1a;
-  margin-bottom: 16px;
+  letter-spacing: -0.2px;
+  margin-bottom: 10px;
+  text-align: left;
+  padding-left: 4px;
 }
 
 .quiz__card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background: #ffc7d8;
+  border-radius: 20px;
+  padding: 8px 20px 22px 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 
 .quiz__progress-text {
   font-family: 'Gilroy Medium', sans-serif;
-  font-size: 12px;
+  font-size: 8pt;
   color: #1a1a1a;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .quiz__progress-bar {
   width: 100%;
-  height: 2px;
-  background: #e0e0e0;
-  border-radius: 1px;
+  height: 4px;
+  background: #ffeef3;
+  border-radius: 3px;
   overflow: hidden;
 }
 
 .quiz__progress-fill {
-  background: #2184f9;
+  background: #f88dad;
   height: 100%;
   transition: width 0.3s ease-in-out;
 }
 
 .quiz__question {
   font-family: 'Gilroy Semibold', sans-serif;
-  font-size: 16px;
+  font-size: 13pt;
   color: #1a1a1a;
 }
 
@@ -572,38 +575,135 @@ function launchEmojiConfetti() {
 }
 
 .quiz__answer {
-  background: #f2f2f2;
-  border-radius: 12px;
-  padding: 10px 14px;
+  background: #ffc7d8;
+  border-radius: 16px;
+  border: 1px solid #b18c97;
+  padding: 8px 16px;
   font-family: 'Gilroy Medium', sans-serif;
-  font-size: 14px;
+  font-size: 10pt;
   color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   cursor: pointer;
-  transition: background 0.2s, border 0.2s;
-  border: 1px solid transparent;
+  position: relative;
+  transition: background 0.3s, transform 0.3s;
+  opacity: 0;
+  animation: slideIn 0.4s ease forwards;
 }
 
-.quiz__answer:hover {
-  background: #e8e8e8;
+.quiz__answer.active {
+  background: #f88dad;
+  border-color: #1a1a1a;
 }
 
 .quiz__answer:has(input:checked) {
-  background: #2184f9;
-  color: #fff;
-  border-color: #2184f9;
+  background: #f88dad;
+  border-color: #1a1a1a;
 }
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-.quiz__answer {
-  animation: slideInRight 0.4s ease forwards;
+
+.quiz__answer input[type="radio"] {
+  display: none;
 }
+
+.quiz__radio {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid #1a1a1a;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.quiz__answer:has(input:checked) .quiz__radio::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1a1a1a;
+}
+
+.quiz__input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 18px;
+  font-family: 'Gilroy Regular', sans-serif;
+  color: #1a1a1a;
+  background: #ffeef3;
+  box-sizing: border-box;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.quiz__description {
+  font-family: 'Gilroy Regular', sans-serif;
+  font-size: 14pt;
+  line-height: 1.4;
+  color: #1a1a1a;
+  margin-top: 12px;
+}
+.quiz__submit--blue {
+  width: 100%;
+  padding: 14px;
+  background: #1d2f6f;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Gilroy Semibold', sans-serif;
+}
+}
+  const quizObserver = new MutationObserver(() => {
+    const quizPhone = document.getElementById('quiz-phone');
+    const quizName = document.getElementById('quiz-name');
+    const quizButton = document.querySelector('.quiz__submit');
+
+    if (quizPhone && !quizPhone.dataset.masked) {
+      const quizMask = applyPhoneMask(quizPhone);
+      quizPhone.dataset.masked = "true";
+
+      if (quizButton) {
+        // Синяя кнопка с белым текстом
+        quizButton.textContent = "Узнать результаты";
+        quizButton.classList.add('quiz__submit--blue');
+
+        quizButton.addEventListener('click', async (e) => {
+          e.preventDefault();
+
+          if (!quizName.value.trim() || !quizMask.unmaskedValue) {
+            alert('Пожалуйста, заполните все поля!');
+            return;
+          }
+
+          let answersText = '';
+          if (window.userAnswers && Array.isArray(userAnswers)) {
+            answersText = userAnswers.map((item, index) =>
+              ${index + 1}. ${item.question}\n➡️ ${item.answer}
+            ).join('\n\n');
+          }
+
+          await sendLeadToTelegram(quizName.value.trim(), quizPhone.value.trim(), answersText);
+          if (typeof launchEmojiConfetti === 'function') {
+            launchEmojiConfetti();
+          }
+        });
+      }
+    }
+  });
+
+  quizObserver.observe(document.body, { childList: true, subtree: true });
+});
 </style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script src="https://unpkg.com/imask"></script>
