@@ -660,9 +660,9 @@ function launchEmojiConfetti() {
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
+<script src="https://unpkg.com/imask"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
- let currentStep = 0;
+let currentStep = 0;
 const quizQuestions = [
   {
     type: "question",
@@ -782,14 +782,13 @@ function renderQuizStep() {
     phoneInput.id = 'quiz-phone';
 
     const submitBtn = document.createElement('button');
-    submitBtn.className = 'quiz__submit';
+    submitBtn.className = 'quiz__submit quiz__submit--blue';
     submitBtn.textContent = 'УЗНАТЬ РЕЗУЛЬТАТЫ';
 
     answersEl.appendChild(nameInput);
     answersEl.appendChild(phoneInput);
     answersEl.appendChild(submitBtn);
 
-    // Маска телефона
     applyPhoneMask(phoneInput);
 
     submitBtn.addEventListener('click', async (e) => {
@@ -821,7 +820,6 @@ function renderQuizStep() {
     launchEmojiConfetti();
   }
 }
-
 document.addEventListener('DOMContentLoaded', renderQuizStep);
 
   function launchEmojiConfetti() {
@@ -880,19 +878,73 @@ document.addEventListener('DOMContentLoaded', renderQuizStep);
     }
   }
 
-  // =========================
-  // УНИВЕРСАЛЬНАЯ функция маски
-  // =========================
-  function applyPhoneMask(input) {
-  // создаем маску
+ 
+// =========================
+// УНИВЕРСАЛЬНАЯ функция маски
+// =========================
+function applyPhoneMask(input) {
   const mask = IMask(input, {
     mask: '+{7} (000) 000-00-00',
     lazy: true,
     placeholderChar: '_',
   });
 
-  // стартовое спокойное состояние
   input.style.color = '#838383';
+
+  function normalizeKzPhone(raw) {
+    let digits = raw.replace(/\D/g, '');
+    if (digits.startsWith('8') || digits.startsWith('7')) {
+      digits = digits.slice(1);
+    }
+    if (digits.length > 10) {
+      digits = digits.slice(-10);
+    }
+    return digits;
+  }
+
+  function formatKzPhone(digits) {
+    const part1 = digits.slice(0, 3);
+    const part2 = digits.slice(3, 6);
+    const part3 = digits.slice(6, 8);
+    const part4 = digits.slice(8, 10);
+    return `+7 (${part1}) ${part2}-${part3}-${part4}`;
+  }
+
+  input.addEventListener('focus', () => {
+    mask.updateOptions({ lazy: false, placeholderChar: ' ' });
+    input.style.color = '#1a1a1a';
+  });
+
+  input.addEventListener('blur', () => {
+    if (!mask.unmaskedValue) {
+      mask.updateOptions({ lazy: true, placeholderChar: '_' });
+      input.style.color = '#838383';
+    } else {
+      input.style.color = '#1a1a1a';
+    }
+  });
+
+  input.addEventListener('paste', (e) => {
+    e.preventDefault();
+    let pasted = (e.clipboardData || window.clipboardData).getData('text');
+    let cleaned = normalizeKzPhone(pasted);
+    if (cleaned.length > 0) {
+      input.value = formatKzPhone(cleaned);
+      mask.updateValue();
+    }
+  });
+
+  input.addEventListener('input', () => {
+    let raw = input.value;
+    let cleaned = normalizeKzPhone(raw);
+    if (cleaned.length === 10) {
+      input.value = formatKzPhone(cleaned);
+      mask.updateValue();
+    }
+  });
+
+  return mask;
+}
 
   // =========================
   // Нормализация вводимого номера
