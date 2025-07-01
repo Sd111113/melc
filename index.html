@@ -588,8 +588,11 @@ function launchEmojiConfetti() {
   cursor: pointer;
   position: relative;
   transition: background 0.3s, transform 0.3s;
-  opacity: 0;
-  animation: slideIn 0.4s ease forwards;
+}
+
+.quiz__answer:has(input:checked) {
+  background: #f88dad;
+  border-color: #1a1a1a;
 }
 
 .quiz__answer input[type="radio"] {
@@ -604,11 +607,6 @@ function launchEmojiConfetti() {
   border: 2px solid #1a1a1a;
   flex-shrink: 0;
   position: relative;
-}
-
-.quiz__answer:has(input:checked) {
-  background: #f88dad;
-  border-color: #1a1a1a;
 }
 
 .quiz__answer:has(input:checked) .quiz__radio::after {
@@ -635,19 +633,6 @@ function launchEmojiConfetti() {
   box-sizing: border-box;
 }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(30px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-.quiz__description {
-  font-family: 'Gilroy Regular', sans-serif;
-  font-size: 14pt;
-  line-height: 1.4;
-  color: #1a1a1a;
-  margin-top: 12px;
-}
-
 .quiz__submit {
   width: 100%;
   padding: 14px;
@@ -663,152 +648,162 @@ function launchEmojiConfetti() {
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const quizQuestions = [
-    {
-      type: "question",
-      text: "Изучали Вы ранее английский язык?",
-      answers: [
-        "Да, в школе 🎒",
-        "Да, проходил(а) курсы 🇺🇸",
-        "Да, с репетитором 👩🏻‍🏫",
-        "Нет, только хочу начать 🏁"
-      ]
-    },
-    {
-      type: "question",
-      text: "Для какой цели Вам нужны знания английского языка?",
-      answers: [
-        "Для работы 👷🏻",
-        "Для путешествий 🛩️",
-        "В личных целях 🍿",
-        "Просто хочу знать 💡"
-      ]
-    },
-    {
-      type: "question",
-      text: "Сколько Вы готовы уделять времени изучению?",
-      answers: [
-        "Одно занятие в неделю 🕐",
-        "Два занятия в неделю 🕑",
-        "Три занятия в неделю 🕒",
-        "Четыре занятия в неделю и больше ♾️"
-      ]
-    },
-    {
-      type: "question",
-      text: "Выберите то, что больше подходит для Вас:",
-      answers: [
-        "Я понимаю речь, но сам(а) говорить не могу 💡",
-        "Умею только читать, на слух не воспринимаю 📕",
-        "С трудом, но могу говорить на английском 🗣️",
-        "Не умею читать и не умею говорить, но хочу научиться 🔥"
-      ]
-    },
-    {
-      type: "question",
-      text: "Какое время Вам подходит для обучения?",
-      answers: [
-        "Утро 🌅",
-        "День 🏙️",
-        "Вечер 🌆"
-      ]
-    },
-    {
-      type: "form"
-    },
-    {
-      type: "thankyou",
-      text: "Спасибо за прохождение нашего Quiz!",
-      description: "Мы определим ваш уровень на нашем бесплатном пробном уроке. Скоро наш менеджер свяжется и подберет время!"
-    }
-  ];
-
-  let currentStep = 0;
-  const totalSteps = quizQuestions.length;
-  let userAnswers = [];
-
-  function updateProgress() {
-    const progressText = document.getElementById('quiz-progress-text');
-    const progressFill = document.getElementById('quiz-progress-fill');
-    const percent = Math.round((currentStep) / (totalSteps - 1) * 100);
-    progressText.textContent = `Готово: ${percent}%`;
-    progressFill.style.width = `${percent}%`;
+ let currentStep = 0;
+const quizQuestions = [
+  {
+    type: "question",
+    text: "Изучали Вы ранее английский язык?",
+    answers: [
+      "Да, в школе 🎒",
+      "Да, проходил(а) курсы 🇺🇸",
+      "Да, с репетитором 👩🏻‍🏫",
+      "Нет, только хочу начать 🏁"
+    ]
+  },
+  {
+    type: "question",
+    text: "Для какой цели Вам нужны знания английского языка?",
+    answers: [
+      "Для работы 👷🏻",
+      "Для путешествий 🛩️",
+      "В личных целях 🍿",
+      "Просто хочу знать 💡"
+    ]
+  },
+  {
+    type: "question",
+    text: "Сколько Вы готовы уделять времени изучению?",
+    answers: [
+      "Одно занятие в неделю 🕐",
+      "Два занятия в неделю 🕑",
+      "Три занятия в неделю 🕒",
+      "Четыре занятия в неделю и больше ♾️"
+    ]
+  },
+  {
+    type: "question",
+    text: "Выберите то, что больше подходит для Вас:",
+    answers: [
+      "Я понимаю речь, но сам(а) говорить не могу 💡",
+      "Умею только читать, на слух не воспринимаю 📕",
+      "С трудом, но могу говорить на английском 🗣️",
+      "Не умею читать и не умею говорить, но хочу научиться 🔥"
+    ]
+  },
+  {
+    type: "question",
+    text: "Какое время Вам подходит для обучения?",
+    answers: [
+      "Утро 🌅",
+      "День 🏙️",
+      "Вечер 🌆"
+    ]
+  },
+  {
+    type: "form"
+  },
+  {
+    type: "thankyou",
+    text: "Спасибо за прохождение нашего Quiz!",
+    description: "Мы определим ваш уровень на нашем бесплатном пробном уроке. Скоро наш менеджер свяжется и подберет время!"
   }
+];
 
-  function renderQuizStep() {
-    const questionEl = document.getElementById('quiz-question');
-    const answersEl = document.getElementById('quiz-answers');
+const totalSteps = quizQuestions.length;
+let userAnswers = [];
+let isBlocked = false;
 
-    if (currentStep >= quizQuestions.length) return;
+function updateProgress() {
+  const progressText = document.getElementById('quiz-progress-text');
+  const progressFill = document.getElementById('quiz-progress-fill');
+  const percent = Math.round((currentStep) / (totalSteps - 1) * 100);
+  progressText.textContent = `Готово: ${percent}%`;
+  progressFill.style.width = `${percent}%`;
+}
 
-    const step = quizQuestions[currentStep];
-    updateProgress();
-    questionEl.innerHTML = '';
-    answersEl.innerHTML = '';
+function renderQuizStep() {
+  const questionEl = document.getElementById('quiz-question');
+  const answersEl = document.getElementById('quiz-answers');
 
-    if (step.type === 'question') {
-      questionEl.textContent = step.text;
-      step.answers.forEach(answer => {
-        const label = document.createElement('label');
-        label.className = 'quiz__answer';
-        label.innerHTML = `<input type="radio"><span class="quiz__radio"></span>${answer}`;
-        label.addEventListener('click', () => {
-          userAnswers.push({ question: step.text, answer: answer });
-          currentStep++;
-          renderQuizStep();
-        });
-        answersEl.appendChild(label);
-      });
-    } else if (step.type === 'form') {
-      questionEl.textContent = "Чтобы узнать результат, заполните форму ниже:";
+  if (currentStep >= quizQuestions.length) return;
 
-      const nameInput = document.createElement('input');
-      nameInput.type = 'text';
-      nameInput.placeholder = 'Имя';
-      nameInput.className = 'quiz__input';
-      nameInput.id = 'quiz-name';
+  const step = quizQuestions[currentStep];
+  updateProgress();
+  questionEl.innerHTML = '';
+  answersEl.innerHTML = '';
 
-      const phoneInput = document.createElement('input');
-      phoneInput.type = 'tel';
-      phoneInput.placeholder = '+7 (___) ___-__-__';
-      phoneInput.className = 'quiz__input';
-      phoneInput.id = 'quiz-phone';
-
-      const submitBtn = document.createElement('button');
-      submitBtn.className = 'quiz__submit';
-      submitBtn.textContent = 'ПОЛУЧИТЬ 1 БЕСПЛАТНЫЙ УРОК';
-
-      submitBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const name = nameInput.value.trim();
-        const phone = phoneInput.value.trim();
-        if (!name || !phone) {
-          alert('Пожалуйста, заполните все поля!');
-          return;
-        }
-
-        let answersText = userAnswers.map((item, index) =>
-          `${index + 1}. ${item.question}\n➡️ ${item.answer}`
-        ).join('\n\n');
-
-        await sendLeadToTelegram(name, phone, answersText);
-        launchEmojiConfetti();
+  if (step.type === 'question') {
+    questionEl.textContent = step.text;
+    step.answers.forEach(answer => {
+      const label = document.createElement('label');
+      label.className = 'quiz__answer';
+      label.innerHTML = `<input type="radio" name="quiz-option"><span class="quiz__radio"></span>${answer}`;
+      label.addEventListener('click', () => {
+        if (isBlocked) return;
+        isBlocked = true;
+        userAnswers.push({ question: step.text, answer: answer });
         currentStep++;
-        renderQuizStep();
+        setTimeout(() => {
+          renderQuizStep();
+          isBlocked = false;
+        }, 800);
       });
-
-      answersEl.appendChild(nameInput);
-      answersEl.appendChild(phoneInput);
-      answersEl.appendChild(submitBtn);
-    } else if (step.type === 'thankyou') {
-      questionEl.textContent = step.text;
-      const desc = document.createElement('p');
-      desc.className = 'quiz__description';
-      desc.textContent = step.description;
-      answersEl.appendChild(desc);
-      launchEmojiConfetti();
-    }
+      answersEl.appendChild(label);
+    });
   }
+
+  else if (step.type === 'form') {
+    questionEl.textContent = "Чтобы узнать результат, заполните форму ниже:";
+
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = 'Имя';
+    nameInput.className = 'quiz__input';
+    nameInput.id = 'quiz-name';
+
+    const phoneInput = document.createElement('input');
+    phoneInput.type = 'tel';
+    phoneInput.placeholder = '+7 (___) ___-__-__';
+    phoneInput.className = 'quiz__input';
+    phoneInput.id = 'quiz-phone';
+
+    const submitBtn = document.createElement('button');
+    submitBtn.className = 'quiz__submit';
+    submitBtn.textContent = 'ПОЛУЧИТЬ 1 БЕСПЛАТНЫЙ УРОК';
+
+    submitBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const phone = phoneInput.value.trim();
+      if (!name || !phone) {
+        alert('Пожалуйста, заполните все поля!');
+        return;
+      }
+      let answersText = userAnswers.map((item, index) =>
+        `${index + 1}. ${item.question}\n➡️ ${item.answer}`
+      ).join('\n\n');
+      await sendLeadToTelegram(name, phone, answersText);
+      launchEmojiConfetti();
+      currentStep++;
+      renderQuizStep();
+    });
+
+    answersEl.appendChild(nameInput);
+    answersEl.appendChild(phoneInput);
+    answersEl.appendChild(submitBtn);
+  }
+
+  else if (step.type === 'thankyou') {
+    questionEl.textContent = step.text;
+    const desc = document.createElement('p');
+    desc.className = 'quiz__description';
+    desc.textContent = step.description;
+    answersEl.appendChild(desc);
+    launchEmojiConfetti();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', renderQuizStep);
 
   function launchEmojiConfetti() {
     const emojis = ['🎉', '🇺🇸', '✨', '❤️', '🇬🇧'];
