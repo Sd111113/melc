@@ -848,28 +848,36 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
 
   // ===============================
-  // Нормализация номера (умная очистка)
+  // Только для вставки! Умная очистка
   // ===============================
-  function normalizeKazakhstanPhone(raw) {
+  function normalizeKazakhstanPhoneOnPaste(raw) {
     let digits = raw.replace(/\D/g, '');
 
-    // Удаляем ведущие +7 или 8
+    // Если начинается на 8 → меняем на 7
     if (digits.startsWith('8')) {
-      digits = digits.slice(1);
-    } else if (digits.startsWith('7')) {
-      digits = digits.slice(1);
+      digits = '7' + digits.slice(1);
     }
 
-    // Оставляем последние 10 цифр
-    if (digits.length > 10) {
-      digits = digits.slice(-10);
+    // Если начинается на 7 и длиннее → оставляем последние 11 (без лишнего +7 в начале)
+    if (digits.startsWith('7') && digits.length > 11) {
+      digits = digits.slice(-11);
+    }
+
+    // оставляем последние 11, если вдруг лишнее
+    if (digits.length > 11) {
+      digits = digits.slice(-11);
+    }
+
+    // В маске мы заполняем только 10 цифр после +7 → убираем первую "7" если есть
+    if (digits.startsWith('7') && digits.length === 11) {
+      digits = digits.slice(1);
     }
 
     return digits;
   }
 
   // ===============================
-  // Маска с умной вставкой
+  // Маска с умной вставкой (только на paste)
   // ===============================
   function applyPhoneMask(input) {
     const mask = IMask(input, {
@@ -878,16 +886,16 @@ document.addEventListener('DOMContentLoaded', () => {
       placeholderChar: '_',
     });
 
-    // Начальный серый цвет
+    // начальный цвет серый
     input.style.color = '#838383';
 
-    // Фокус
+    // фокус
     input.addEventListener('focus', () => {
       mask.updateOptions({ lazy: false, placeholderChar: ' ' });
       input.style.color = '#1a1a1a';
     });
 
-    // Блюр
+    // блюр
     input.addEventListener('blur', () => {
       if (!mask.unmaskedValue) {
         mask.updateOptions({ lazy: true, placeholderChar: '_' });
@@ -897,16 +905,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Умная вставка
+    // умная вставка
     input.addEventListener('paste', (e) => {
       e.preventDefault();
       let pasted = (e.clipboardData || window.clipboardData).getData('text') || '';
-      let normalized = normalizeKazakhstanPhone(pasted);
+      let normalized = normalizeKazakhstanPhoneOnPaste(pasted);
 
       if (normalized.length === 10) {
         mask.unmaskedValue = normalized;
       } else {
-        alert('Номер телефона должен содержать 10 цифр после +7.');
+        alert('При вставке номер должен содержать ровно 10 цифр после +7.');
       }
     });
 
@@ -918,18 +926,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===============================
   function validateAndGetPhone(mask) {
     mask.updateValue();
-    let digits = mask.unmaskedValue.replace(/\D/g, '');
+    let unmasked = mask.unmaskedValue.replace(/\D/g, '');
 
-    // Разрешаем только если ровно 10 цифр
-    if (digits.length === 10) {
-      return '+7' + digits;
+    // Нужны ровно 11 цифр (начиная с 7) для отправки
+    if (unmasked.length === 11 && unmasked.startsWith('7')) {
+      return '+' + unmasked;
     }
 
     return null;
   }
 
   // ===============================
-  // Обработка отправки формы
+  // Отправка формы
   // ===============================
   async function handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers = '') {
     form.addEventListener('submit', async (e) => {
