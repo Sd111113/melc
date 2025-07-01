@@ -772,6 +772,38 @@ document.addEventListener('DOMContentLoaded', () => {
           `${index + 1}. ${item.question}\n➡️ ${item.answer}`
         ).join('\n\n');
 
+function formatPhonePretty(phone) {
+  // Убираем всё кроме цифр
+  let digits = phone.replace(/\D/g, '');
+  
+  // Проверка на длину
+  if (digits.length !== 11 || !digits.startsWith('7')) {
+    return phone; // вернем как есть если что-то не то
+  }
+
+  const code = digits.slice(1, 4);
+  const part1 = digits.slice(4, 7);
+  const part2 = digits.slice(7, 9);
+  const part3 = digits.slice(9, 11);
+
+  return `+7 (${code}) ${part1}-${part2}-${part3}`;
+}
+function formatPhonePretty(phone) {
+  // Убираем всё кроме цифр
+  let digits = phone.replace(/\D/g, '');
+  
+  // Проверка на длину
+  if (digits.length !== 11 || !digits.startsWith('7')) {
+    return phone; // вернем как есть если что-то не то
+  }
+
+  const code = digits.slice(1, 4);
+  const part1 = digits.slice(4, 7);
+  const part2 = digits.slice(7, 9);
+  const part3 = digits.slice(9, 11);
+
+  return `+7 (${code}) ${part1}-${part2}-${part3}`;
+}
         await sendLeadToTelegram(name, phone, answersText);
         launchEmojiConfetti();
 
@@ -829,7 +861,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   async function sendLeadToTelegram(name, phone, answersText = '') {
-    let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
+    let formattedPhone = formatPhonePretty(phone);
+let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${formattedPhone}`;
     if (answersText) {
       message += `\n\n📝 Ответы на вопросы:\n${answersText}`;
     }
@@ -950,6 +983,22 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Пожалуйста, заполните все поля корректно!');
         return;
       }
+function formatPhonePretty(phone) {
+  // Убираем всё кроме цифр
+  let digits = phone.replace(/\D/g, '');
+  
+  // Проверка на длину
+  if (digits.length !== 11 || !digits.startsWith('7')) {
+    return phone; // вернем как есть если что-то не то
+  }
+
+  const code = digits.slice(1, 4);
+  const part1 = digits.slice(4, 7);
+  const part2 = digits.slice(7, 9);
+  const part3 = digits.slice(9, 11);
+
+  return `+7 (${code}) ${part1}-${part2}-${part3}`;
+}
 
       await sendLeadToTelegram(name, phone, extraAnswers);
       if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
@@ -1004,6 +1053,22 @@ document.addEventListener('DOMContentLoaded', () => {
               `${index + 1}. ${item.question}\n➡️ ${item.answer}`
             ).join('\n\n');
           }
+function formatPhonePretty(phone) {
+  // Убираем всё кроме цифр
+  let digits = phone.replace(/\D/g, '');
+  
+  // Проверка на длину
+  if (digits.length !== 11 || !digits.startsWith('7')) {
+    return phone; // вернем как есть если что-то не то
+  }
+
+  const code = digits.slice(1, 4);
+  const part1 = digits.slice(4, 7);
+  const part2 = digits.slice(7, 9);
+  const part3 = digits.slice(9, 11);
+
+  return `+7 (${code}) ${part1}-${part2}-${part3}`;
+}
 
           await sendLeadToTelegram(name, phone, answersText);
           if (typeof launchEmojiConfetti === 'function') launchEmojiConfetti();
