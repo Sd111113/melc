@@ -626,7 +626,6 @@ font-weight: 400;
   to { opacity: 0; transform: translateX(-30px); }
 }
 </style>
-
 <script src="https://unpkg.com/imask"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -642,8 +641,8 @@ document.addEventListener('DOMContentLoaded', () => {
     { type: "thankyou", text: "Спасибо за прохождение нашего Quiz!", description: "Мы определим ваш уровень на бесплатном пробном уроке. Скоро наш менеджер свяжется и подберет время!" }
   ];
 
-  async function sendLeadToTelegram(name, phone, answersText) {
-    const TELEGRAM_TOKEN = '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE',
+  async function sendQuizToTelegram(name, phone, answersText) {
+    const TELEGRAM_TOKEN = '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE';
     const CHAT_ID = '-1002856948789';
 
     const message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${formatPhonePretty(phone)}\n\n📝 Ответы на вопросы:\n${answersText}`;
@@ -737,7 +736,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .join('\n\n');
 
           try {
-            await sendLeadToTelegram(name, phone, answersText);
+            await sendQuizToTelegram(name, phone, answersText);
             launchEmojiConfetti();
             currentStep++;
             renderQuizStep();
@@ -772,7 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return digits;
   }
 
-  // ПРИМЕР заглушки эффекта
+  // Заглушка эффекта
   function launchEmojiConfetti() {
     console.log('🎉 Confetti!');
   }
