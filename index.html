@@ -850,6 +850,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <img src="images/myelc.net.png" alt="Личный кабинет">
       </div>
     </div>
+
     <div class="benefits__card">
       <div class="benefits__progress">
         <span class="progress-bar"></span>
@@ -857,11 +858,12 @@ document.addEventListener('DOMContentLoaded', () => {
         <span class="progress-bar"></span>
       </div>
       <div class="benefits__content">
-        <h3>До 5 преподавателей за 1 урок</h3>
-        <p>Рецепт, который мы создавали исходя из нашего 12 летнего опыта и знаний. 5 преподавателей, 5 различных классов и упражнении. После каждого урока Вы проходите экзамен, чтобы быть точно уверенным, в своих новых знаниях</p>
+        <h3>Рецепт из 12 лет опыта и знаний</h3>
+        <p>5 преподавателей, 5 разных классов и упражнений. После каждого урока - экзамен для уверенности в новых знаниях</p>
         <img src="images/classes.png" alt="До 5 преподавателей">
       </div>
     </div>
+
     <div class="benefits__card">
       <div class="benefits__progress">
         <span class="progress-bar"></span>
@@ -892,27 +894,24 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 .benefits__carousel {
   position: relative;
-  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
   height: 460px;
+  background: #5999ff;
+  border-radius: 20px;
+  padding: 20px;
+  color: #ffffff;
   overflow: hidden;
 }
 .benefits__card {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  background: #5999ff;
-  border-radius: 20px;
-  padding: 16px 20px;
-  box-sizing: border-box;
-  color: #ffffff;
+  top: 0;
+  left: 0;
   opacity: 0;
-  filter: blur(4px);
-  transition: opacity 0.4s ease, filter 0.4s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  filter: blur(8px);
+  transition: opacity 0.6s ease, filter 0.6s ease;
 }
 .benefits__card.active {
   opacity: 1;
@@ -920,24 +919,26 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 .benefits__progress {
   display: flex;
-  gap: 4px;
-  margin-bottom: 12px;
+  gap: 6px;
+  margin-bottom: 14px;
 }
 .progress-bar {
   flex: 1;
   height: 4px;
   background: #b6d2fe;
   border-radius: 2px;
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
 }
-.progress-bar::after {
+.progress-bar.fill::after {
   content: "";
-  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
+  width: 100%;
   background: #ffffff;
-  width: 0%;
-  transition: width 2s ease;
+  transition: width 1.5s linear;
 }
 .benefits__content h3 {
   font-family: 'Gilroy Semibold', sans-serif;
@@ -951,43 +952,52 @@ document.addEventListener('DOMContentLoaded', () => {
   line-height: 1.4;
 }
 .benefits__content img {
+  width: auto;
   max-width: 100%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: block;
+  box-shadow: none;
 }
 </style>
 
 <script>
-let observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      startCarousel();
-      observer.disconnect();
-    }
-  });
-}, { threshold: 0.45 });
-observer.observe(document.getElementById('benefits-carousel'));
-
-let current = 0;
-function startCarousel() {
+document.addEventListener('DOMContentLoaded', () => {
   const cards = document.querySelectorAll('.benefits__card');
+  const progressBars = document.querySelectorAll('.benefits__progress .progress-bar');
+  let current = 0;
+  let started = false;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !started) {
+        started = true;
+        startCarousel();
+      }
+    });
+  }, { threshold: 0.45 });
+
+  observer.observe(document.getElementById('benefits-carousel'));
+
+  function startCarousel() {
+    showCard(current);
+    setInterval(() => {
+      current = (current + 1) % cards.length;
+      showCard(current);
+    }, 3000);
+  }
+
   function showCard(index) {
     cards.forEach((card, i) => {
       card.classList.toggle('active', i === index);
       const bars = card.querySelectorAll('.progress-bar');
-      bars.forEach((bar, j) => {
-        bar.querySelector('::after').style.width = '0%';
-        if (i === index && j === 0) {
-          setTimeout(() => bar.querySelector('::after').style.width = '100%', 10);
+      bars.forEach((bar, bIndex) => {
+        bar.classList.remove('fill');
+        if (bIndex === index) {
+          setTimeout(() => bar.classList.add('fill'), 50);
         }
       });
     });
   }
-  showCard(current);
-  setInterval(() => {
-    current = (current + 1) % cards.length;
-    showCard(current);
-  }, 2000);
-}
+});
 </script>
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
