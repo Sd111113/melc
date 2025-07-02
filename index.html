@@ -884,12 +884,14 @@ function formatPhoneFull(raw) {
 }
 
 document.querySelectorAll('.phone-input, #phone').forEach(input => {
-  let mask = IMask(input, {
+  const mask = IMask(input, {
     mask: '+7 (000) 000-00-00',
     lazy: true,
     placeholderChar: '_',
     overwrite: true
   });
+
+  let activated = false;
 
   function setGray() {
     input.style.color = '#838383';
@@ -901,33 +903,53 @@ document.querySelectorAll('.phone-input, #phone').forEach(input => {
     mask.updateOptions({ lazy: false, placeholderChar: ' ' });
   }
 
+  // Начальное спокойное состояние
   setGray();
 
-  input.addEventListener('focus', setBlack);
-
-  input.addEventListener('blur', () => {
-    const digits = cleanPhone(input.value);
-    if (digits.length < 10) {
-      input.value = '';
-      setGray();
-      input.placeholder = '+7 (___) ___-__-__';
-    } else {
-      input.value = formatPhoneFull(input.value);
+  input.addEventListener('focus', () => {
+    if (!activated) {
+      activated = true;
       setBlack();
     }
   });
 
   input.addEventListener('input', () => {
-    input.style.color = input.value.includes('_') ? '#838383' : '#1a1a1a';
+    const digits = cleanPhone(input.value);
+    if (digits.length >= 10) {
+      input.value = formatPhoneFull(digits);
+      mask.updateValue();
+    }
+
+    if (activated) {
+      setBlack();
+    } else if (!digits.length) {
+      setGray();
+    }
   });
 
-  input.addEventListener('paste', e => {
+  input.addEventListener('paste', (e) => {
     e.preventDefault();
     const pasteData = (e.clipboardData || window.clipboardData).getData('text');
     const digits = cleanPhone(pasteData);
     if (digits.length >= 10) {
       input.value = formatPhoneFull(digits);
       mask.updateValue();
+    } else {
+      input.value = '';
+    }
+    activated = true;
+    setBlack();
+  });
+
+  input.addEventListener('blur', () => {
+    const digits = cleanPhone(input.value);
+    if (digits.length >= 10) {
+      input.value = formatPhoneFull(input.value);
+    }
+
+    if (!activated && !digits.length) {
+      setGray();
+    } else {
       setBlack();
     }
   });
