@@ -834,45 +834,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <!-- 5й блок наши плюшки -->
-<section class="benefits" id="benefits">
+<section class="benefits">
   <h2 class="benefits__title">На нашем офлайн обучении вы получите:</h2>
 
-  <div class="benefits__carousel">
-    <div class="benefits__card">
-      <div class="benefits__progress">
-        <div class="progress-bar"><span class="fill"></span></div>
-        <div class="progress-bar"><span class="fill"></span></div>
-        <div class="progress-bar"><span class="fill"></span></div>
-      </div>
-      <div class="benefits__content">
-        <h3>Личный кабинет</h3>
-        <p>Чтобы вы двигались уверенно и четко. Видео с ваших выступлении, чтобы вы могли видеть результаты своих достижении</p>
-        <img src="images/myelc.net.png" alt="Личный кабинет">
-      </div>
+  <div class="benefits__card">
+    <div class="benefits__progress">
+      <span class="progress-bar"></span>
+      <span class="progress-bar"></span>
+      <span class="progress-bar"></span>
     </div>
-    <div class="benefits__card">
-      <div class="benefits__progress">
-        <div class="progress-bar"><span class="fill"></span></div>
-        <div class="progress-bar"><span class="fill"></span></div>
-        <div class="progress-bar"><span class="fill"></span></div>
-      </div>
-      <div class="benefits__content">
-        <h3>До 5 преподавателей за 1 урок</h3>
-        <p>Рецепт, который мы создавали исходя из нашего 12 летнего опыта и знаний. 5 преподавателей, 5 различных классов и упражнении. После каждого урока Вы проходите экзамен, чтобы быть точно уверенным, в своих новых знаниях</p>
-        <img src="images/classes.png" alt="До 5 преподавателей">
-      </div>
-    </div>
-    <div class="benefits__card">
-      <div class="benefits__progress">
-        <div class="progress-bar"><span class="fill"></span></div>
-        <div class="progress-bar"><span class="fill"></span></div>
-        <div class="progress-bar"><span class="fill"></span></div>
-      </div>
-      <div class="benefits__content">
-        <h3>Сертификат за каждый уровень</h3>
-        <p>По прохождению каждого уровня мы выдаем индивидуальный сертификат</p>
-        <img src="images/certificate.png" alt="Сертификат">
-      </div>
+    <div class="benefits__content">
+      <h3 id="benefits-heading">Личный кабинет</h3>
+      <p id="benefits-description">Чтобы вы двигались уверенно и четко. Видео с ваших выступлении, чтобы вы могли видеть результаты своих достижении</p>
+      <img id="benefits-image" src="images/myelc.net.png" alt="Личный кабинет">
     </div>
   </div>
 </section>
@@ -890,26 +864,20 @@ document.addEventListener('DOMContentLoaded', () => {
   margin-bottom: 24px;
   text-align: left;
 }
-.benefits__carousel {
-  display: flex;
-  overflow: hidden;
-  position: relative;
-}
 .benefits__card {
   background: #5999ff;
   border-radius: 20px;
   padding: 16px 20px;
-  flex: 0 0 100%;
-  box-sizing: border-box;
+  max-width: 700px;
+  margin: 0 auto;
   color: #ffffff;
-  transition: opacity 0.5s ease, filter 0.5s ease;
   position: relative;
+  overflow: hidden;
 }
 .benefits__progress {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   margin-bottom: 12px;
-  padding-top: 3px;
 }
 .progress-bar {
   flex: 1;
@@ -919,12 +887,21 @@ document.addEventListener('DOMContentLoaded', () => {
   overflow: hidden;
   position: relative;
 }
-.progress-bar .fill {
+.progress-bar span {
+  content: "";
   display: block;
   height: 100%;
-  width: 0%;
   background: #ffffff;
+  width: 0%;
   transition: width 4s ease;
+}
+.benefits__content {
+  text-align: left;
+  transition: opacity 0.6s ease, filter 0.6s ease;
+}
+.benefits__content.blur {
+  filter: blur(4px);
+  opacity: 0.5;
 }
 .benefits__content h3 {
   font-family: 'Gilroy Semibold', sans-serif;
@@ -947,51 +924,73 @@ document.addEventListener('DOMContentLoaded', () => {
 </style>
 
 <script>
-const benefitsSection = document.getElementById('benefits');
-let benefitsStarted = false;
-
-let observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting && !benefitsStarted) {
-      benefitsStarted = true;
-      startBenefitsCarousel();
-      observer.unobserve(entry.target);
+document.addEventListener('DOMContentLoaded', () => {
+  const data = [
+    {
+      title: "Личный кабинет",
+      text: "Чтобы вы двигались уверенно и четко. Видео с ваших выступлении, чтобы вы могли видеть результаты своих достижении",
+      img: "images/myelc.net.png"
+    },
+    {
+      title: "До 5 преподавателей за 1 урок",
+      text: "Рецепт, который мы создавали исходя из нашего 12 летнего опыта и знаний. 5 преподавателей, 5 различных классов и упражнении. После каждого урока Вы проходите экзамен, чтобы быть точно уверенным, в своих новых знаниях",
+      img: "images/classes.png"
+    },
+    {
+      title: "Сертификат за каждый уровень",
+      text: "По прохождению каждого уровня мы выдаем индивидуальный сертификат",
+      img: "images/certificate.png"
     }
-  });
-}, {
-  threshold: 0.45
-});
-observer.observe(benefitsSection);
+  ];
 
-function startBenefitsCarousel() {
-  const cards = document.querySelectorAll('.benefits__card');
-  let current = 0;
+  let currentIndex = 0;
+  const heading = document.getElementById('benefits-heading');
+  const description = document.getElementById('benefits-description');
+  const image = document.getElementById('benefits-image');
+  const progressBars = document.querySelectorAll('.progress-bar');
+  const content = document.querySelector('.benefits__content');
+  const section = document.querySelector('.benefits');
 
-  function showCard(index) {
-    cards.forEach((card, i) => {
-      const fills = card.querySelectorAll('.fill');
-      fills.forEach(f => f.style.width = '0%');
+  let interval;
 
-      if (i === index) {
-        card.style.opacity = '1';
-        card.style.filter = 'blur(0)';
+  function updateCard(index) {
+    content.classList.add('blur');
 
-        fills.forEach((fill, idx) => {
-          setTimeout(() => fill.style.width = '100%', idx * 4000 / fills.length);
-        });
-      } else {
-        card.style.opacity = '0';
-        card.style.filter = 'blur(4px)';
-      }
-    });
+    setTimeout(() => {
+      heading.textContent = data[index].title;
+      description.textContent = data[index].text;
+      image.src = data[index].img;
+      content.classList.remove('blur');
+    }, 600);
   }
 
-  showCard(current);
-  setInterval(() => {
-    current = (current + 1) % cards.length;
-    showCard(current);
-  }, 4000);
-}
+  function startCycle() {
+    interval = setInterval(() => {
+      progressBars.forEach((bar, i) => {
+        bar.innerHTML = '<span></span>';
+        bar.querySelector('span').style.width = '0%';
+      });
+      let bar = progressBars[currentIndex];
+      let fill = bar.querySelector('span');
+      fill.style.width = '100%';
+
+      updateCard(currentIndex);
+
+      currentIndex = (currentIndex + 1) % data.length;
+    }, 4000);
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        startCycle();
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.45 });
+
+  observer.observe(section);
+});
 </script>
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
