@@ -914,11 +914,11 @@ document.addEventListener('DOMContentLoaded', () => {
   height: 100%;
   width: 0%;
   background-color: white;
-  transition: width 4s linear;
 }
 
 .progress-bar.active::after {
   width: 100%;
+  transition: width 4s linear;
 }
 
 .benefits__content {
@@ -926,12 +926,15 @@ document.addEventListener('DOMContentLoaded', () => {
   flex-direction: column;
   gap: 16px;
   transition: filter 0.4s ease;
+  flex-grow: 1;
 }
 
 .benefits__text-wrapper {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding-top: 10px;
+  flex-grow: 0;
 }
 
 .benefits__heading {
@@ -950,14 +953,17 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 .benefits__image {
-  height: auto;
   box-shadow: 0 4px 12px rgba(0,0,0,0.12);
   margin-top: 10px;
   transition: width 0.3s ease;
   max-width: 100%;
+  height: auto;
+  /* Clip-path пример для PNG с неровными краями */
+  clip-path: inset(0% round 8px);
+  mask-image: linear-gradient(to bottom, black 100%, transparent 100%);
 }
 
-/* Размеры для кастомной регулировки */
+/* Размеры для индивидуальной регулировки */
 .size-small { width: 50%; }
 .size-medium { width: 70%; }
 .size-large { width: 90%; }
@@ -1010,6 +1016,13 @@ function fillProgress(bar) {
   bar.classList.add('active');
 }
 
+function resetProgressBarsInstant() {
+  progressBars.forEach(bar => {
+    bar.classList.remove('active');
+    bar.querySelector('::after')?.removeAttribute('style');
+  });
+}
+
 function resetProgressBars() {
   progressBars.forEach(bar => bar.classList.remove('active'));
 }
@@ -1024,7 +1037,8 @@ function cycle() {
       setTimeout(() => {
         resetProgressBars();
         progressIndex = 0;
-        cycle();
+        updateContent(currentIndex);
+        setTimeout(cycle, 400);
       }, 400);
     } else {
       updateContent(currentIndex);
