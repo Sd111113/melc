@@ -833,74 +833,150 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
-<section id="offline-learning" style="background:#f4f4f4; padding:50px 0;">
-  <div class="offline-slider" style="max-width:700px; margin:0 auto; background:#5999ff; border-radius:20px; padding:24px; position:relative; overflow:hidden; color:#fff;">
+<!-- 5й блок наши плюшки -->
+<section class="benefits">
+  <h2 class="benefits__title">На нашем офлайн обучении вы получите:</h2>
 
-    <div class="progress-bars" style="display:flex; gap:8px; margin-bottom:20px;">
-      <div class="progress-bar" style="flex:1; height:4px; background:#b6d2fe; border-radius:2px; overflow:hidden;">
-        <div class="progress-fill" style="width:0%; height:100%; background:#fff; transition:width 3.4s;"></div>
+  <div class="benefits__carousel" id="benefits-carousel">
+    <div class="benefits__card">
+      <div class="benefits__progress">
+        <span class="progress-bar"></span>
+        <span class="progress-bar"></span>
+        <span class="progress-bar"></span>
       </div>
-      <div class="progress-bar" style="flex:1; height:4px; background:#b6d2fe; border-radius:2px; overflow:hidden;">
-        <div class="progress-fill" style="width:0%; height:100%; background:#fff; transition:width 3.4s;"></div>
-      </div>
-      <div class="progress-bar" style="flex:1; height:4px; background:#b6d2fe; border-radius:2px; overflow:hidden;">
-        <div class="progress-fill" style="width:0%; height:100%; background:#fff; transition:width 3.4s;"></div>
+      <div class="benefits__content">
+        <h3>Личный кабинет</h3>
+        <p>Чтобы вы двигались уверенно и четко. Видео с ваших выступлении, чтобы вы могли видеть результаты своих достижении</p>
+        <img src="images/myelc.net.png" alt="Личный кабинет">
       </div>
     </div>
-
-    <div class="offline-content" style="position:relative;">
-      <div class="offline-card active" style="transition:filter 0.5s;">
-        <h3 style="font-family:'Gilroy Semibold'; font-size:18px; margin-bottom:8px;">Личный кабинет</h3>
-        <p style="font-family:'Gilroy Medium'; font-size:13px; line-height:1.4; margin-bottom:16px;">Чтобы вы двигались уверенно и четко.<br>Видео с ваших выступлении, чтобы вы могли видеть результаты своих достижении</p>
-        <img src="images/myelc.net.png" alt="Личный кабинет" style="width:100%; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.08);">
+    <div class="benefits__card">
+      <div class="benefits__progress">
+        <span class="progress-bar"></span>
+        <span class="progress-bar"></span>
+        <span class="progress-bar"></span>
       </div>
-
-      <div class="offline-card" style="display:none;">
-        <h3 style="font-family:'Gilroy Semibold'; font-size:18px; margin-bottom:8px;">До 5 преподавателей за 1 урок</h3>
-        <p style="font-family:'Gilroy Medium'; font-size:13px; line-height:1.4; margin-bottom:16px;">Рецепт, который мы создавали исходя из нашего 12 летнего опыта и знаний. 5 преподавателей, 5 различных классов и упражнении. После каждого урока Вы проходите экзамен, чтобы быть точно уверенным, в своих новых знаниях</p>
-        <img src="images/classes.png" alt="До 5 преподавателей" style="width:100%; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.08);">
+      <div class="benefits__content">
+        <h3>До 5 преподавателей за 1 урок</h3>
+        <p>Рецепт, который мы создавали исходя из нашего 12 летнего опыта и знаний. 5 преподавателей, 5 различных классов и упражнении. После каждого урока Вы проходите экзамен, чтобы быть точно уверенным, в своих новых знаниях</p>
+        <img src="images/classes.png" alt="До 5 преподавателей">
       </div>
-
-      <div class="offline-card" style="display:none;">
-        <h3 style="font-family:'Gilroy Semibold'; font-size:18px; margin-bottom:8px;">Сертификат за каждый уровень</h3>
-        <p style="font-family:'Gilroy Medium'; font-size:13px; line-height:1.4; margin-bottom:16px;">По прохождению каждого уровня мы выдаем индивидуальный сертификат</p>
-        <img src="images/certificate.png" alt="Сертификат" style="width:100%; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.08);">
+    </div>
+    <div class="benefits__card">
+      <div class="benefits__progress">
+        <span class="progress-bar"></span>
+        <span class="progress-bar"></span>
+        <span class="progress-bar"></span>
+      </div>
+      <div class="benefits__content">
+        <h3>Сертификат за каждый уровень</h3>
+        <p>По прохождению каждого уровня мы выдаем индивидуальный сертификат</p>
+        <img src="images/certificate.png" alt="Сертификат">
       </div>
     </div>
   </div>
 </section>
 
-<script>
-let offlineTriggered = false;
-function startOfflineAnimation() {
-  if (offlineTriggered) return;
-  offlineTriggered = true;
-  const bars = document.querySelectorAll('#offline-learning .progress-fill');
-  const cards = document.querySelectorAll('#offline-learning .offline-card');
-  let step = 0;
-
-  function animateStep() {
-    if (step >= bars.length) return;
-    bars[step].style.width = '100%';
-    setTimeout(() => {
-      cards.forEach((c, i) => {
-        c.style.display = i === step+1 ? 'block' : 'none';
-        c.style.filter = i === step+1 ? 'blur(0)' : 'blur(4px)';
-      });
-      step++;
-      animateStep();
-    }, 3400);
-  }
-  animateStep();
+<style>
+.benefits {
+  background: #f4f4f4;
+  padding: 40px 25px;
 }
+.benefits__title {
+  font-family: 'Gilroy Bold', sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin-bottom: 24px;
+  text-align: left;
+}
+.benefits__carousel {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+.benefits__card {
+  background: #5999ff;
+  border-radius: 20px;
+  padding: 16px 20px;
+  flex: 0 0 100%;
+  box-sizing: border-box;
+  color: #ffffff;
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+.benefits__progress {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: #b6d2fe;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  background: #ffffff;
+  width: 0%;
+  transition: width 4s ease;
+}
+.benefits__content h3 {
+  font-family: 'Gilroy Semibold', sans-serif;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.benefits__content p {
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 13px;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.benefits__content img {
+  width: auto;
+  max-width: 100%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: block;
+}
+</style>
 
-window.addEventListener('scroll', () => {
-  const block = document.getElementById('offline-learning');
-  const rect = block.getBoundingClientRect();
-  if (rect.top < window.innerHeight * 0.75) {
-    startOfflineAnimation();
-  }
-});
+<script>
+let observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      startCarousel();
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.75 });
+observer.observe(document.getElementById('benefits-carousel'));
+
+let current = 0;
+function startCarousel() {
+  const cards = document.querySelectorAll('.benefits__card');
+  setInterval(() => {
+    cards.forEach((card, i) => {
+      const bars = card.querySelectorAll('.progress-bar::after');
+      bars.forEach(bar => bar.style.width = '0%');
+      if (i === current) {
+        card.style.opacity = 1;
+        card.style.filter = 'blur(0)';
+        const progress = card.querySelectorAll('.progress-bar');
+        progress.forEach(bar => {
+          bar.querySelector('::after').style.width = '100%';
+        });
+      } else {
+        card.style.opacity = 0;
+        card.style.filter = 'blur(4px)';
+      }
+    });
+    current = (current + 1) % cards.length;
+  }, 4000);
+}
 </script>
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
