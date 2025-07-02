@@ -270,7 +270,7 @@ font-weight: 400;
       <h2>Запишитесь на 1 бесплатный урок<br>+консультация</h2>
       <form id="tg-form">
         <input type="text" id="name" placeholder="Имя" required />
-<input type="text" inputmode="tel" id="phone" placeholder="+7 (___) ___-__-__" required />
+<input type="tel" id="phone" class="phone-input" placeholder="+7 (___) ___-__-__" required />
         <button type="submit">Хочу на 1 бесплатный урок</button>
       </form>
     </div>
@@ -829,8 +829,8 @@ function formatPhonePretty(phone) {
   renderQuizStep();
 });
 </script>
-<input type="text" class="name-input" placeholder="Имя">
-<input type="tel" class="phone-input" placeholder="+7 (___) ___-__-__">
+<input type="text" id="name" class="name-input" placeholder="Имя" required>
+<input type="tel" id="phone" class="phone-input" inputmode="numeric" pattern="[0-9]*" placeholder="+7 (___) ___-__-__" required>
 
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
@@ -883,12 +883,11 @@ function formatPhoneFull(raw) {
   return `+7 (${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
 }
 
-document.querySelectorAll('.phone-input').forEach(input => {
+document.querySelectorAll('.phone-input, #phone').forEach(input => {
   let mask = IMask(input, {
     mask: '+7 (000) 000-00-00',
     lazy: true,
     placeholderChar: '_',
-    prepare: str => cleanPhone(str),
     overwrite: true
   });
 
@@ -904,9 +903,7 @@ document.querySelectorAll('.phone-input').forEach(input => {
 
   setGray();
 
-  input.addEventListener('focus', () => {
-    setBlack();
-  });
+  input.addEventListener('focus', setBlack);
 
   input.addEventListener('blur', () => {
     const digits = cleanPhone(input.value);
@@ -921,11 +918,7 @@ document.querySelectorAll('.phone-input').forEach(input => {
   });
 
   input.addEventListener('input', () => {
-    if (input.value.includes('_')) {
-      input.style.color = '#838383';
-    } else {
-      input.style.color = '#1a1a1a';
-    }
+    input.style.color = input.value.includes('_') ? '#838383' : '#1a1a1a';
   });
 
   input.addEventListener('paste', e => {
@@ -952,8 +945,8 @@ const form = document.getElementById('tg-form');
 if (form) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const nameInput = form.querySelector('.name-input');
-    const phoneInput = form.querySelector('.phone-input');
+    const nameInput = form.querySelector('#name');
+    const phoneInput = form.querySelector('#phone');
 
     if (!isNameValid(nameInput.value)) {
       alert('Пожалуйста, введите корректное имя.');
