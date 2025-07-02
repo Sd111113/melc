@@ -858,7 +858,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       <div class="benefits__content">
         <h3>До 5 преподавателей за 1 урок</h3>
-        <p>Рецепт из 12 лет опыта и знаний: 5 преподавателей, 5 разных классов и упражнений. После каждого урока - экзамен для уверенности в новых знаниях</p>
+        <p>Рецепт из 12 лет опыта и знаний: 5 преподавателей, 5 разных классов и упражнений. После каждого урока — экзамен для уверенности в новых знаниях</p>
         <img src="images/classes.png" alt="До 5 преподавателей">
       </div>
     </div>
@@ -971,16 +971,6 @@ function createFills() {
 }
 createFills();
 
-let observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      startCarousel();
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.45 });
-observer.observe(carousel);
-
 function startCarousel() {
   showCard(0);
 }
@@ -991,19 +981,20 @@ function showCard(index) {
   });
 
   const progressBars = cards[index].querySelectorAll('.progress-bar-fill');
-  progressBars.forEach((fill, i) => {
+  progressBars.forEach(fill => {
     fill.style.transition = 'width 4s linear';
-    fill.style.width = i === index ? '100%' : (i < index ? '100%' : '0%');
+    fill.style.width = '100%';
   });
 
   setTimeout(() => {
     current = (index + 1) % cards.length;
-    if (current === 0) {
-      allBars.forEach(bar => bar.querySelector('.progress-bar-fill').style.width = '0%');
-    }
+    allBars.forEach(bar => bar.querySelector('.progress-bar-fill').style.width = '0%');
     showCard(current);
   }, 5000);
 }
+
+// Запустить сразу без Observer для мобильных, чтобы блок был виден всегда
+startCarousel();
 </script>
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
