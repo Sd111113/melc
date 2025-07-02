@@ -834,6 +834,11 @@ function formatPhonePretty(phone) {
 
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
+<input type="text" id="name" class="name-input" placeholder="Имя" required>
+<input type="tel" id="phone" class="phone-input" inputmode="numeric" pattern="[0-9]*" placeholder="+7 (___) ___-__-__" required>
+
+<script src="https://unpkg.com/imask"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
 // Telegram settings
 const TELEGRAM_SETTINGS = {
@@ -877,21 +882,17 @@ function cleanPhone(raw) {
   return digits;
 }
 
-function formatPhoneFull(raw) {
-  const digits = cleanPhone(raw);
+function formatPhoneFull(digits) {
   if (digits.length !== 10) return '';
   return `+7 (${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
 }
 
 document.querySelectorAll('.phone-input, #phone').forEach(input => {
-  const mask = IMask(input, {
+  let mask = IMask(input, {
     mask: '+7 (000) 000-00-00',
     lazy: true,
-    placeholderChar: '_',
-    overwrite: true
+    placeholderChar: '_'
   });
-
-  let activated = false;
 
   function setGray() {
     input.style.color = '#838383';
@@ -903,55 +904,42 @@ document.querySelectorAll('.phone-input, #phone').forEach(input => {
     mask.updateOptions({ lazy: false, placeholderChar: ' ' });
   }
 
-  // Начальное спокойное состояние
   setGray();
 
-  input.addEventListener('focus', () => {
-    if (!activated) {
-      activated = true;
-      setBlack();
-    }
-  });
+  input.addEventListener('focus', () => setBlack());
 
-  input.addEventListener('input', () => {
-    const digits = cleanPhone(input.value);
-    if (digits.length >= 10) {
-      input.value = formatPhoneFull(digits);
-      mask.updateValue();
-    }
-
-    if (activated) {
-      setBlack();
-    } else if (!digits.length) {
+  input.addEventListener('blur', () => {
+    let digits = cleanPhone(input.value);
+    if (digits.length < 10) {
+      input.value = '';
       setGray();
+      input.placeholder = '+7 (___) ___-__-__';
+    } else {
+      input.value = formatPhoneFull(digits);
+      setBlack();
     }
   });
 
   input.addEventListener('paste', (e) => {
     e.preventDefault();
-    const pasteData = (e.clipboardData || window.clipboardData).getData('text');
-    const digits = cleanPhone(pasteData);
+    let pasted = (e.clipboardData || window.clipboardData).getData('text');
+    let digits = cleanPhone(pasted);
     if (digits.length >= 10) {
+      digits = digits.slice(-10);
       input.value = formatPhoneFull(digits);
       mask.updateValue();
-    } else {
-      input.value = '';
-    }
-    activated = true;
-    setBlack();
-  });
-
-  input.addEventListener('blur', () => {
-    const digits = cleanPhone(input.value);
-    if (digits.length >= 10) {
-      input.value = formatPhoneFull(input.value);
-    }
-
-    if (!activated && !digits.length) {
-      setGray();
-    } else {
       setBlack();
     }
+  });
+
+  input.addEventListener('input', () => {
+    let digits = cleanPhone(input.value);
+    if (digits.length > 10) {
+      digits = digits.slice(-10);
+      input.value = formatPhoneFull(digits);
+      mask.updateValue();
+    }
+    input.style.color = digits.length ? '#1a1a1a' : '#838383';
   });
 });
 
@@ -982,7 +970,7 @@ if (form) {
     }
 
     try {
-      await sendLeadToTelegram(nameInput.value.trim(), formatPhoneFull(phoneInput.value));
+      await sendLeadToTelegram(nameInput.value.trim(), formatPhoneFull(cleanPhone(phoneInput.value)));
       launchEmojiConfetti();
       setTimeout(() => {
         window.location.href = 'thanks.html';
