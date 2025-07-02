@@ -485,7 +485,107 @@ font-weight: 400;
     <div class="quiz__answers" id="quiz-answers"></div>
   </div>
 </section>
-
+<style>
+.quiz {
+  background: #f4f4f4;
+  padding: 10px 25px;
+}
+.quiz__title {
+  font-family: 'Gilroy Bold', sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+  text-align: left;
+}
+.quiz__card {
+  background: #ffc7d8;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+  position: relative;
+}
+.quiz__progress-text {
+  font-size: 10pt;
+  color: #1a1a1a;
+}
+.quiz__progress-bar {
+  width: 100%;
+  height: 4px;
+  background: #ffeef3;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.quiz__progress-fill {
+  background: #f88dad;
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s ease-in-out;
+}
+.quiz__question {
+  font-family: 'Gilroy Semibold', sans-serif;
+  font-size: 14pt;
+  color: #1a1a1a;
+}
+.quiz__answers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.quiz__answer {
+  background: #ffc7d8;
+  border: 1px solid #b18c97;
+  border-radius: 16px;
+  padding: 10px 16px;
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 11pt;
+  color: #1a1a1a;
+  cursor: pointer;
+  opacity: 0;
+  animation: slideIn 0.3s ease forwards;
+}
+.quiz__answer:hover {
+  background: #f88dad;
+  border-color: #1a1a1a;
+}
+.quiz__input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 18px;
+  font-family: 'Gilroy Regular', sans-serif;
+  background: #ffeef3;
+  box-sizing: border-box;
+}
+.quiz__submit {
+  width: 100%;
+  padding: 14px;
+  background: #1d2f6f;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Gilroy Semibold', sans-serif;
+}
+.quiz__description {
+  font-family: 'Gilroy Regular', sans-serif;
+  font-size: 14pt;
+  color: #1a1a1a;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-30px); }
+}
+</style>
 <script src="https://unpkg.com/imask"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -651,12 +751,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
-
-<style>
-@keyframes slideOut {
-  to { opacity: 0; transform: translateX(-30px); }
-}
-</style>
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
