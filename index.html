@@ -954,7 +954,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 .benefits__image {
   box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-  margin-top: 10px;
+  margin: 10px auto 0 auto;
   transition: width 0.3s ease;
   max-width: 100%;
   height: auto;
@@ -964,9 +964,10 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 /* Размеры для индивидуальной регулировки */
-.size-small { width: 50%; }
-.size-medium { width: 70%; }
-.size-large { width: 90%; }
+.size-xsmall { width: 85%; }
+.size-small { width: 90%; }
+.size-medium { width: 100%; }
+.size-large { width: 120%; }
 </style>
 
 <script>
@@ -981,7 +982,7 @@ const benefitsData = [
     title: "До 5 преподавателей за 1 урок",
     text: "Рецепт из 12 лет опыта и знаний: 5 преподавателей, 5 разных классов и упражнений. После каждого урока - экзамен для уверенности в новых знаниях",
     img: "images/classes.png",
-    sizeClass: "size-small"
+    sizeClass: "size-large"
   },
   {
     title: "Сертификат за каждый уровень",
