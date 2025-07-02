@@ -891,22 +891,31 @@ document.addEventListener('DOMContentLoaded', () => {
   text-align: left;
 }
 .benefits__carousel {
-  display: flex;
-  overflow: hidden;
   position: relative;
+  max-width: 700px;
+  margin: 0 auto;
 }
 .benefits__card {
   background: #5999ff;
   border-radius: 20px;
   padding: 16px 20px;
-  flex: 0 0 100%;
   box-sizing: border-box;
   color: #ffffff;
-  height: 380px; /* уменьшена высота на 20% */
+  height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  filter: blur(4px);
   transition: opacity 0.5s ease, filter 0.5s ease;
+}
+.benefits__card.active {
+  opacity: 1;
+  filter: blur(0);
 }
 .benefits__progress {
   display: flex;
@@ -922,13 +931,11 @@ document.addEventListener('DOMContentLoaded', () => {
   overflow: hidden;
   position: relative;
 }
-.progress-bar::after {
-  content: "";
-  display: block;
+.progress-bar-fill {
   height: 100%;
   background: #ffffff;
   width: 0%;
-  transition: width 1.5s ease;
+  transition: width 4s linear;
 }
 .benefits__content h3 {
   font-family: 'Gilroy Semibold', sans-serif;
@@ -942,47 +949,63 @@ document.addEventListener('DOMContentLoaded', () => {
   line-height: 1.4;
 }
 .benefits__content img {
-  width: auto;
   max-width: 100%;
-  max-height: 140px;
+  max-height: 120px;
   object-fit: contain;
   display: block;
 }
 </style>
 
 <script>
-const carousel = document.getElementById('benefits-carousel');
-const cards = carousel.querySelectorAll('.benefits__card');
-let current = 0;
-let observer = new IntersectionObserver(entries => {
+const benefitsCarousel = document.getElementById('benefits-carousel');
+const benefitCards = benefitsCarousel.querySelectorAll('.benefits__card');
+let benefitIndex = 0;
+let running = false;
+
+// Add fill elements to progress bars
+benefitCards.forEach(card => {
+  card.querySelectorAll('.progress-bar').forEach(bar => {
+    const fill = document.createElement('div');
+    fill.classList.add('progress-bar-fill');
+    bar.appendChild(fill);
+  });
+});
+
+const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      startCarousel();
+    if (entry.isIntersecting && !running) {
+      running = true;
+      startBenefitCarousel();
       observer.unobserve(entry.target);
     }
   });
 }, { threshold: 0.45 });
-observer.observe(carousel);
+observer.observe(benefitsCarousel);
 
-function startCarousel() {
-  setInterval(() => {
-    cards.forEach((card, i) => {
-      const bars = card.querySelectorAll('.progress-bar::after');
-      bars.forEach(bar => bar.style.width = '0%');
-      if (i === current) {
-        card.style.opacity = 1;
-        card.style.filter = 'blur(0)';
-        const progress = card.querySelectorAll('.progress-bar');
-        progress.forEach(bar => {
-          bar.querySelector('::after').style.width = '100%';
-        });
-      } else {
-        card.style.opacity = 0;
-        card.style.filter = 'blur(4px)';
-      }
-    });
-    current = (current + 1) % cards.length;
-  }, 3000);
+function startBenefitCarousel() {
+  showCard(benefitIndex);
+}
+
+function showCard(index) {
+  benefitCards.forEach((card, i) => {
+    const fills = card.querySelectorAll('.progress-bar-fill');
+    fills.forEach(f => f.style.width = '0%');
+    card.classList.remove('active');
+  });
+
+  const currentCard = benefitCards[index];
+  currentCard.classList.add('active');
+
+  const progressFills = currentCard.querySelectorAll('.progress-bar-fill');
+  for (let i = 0; i <= index; i++) {
+    progressFills[i].style.transition = 'width 4s linear';
+    progressFills[i].style.width = '100%';
+  }
+
+  setTimeout(() => {
+    benefitIndex = (benefitIndex + 1) % benefitCards.length;
+    showCard(benefitIndex);
+  }, 5000);
 }
 </script>
 <script src="https://unpkg.com/imask"></script>
