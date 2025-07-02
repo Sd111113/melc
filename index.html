@@ -869,7 +869,7 @@ document.addEventListener('DOMContentLoaded', () => {
   font-size: 25px;
   font-weight: 400;
   color: #1a1a1a;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .benefits__carousel {
@@ -1013,12 +1013,10 @@ function updateContent(index) {
     img.src = benefitsData[index].img;
     img.className = 'benefits__image ' + benefitsData[index].sizeClass;
 
-    content.style.filter = 'blur(4px)';
-
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       content.style.transition = 'filter 0.2s ease';
       content.style.filter = 'blur(0)';
-    }, 10);
+    });
   }, 200);
 }
 
