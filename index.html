@@ -1003,21 +1003,33 @@ const img = carousel.querySelector('.benefits__image');
 let currentIndex = 0;
 let progressIndex = 0;
 
-function updateContent(index) {
+async function updateContent(index) {
+  // 1. Запускаем затухание (blur out)
   content.style.transition = 'filter 0.2s ease';
   content.style.filter = 'blur(4px)';
 
-  setTimeout(() => {
-    heading.textContent = benefitsData[index].title;
-    text.textContent = benefitsData[index].text;
-    img.src = benefitsData[index].img;
-    img.className = 'benefits__image ' + benefitsData[index].sizeClass;
+  // 2. Предзагружаем картинку заранее
+  await preloadImage(benefitsData[index].img);
 
-    requestAnimationFrame(() => {
-      content.style.transition = 'filter 0.2s ease';
-      content.style.filter = 'blur(0)';
-    });
-  }, 200);
+  // 3. Меняем контент после подгрузки
+  heading.textContent = benefitsData[index].title;
+  text.textContent = benefitsData[index].text;
+  img.src = benefitsData[index].img;
+  img.className = 'benefits__image ' + benefitsData[index].sizeClass;
+
+  // 4. Запускаем проявление (blur in)
+  setTimeout(() => {
+    content.style.transition = 'filter 0.2s ease';
+    content.style.filter = 'blur(0)';
+  }, 50);
+}
+
+function preloadImage(src) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve();
+    img.src = src;
+  });
 }
 
 function fillProgress(bar) {
