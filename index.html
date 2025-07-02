@@ -530,7 +530,7 @@ font-weight: 400;
   background: #f88dad;
   height: 100%;
   width: 0%;
-  transition: width 0.3s ease-in-out;
+  transition: width 0.2s ease-in-out;
 }
 .quiz__question {
   font-family: 'Gilroy Semibold', sans-serif;
@@ -555,7 +555,7 @@ font-weight: 400;
   display: flex;
   align-items: center;
   gap: 12px;
-  transition: background 0.1s, border-color 0.1s;
+  transition: background 0s, border-color 0s;
 }
 .quiz__answer.selected {
   background: #f88dad;
@@ -612,10 +612,10 @@ font-weight: 400;
   margin-top: 12px;
 }
 .fade-in {
-  animation: fadeIn 0.3s forwards;
+  animation: fadeIn 0.2s forwards;
 }
 .fade-out {
-  animation: fadeOut 0.3s forwards;
+  animation: fadeOut 0.2s forwards;
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateX(30px); }
@@ -645,16 +645,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const TELEGRAM_TOKEN = '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE';
     const CHAT_ID = '-1002856948789';
 
-    const message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${formatPhonePretty(phone)}\n\n📝 Ответы на вопросы:\n${answersText}`;
+    const message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${formatPhoneFull(phone)}\n\n📝 Ответы на вопросы:\n${answersText}`;
     const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
     await fetch(url);
   }
 
-  function formatPhonePretty(phone) {
-    let digits = phone.replace(/\D/g, '');
-    if (digits.length === 10) digits = '7' + digits;
-    if (digits.length !== 11 || !digits.startsWith('7')) return phone;
-    return `+7 (${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7,9)}-${digits.slice(9,11)}`;
+  function formatPhoneFull(digits) {
+    if (digits.length !== 10) return '';
+    return `+7 (${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
   }
 
   function updateProgress() {
@@ -716,7 +714,7 @@ document.addEventListener('DOMContentLoaded', () => {
         phoneInput.placeholder = '+7 (___) ___-__-__';
         phoneInput.className = 'quiz__input';
         phoneInput.id = 'quiz-phone';
-        IMask(phoneInput, { mask: '+7 (000) 000-00-00' });
+        setupPhoneMask(phoneInput);
 
         const submitBtn = document.createElement('button');
         submitBtn.className = 'quiz__submit--blue';
@@ -771,9 +769,68 @@ document.addEventListener('DOMContentLoaded', () => {
     return digits;
   }
 
-  // Заглушка эффекта
+  function setupPhoneMask(input) {
+    let mask = IMask(input, {
+      mask: '+7 (000) 000-00-00',
+      lazy: true,
+      placeholderChar: '_'
+    });
+
+    function setGray() {
+      input.style.color = '#838383';
+      mask.updateOptions({ lazy: true, placeholderChar: '_' });
+    }
+
+    function setBlack() {
+      input.style.color = '#1a1a1a';
+      mask.updateOptions({ lazy: false, placeholderChar: ' ' });
+    }
+
+    setGray();
+
+    input.addEventListener('focus', () => setBlack());
+
+    input.addEventListener('blur', () => {
+      let digits = cleanPhone(input.value);
+      if (digits.length < 10) {
+        input.value = '';
+        setGray();
+        input.placeholder = '+7 (___) ___-__-__';
+      } else {
+        input.value = formatPhoneFull(digits);
+        setBlack();
+      }
+    });
+
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      let pasted = (e.clipboardData || window.clipboardData).getData('text');
+      let digits = cleanPhone(pasted);
+      if (digits.length >= 10) {
+        digits = digits.slice(-10);
+        input.value = formatPhoneFull(digits);
+        mask.updateValue();
+        setBlack();
+      }
+    });
+
+    input.addEventListener('input', () => {
+      let digits = cleanPhone(input.value);
+      if (digits.length > 10) {
+        digits = digits.slice(-10);
+        input.value = formatPhoneFull(digits);
+        mask.updateValue();
+      }
+      input.style.color = digits.length ? '#1a1a1a' : '#838383';
+    });
+  }
+
   function launchEmojiConfetti() {
-    console.log('🎉 Confetti!');
+    if (typeof confetti !== 'undefined') {
+      confetti();
+    } else {
+      console.log('🎉 Confetti!');
+    }
   }
 });
 </script>
