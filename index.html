@@ -851,18 +851,16 @@ function formatPhonePretty(phone) {
 </script>
 <script src="https://unpkg.com/imask"></script>
 <script>
-
-  // =========================
-  // НАСТРОЙКИ TELEGRAM
-  // =========================
+  // Настройки для Telegram
   const TELEGRAM_SETTINGS = {
     token: '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE',
     chat_id: '-1002856948789'
   };
 
+  // --- Отправка в Telegram
   async function sendLeadToTelegram(name, phone, answersText = '') {
     let formattedPhone = formatPhonePretty(phone);
-let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${formattedPhone}`;
+    let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${formattedPhone}`;
     if (answersText) {
       message += `\n\n📝 Ответы на вопросы:\n${answersText}`;
     }
@@ -876,180 +874,130 @@ let message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Те�
       throw new Error(data.description);
     }
   }
-</script>
-<script src="https://unpkg.com/imask"></script>
-<script>
-// Умное форматирование красивого номера
-function formatPhonePretty(phone) {
-  let digits = phone.replace(/\D/g, '');
-  if (digits.length !== 11 || !digits.startsWith('7')) return phone;
-  return `+7 (${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7,9)}-${digits.slice(9,11)}`;
-}
 
-// Paste-нормализация только при вставке
-function normalizeOnPaste(raw) {
-  let digits = raw.replace(/\D/g, '');
-  if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-  if (digits.length > 11) digits = digits.slice(-11);
-  if (digits.startsWith('7') && digits.length === 11) return digits.slice(1);
-  return digits;
-}
+  // --- Красивая маска вида +7 (000) 000-00-00
+  function applyPhoneMask(input) {
+    const mask = IMask(input, {
+      mask: '+{7} (000) 000-00-00',
+      lazy: true,
+      placeholderChar: '_',
+    });
 
-// Маска для инпута с умной вставкой
-function applyPhoneMask(input) {
-  const mask = IMask(input, {
-    mask: '+{7} (000) 000-00-00',
-    lazy: true,
-    placeholderChar: '_',
-  });
+    input.style.color = '#838383';
 
-  input.style.color = '#838383';
-
-  input.addEventListener('focus', () => {
-    mask.updateOptions({ lazy: false, placeholderChar: ' ' });
-    input.style.color = '#1a1a1a';
-  });
-
-  input.addEventListener('blur', () => {
-    if (!mask.unmaskedValue) {
-      mask.updateOptions({ lazy: true, placeholderChar: '_' });
-      input.style.color = '#838383';
-    } else {
+    // Фокус и блюр для цвета и плейсхолдера
+    input.addEventListener('focus', () => {
+      mask.updateOptions({ lazy: false, placeholderChar: ' ' });
       input.style.color = '#1a1a1a';
-    }
-  });
+    });
 
-  input.addEventListener('paste', (e) => {
-    e.preventDefault();
-    let pasted = (e.clipboardData || window.clipboardData).getData('text') || '';
-    let normalized = normalizeOnPaste(pasted);
-    if (normalized.length === 10) mask.unmaskedValue = normalized;
-  });
-
-  return mask;
-}
-
-// Минимальная проверка перед отправкой
-function validateAndGetPhone(mask) {
-  mask.updateValue();
-  let digits = mask.unmaskedValue.replace(/\D/g, '');
-  if (digits.length === 10) {
-    return '+7' + digits;
-  }
-  return null;
-}
-
-// Конфетти эффект
-function launchEmojiConfetti() {
-  if (typeof confetti === 'undefined') return;
-  const emojis = ['🎉', '🇺🇸', '✨', '❤️', '🇬🇧'];
-  const emojiShapes = emojis.map(e => confetti.shapeFromText({ text: e, scalar: 1.8 }));
-  const count = 200;
-  const defaults = { origin: { y: 0.7 }, gravity: 0.85, decay: 0.9, shapes: emojiShapes };
-  function fire(ratio, opts) {
-    confetti({ ...defaults, ...opts, particleCount: Math.floor(count * ratio) });
-  }
-  fire(0.25, { spread: 25, startVelocity: 60 });
-  fire(0.2, { spread: 45, startVelocity: 50 });
-  fire(0.35, { spread: 70, decay: 0.91, scalar: 0.9 });
-  fire(0.1, { spread: 90, startVelocity: 35, decay: 0.92, scalar: 1.2 });
-  fire(0.1, { spread: 90, startVelocity: 50 });
-}
-
-// Отправка в Telegram
-async function sendLeadToTelegram(name, phone, answersText = '') {
-  const prettyPhone = formatPhonePretty(phone);
-  const message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${prettyPhone}` + (answersText ? `\n\n📝 Ответы на вопросы:\n${answersText}` : '');
-  const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
-  const response = await fetch(url);
-  const data = await response.json();
-  if (!data.ok) {
-    alert('Ошибка отправки в Telegram:\n' + JSON.stringify(data, null, 2));
-    throw new Error(data.description);
-  }
-}
-
-// Основной обработчик формы
-async function handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers = '') {
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = nameInput.value.trim();
-    const phone = validateAndGetPhone(mask);
-
-    if (!name || !phone) {
-      alert('Пожалуйста, заполните все поля корректно!');
-      return;
-    }
-
-    launchEmojiConfetti();
-
-    try {
-      await sendLeadToTelegram(name, phone, extraAnswers);
-    } catch (err) {
-      console.error(err);
-    }
-
-    setTimeout(() => {
-      window.location.href = 'thanks.html';
-    }, 1000);
-  });
-}
-
-// После загрузки
-document.addEventListener('DOMContentLoaded', () => {
-  const mainForm = document.getElementById('tg-form');
-  if (mainForm) {
-    const mainPhone = document.getElementById('phone');
-    const mainName = document.getElementById('name');
-    const mainMask = applyPhoneMask(mainPhone);
-    handleFormSubmission(mainForm, mainName, mainPhone, mainMask);
-  }
-
-  // Для quiz
-  const quizObserver = new MutationObserver(() => {
-    const quizPhone = document.getElementById('quiz-phone');
-    const quizName = document.getElementById('quiz-name');
-    const quizButton = document.querySelector('.quiz__submit');
-
-    if (quizPhone && !quizPhone.dataset.masked) {
-      const quizMask = applyPhoneMask(quizPhone);
-      quizPhone.dataset.masked = "true";
-
-      if (quizButton) {
-        quizButton.textContent = "Узнать результаты";
-        quizButton.classList.add('quiz__submit--blue');
-
-        quizButton.addEventListener('click', async (e) => {
-          e.preventDefault();
-          const name = quizName.value.trim();
-          const phone = validateAndGetPhone(quizMask);
-
-          if (!name || !phone) {
-            alert('Пожалуйста, заполните все поля корректно!');
-            return;
-          }
-
-          launchEmojiConfetti();
-
-          let answersText = '';
-          if (window.userAnswers && Array.isArray(window.userAnswers)) {
-            answersText = window.userAnswers.map((item, index) =>
-              `${index + 1}. ${item.question}\n➡️ ${item.answer}`
-            ).join('\n\n');
-          }
-
-          try {
-            await sendLeadToTelegram(name, phone, answersText);
-          } catch (err) {
-            console.error(err);
-          }
-        });
+    input.addEventListener('blur', () => {
+      if (!mask.unmaskedValue) {
+        mask.updateOptions({ lazy: true, placeholderChar: '_' });
+        input.style.color = '#838383';
+      } else {
+        input.style.color = '#1a1a1a';
       }
-    }
-  });
+    });
 
-  quizObserver.observe(document.body, { childList: true, subtree: true });
-});
+    // Вставка с очисткой
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      let pasted = (e.clipboardData || window.clipboardData).getData('text') || '';
+      let digits = normalizeDigits(pasted);
+      if (digits.length === 10) mask.unmaskedValue = digits;
+    });
+
+    return mask;
+  }
+
+  // --- Нормализация номера на вставке
+  function normalizeDigits(raw) {
+    let digits = raw.replace(/\D/g, '');
+    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+    if (digits.startsWith('7')) digits = digits.slice(1);
+    return digits.slice(-10);
+  }
+
+  // --- Формат для Telegram (без маски, красиво)
+  function formatPhonePretty(phone) {
+    let digits = phone.replace(/\D/g, '');
+    if (digits.length !== 11 || !digits.startsWith('7')) return phone;
+    return `+7 (${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7,9)}-${digits.slice(9,11)}`;
+  }
+
+  // --- Проверка перед отправкой
+  function validateAndGetPhone(mask) {
+    mask.updateValue();
+    let digits = mask.unmaskedValue.replace(/\D/g, '');
+    if (digits.length === 10) {
+      return '+7' + digits;
+    }
+    return null;
+  }
+
+  // --- Универсальная функция для всех форм
+  function handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers = '') {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const phone = validateAndGetPhone(mask);
+
+      if (!name || !phone) {
+        alert('Пожалуйста, заполните все поля корректно!');
+        return;
+      }
+
+      if (typeof launchEmojiConfetti === 'function') {
+        launchEmojiConfetti();
+      }
+
+      try {
+        await sendLeadToTelegram(name, phone, extraAnswers);
+      } catch (err) {
+        console.error(err);
+      }
+
+      setTimeout(() => {
+        window.location.href = 'thanks.html';
+      }, 1000);
+    });
+  }
+
+  // --- Применяем маски и обработчики ко всем формам на странице
+  document.addEventListener('DOMContentLoaded', () => {
+    // Главная форма
+    const mainForm = document.getElementById('tg-form');
+    if (mainForm) {
+      const mainPhone = document.getElementById('phone');
+      const mainName = document.getElementById('name');
+      const mainMask = applyPhoneMask(mainPhone);
+      handleFormSubmission(mainForm, mainName, mainPhone, mainMask);
+    }
+
+    // Автоматическая активация для новых форм (например в квизе)
+    const quizObserver = new MutationObserver(() => {
+      document.querySelectorAll('.quiz-form').forEach(form => {
+        if (form.dataset.prepared) return;
+        form.dataset.prepared = 'true';
+
+        const phoneInput = form.querySelector('input[type="tel"]');
+        const nameInput = form.querySelector('input[type="text"]');
+        if (!phoneInput || !nameInput) return;
+
+        const mask = applyPhoneMask(phoneInput);
+
+        // Собираем ответы если есть
+        const extraAnswers = window.userAnswers && Array.isArray(window.userAnswers)
+          ? window.userAnswers.map((item, i) => `${i + 1}. ${item.question}\n➡️ ${item.answer}`).join('\n\n')
+          : '';
+
+        handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers);
+      });
+    });
+
+    quizObserver.observe(document.body, { childList: true, subtree: true });
+  });
 </script>
 </body>
 </html>
