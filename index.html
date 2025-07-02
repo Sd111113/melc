@@ -1003,14 +1003,27 @@ let currentIndex = 0;
 let progressIndex = 0;
 
 function updateContent(index) {
+  // 1. Убираем старое - блюр на выход
+  content.style.transition = 'filter 0.2s ease';
   content.style.filter = 'blur(4px)';
+
   setTimeout(() => {
+    // 2. Меняем контент во время размытия
     heading.textContent = benefitsData[index].title;
     text.textContent = benefitsData[index].text;
     img.src = benefitsData[index].img;
     img.className = 'benefits__image ' + benefitsData[index].sizeClass;
-    content.style.filter = 'blur(0)';
-  }, 400);
+
+    // 3. Оставляем размытым при смене
+    content.style.filter = 'blur(4px)';
+
+    // 4. Через пару миллисекунд снимаем блюр на вход
+    setTimeout(() => {
+      content.style.transition = 'filter 0.2s ease';
+      content.style.filter = 'blur(0)';
+    }, 10);
+
+  }, 200);
 }
 
 function fillProgress(bar) {
