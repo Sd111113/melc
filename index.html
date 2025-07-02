@@ -892,26 +892,27 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 .benefits__carousel {
   position: relative;
-  max-width: 700px;
+  max-width: 600px;
   margin: 0 auto;
+  overflow: hidden;
+  border-radius: 20px;
 }
 .benefits__card {
   background: #5999ff;
   border-radius: 20px;
-  padding: 16px 20px;
-  box-sizing: border-box;
+  padding: 20px;
   color: #ffffff;
-  height: 300px;
+  height: 360px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: absolute;
+  width: 100%;
   top: 0;
   left: 0;
-  width: 100%;
   opacity: 0;
   filter: blur(4px);
-  transition: opacity 0.5s ease, filter 0.5s ease;
+  transition: opacity 0.7s ease, filter 0.7s ease;
 }
 .benefits__card.active {
   opacity: 1;
@@ -920,7 +921,7 @@ document.addEventListener('DOMContentLoaded', () => {
 .benefits__progress {
   display: flex;
   gap: 6px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   justify-content: center;
 }
 .progress-bar {
@@ -932,6 +933,8 @@ document.addEventListener('DOMContentLoaded', () => {
   position: relative;
 }
 .progress-bar-fill {
+  content: "";
+  display: block;
   height: 100%;
   background: #ffffff;
   width: 0%;
@@ -940,71 +943,75 @@ document.addEventListener('DOMContentLoaded', () => {
 .benefits__content h3 {
   font-family: 'Gilroy Semibold', sans-serif;
   font-size: 18px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 .benefits__content p {
   font-family: 'Gilroy Medium', sans-serif;
   font-size: 13px;
-  margin-bottom: 12px;
   line-height: 1.4;
 }
 .benefits__content img {
   max-width: 100%;
-  max-height: 120px;
+  max-height: 140px;
   object-fit: contain;
   display: block;
+  margin-top: 10px;
 }
 </style>
 
 <script>
-const benefitsCarousel = document.getElementById('benefits-carousel');
-const benefitCards = benefitsCarousel.querySelectorAll('.benefits__card');
-let benefitIndex = 0;
-let running = false;
+const carousel = document.getElementById('benefits-carousel');
+const cards = carousel.querySelectorAll('.benefits__card');
+const allBars = carousel.querySelectorAll('.progress-bar');
+let current = 0;
 
-// Add fill elements to progress bars
-benefitCards.forEach(card => {
-  card.querySelectorAll('.progress-bar').forEach(bar => {
-    const fill = document.createElement('div');
-    fill.classList.add('progress-bar-fill');
-    bar.appendChild(fill);
+function createFills() {
+  allBars.forEach(bar => {
+    bar.innerHTML = '<span class="progress-bar-fill"></span>';
   });
-});
+}
+createFills();
 
-const observer = new IntersectionObserver(entries => {
+let observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
-    if (entry.isIntersecting && !running) {
-      running = true;
-      startBenefitCarousel();
+    if (entry.isIntersecting) {
+      startCarousel();
       observer.unobserve(entry.target);
     }
   });
 }, { threshold: 0.45 });
-observer.observe(benefitsCarousel);
+observer.observe(carousel);
 
-function startBenefitCarousel() {
-  showCard(benefitIndex);
+function startCarousel() {
+  showCard(0);
 }
 
 function showCard(index) {
-  benefitCards.forEach((card, i) => {
-    const fills = card.querySelectorAll('.progress-bar-fill');
-    fills.forEach(f => f.style.width = '0%');
-    card.classList.remove('active');
+  cards.forEach((card, i) => {
+    card.classList.toggle('active', i === index);
   });
 
-  const currentCard = benefitCards[index];
-  currentCard.classList.add('active');
-
-  const progressFills = currentCard.querySelectorAll('.progress-bar-fill');
-  for (let i = 0; i <= index; i++) {
-    progressFills[i].style.transition = 'width 4s linear';
-    progressFills[i].style.width = '100%';
-  }
+  const progressBars = cards[index].querySelectorAll('.progress-bar-fill');
+  progressBars.forEach((fill, i) => {
+    if (i === index) {
+      fill.style.transition = 'width 4s linear';
+      fill.style.width = '100%';
+    } else if (i < index) {
+      fill.style.transition = 'none';
+      fill.style.width = '100%';
+    } else {
+      fill.style.transition = 'none';
+      fill.style.width = '0%';
+    }
+  });
 
   setTimeout(() => {
-    benefitIndex = (benefitIndex + 1) % benefitCards.length;
-    showCard(benefitIndex);
+    current = (index + 1) % cards.length;
+    if (current === 0) {
+      // Reset all bars when cycle restarts
+      allBars.forEach(bar => bar.querySelector('.progress-bar-fill').style.width = '0%');
+    }
+    showCard(current);
   }, 5000);
 }
 </script>
