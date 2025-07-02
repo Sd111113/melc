@@ -926,7 +926,7 @@ document.addEventListener('DOMContentLoaded', () => {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  transition: filter 0.4s ease;
+  transition: filter 0.2s ease, opacity 0.2s ease;
   flex-grow: 1;
 }
 
@@ -1004,23 +1004,25 @@ let currentIndex = 0;
 let progressIndex = 0;
 
 async function updateContent(index) {
-  // 1. Запускаем затухание (blur out)
-  content.style.transition = 'filter 0.2s ease';
+  // 1. Исчезание старого контента
+  content.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
   content.style.filter = 'blur(4px)';
+  content.style.opacity = '0';
 
-  // 2. Предзагружаем картинку заранее
+  // 2. Дожидаемся блюра + предзагрузки новой картинки
   await preloadImage(benefitsData[index].img);
 
-  // 3. Меняем контент после подгрузки
+  // 3. Меняем текст и картинку
   heading.textContent = benefitsData[index].title;
   text.textContent = benefitsData[index].text;
   img.src = benefitsData[index].img;
   img.className = 'benefits__image ' + benefitsData[index].sizeClass;
 
-  // 4. Запускаем проявление (blur in)
+  // 4. Мягкая пауза на рендер
   setTimeout(() => {
-    content.style.transition = 'filter 0.2s ease';
+    content.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
     content.style.filter = 'blur(0)';
+    content.style.opacity = '1';
   }, 50);
 }
 
