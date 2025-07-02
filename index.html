@@ -637,6 +637,8 @@ font-weight: 400;
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  renderQuizStep();
+});
 </script>
 <script>
   let currentStep = 0;
@@ -702,9 +704,6 @@ document.addEventListener('DOMContentLoaded', () => {
       description: "Мы определим ваш уровень на нашем бесплатном пробном уроке. Скоро наш менеджер свяжется и подберет время!"
     }
   ];
-
-  let currentStep = 0;
-  let userAnswers = [];
 
   function updateProgress() {
     const progressText = document.getElementById('quiz-progress-text');
