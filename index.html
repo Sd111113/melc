@@ -833,6 +833,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
+
 <!-- 5й блок наши плюшки -->
 <section class="benefits">
   <h2 class="benefits__title">На нашем офлайн обучении вы получите:</h2>
@@ -846,7 +847,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       <div class="benefits__content">
         <h3>Личный кабинет</h3>
-        <p>Чтобы вы двигались уверенно и четко. Видео с ваших выступлении, чтобы вы могли видеть результаты своих достижении</p>
+        <p>Чтобы вы двигались уверенно и четко. Видео с ваших выступлений, чтобы вы могли видеть результаты своих достижений</p>
         <img src="images/myelc.net.png" alt="Личный кабинет">
       </div>
     </div>
@@ -933,7 +934,6 @@ document.addEventListener('DOMContentLoaded', () => {
   position: relative;
 }
 .progress-bar-fill {
-  content: "";
   display: block;
   height: 100%;
   background: #ffffff;
@@ -993,22 +993,13 @@ function showCard(index) {
 
   const progressBars = cards[index].querySelectorAll('.progress-bar-fill');
   progressBars.forEach((fill, i) => {
-    if (i === index) {
-      fill.style.transition = 'width 4s linear';
-      fill.style.width = '100%';
-    } else if (i < index) {
-      fill.style.transition = 'none';
-      fill.style.width = '100%';
-    } else {
-      fill.style.transition = 'none';
-      fill.style.width = '0%';
-    }
+    fill.style.transition = 'width 4s linear';
+    fill.style.width = i === index ? '100%' : (i < index ? '100%' : '0%');
   });
 
   setTimeout(() => {
     current = (index + 1) % cards.length;
     if (current === 0) {
-      // Reset all bars when cycle restarts
       allBars.forEach(bar => bar.querySelector('.progress-bar-fill').style.width = '0%');
     }
     showCard(current);
