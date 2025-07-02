@@ -928,13 +928,13 @@ function formatPhonePretty(phone) {
 
   // --- Проверка перед отправкой
   function validateAndGetPhone(mask) {
-    mask.updateValue();
-    let digits = mask.unmaskedValue.replace(/\D/g, '');
-    if (digits.length === 10) {
-      return '+7' + digits;
-    }
-    return null;
+  mask.updateValue();
+  let digits = mask.unmaskedValue.replace(/\D/g, '');
+  if (digits.length === 10 && /^\d{10}$/.test(digits)) {
+    return '7' + digits;
   }
+  return null;
+}
 
   // --- Универсальная функция для всех форм
   function handleFormSubmission(form, nameInput, phoneInput, mask, extraAnswers = '') {
