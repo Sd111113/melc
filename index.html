@@ -847,10 +847,9 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="benefits__content">
         <h3>Личный кабинет</h3>
         <p>Чтобы вы двигались уверенно и четко. Видео с ваших выступлении, чтобы вы могли видеть результаты своих достижении</p>
-        <img class="benefits__image" src="images/myelc.net.png" alt="Личный кабинет">
+        <img src="images/myelc.net.png" alt="Личный кабинет">
       </div>
     </div>
-
     <div class="benefits__card">
       <div class="benefits__progress">
         <span class="progress-bar"></span>
@@ -860,10 +859,9 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="benefits__content">
         <h3>До 5 преподавателей за 1 урок</h3>
         <p>Рецепт из 12 лет опыта и знаний: 5 преподавателей, 5 разных классов и упражнений. После каждого урока - экзамен для уверенности в новых знаниях</p>
-        <img class="benefits__image" src="images/classes.png" alt="До 5 преподавателей">
+        <img src="images/classes.png" alt="До 5 преподавателей">
       </div>
     </div>
-
     <div class="benefits__card">
       <div class="benefits__progress">
         <span class="progress-bar"></span>
@@ -873,7 +871,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="benefits__content">
         <h3>Сертификат за каждый уровень</h3>
         <p>По прохождению каждого уровня мы выдаем индивидуальный сертификат</p>
-        <img class="benefits__image" src="images/certificate.png" alt="Сертификат">
+        <img src="images/certificate.png" alt="Сертификат">
       </div>
     </div>
   </div>
@@ -887,25 +885,28 @@ document.addEventListener('DOMContentLoaded', () => {
 .benefits__title {
   font-family: 'Gilroy Bold', sans-serif;
   font-size: 25px;
-  margin-bottom: 24px;
+  font-weight: 400;
   color: #1a1a1a;
+  margin-bottom: 24px;
+  text-align: left;
 }
 .benefits__carousel {
   display: flex;
   overflow: hidden;
   position: relative;
-  height: 500px; /* фиксированный размер по самому высокому контенту */
 }
 .benefits__card {
   background: #5999ff;
   border-radius: 20px;
   padding: 16px 20px;
   flex: 0 0 100%;
+  box-sizing: border-box;
   color: #ffffff;
-  transition: opacity 0.3s ease, filter 0.3s ease;
+  height: 380px; /* уменьшена высота на 20% */
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  justify-content: space-between;
+  transition: opacity 0.5s ease, filter 0.5s ease;
 }
 .benefits__progress {
   display: flex;
@@ -937,17 +938,53 @@ document.addEventListener('DOMContentLoaded', () => {
 .benefits__content p {
   font-family: 'Gilroy Medium', sans-serif;
   font-size: 13px;
-  line-height: 1.4;
   margin-bottom: 12px;
+  line-height: 1.4;
 }
-.benefits__image {
+.benefits__content img {
+  width: auto;
   max-width: 100%;
-  max-height: 260px;
+  max-height: 140px;
   object-fit: contain;
   display: block;
-  margin: 0 auto;
 }
 </style>
+
+<script>
+const carousel = document.getElementById('benefits-carousel');
+const cards = carousel.querySelectorAll('.benefits__card');
+let current = 0;
+let observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      startCarousel();
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.45 });
+observer.observe(carousel);
+
+function startCarousel() {
+  setInterval(() => {
+    cards.forEach((card, i) => {
+      const bars = card.querySelectorAll('.progress-bar::after');
+      bars.forEach(bar => bar.style.width = '0%');
+      if (i === current) {
+        card.style.opacity = 1;
+        card.style.filter = 'blur(0)';
+        const progress = card.querySelectorAll('.progress-bar');
+        progress.forEach(bar => {
+          bar.querySelector('::after').style.width = '100%';
+        });
+      } else {
+        card.style.opacity = 0;
+        card.style.filter = 'blur(4px)';
+      }
+    });
+    current = (current + 1) % cards.length;
+  }, 3000);
+}
+</script>
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
