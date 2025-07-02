@@ -470,7 +470,7 @@ font-weight: 400;
   z-index: 1;
 }
 </style>
-<!-- КВИЗ (готовая секция и скрипт с маской для телефона и валидацией имени) -->
+<!-- КВИЗ (готовая секция и скрипт с маской для телефона и валидацией имени, полностью исправленный под макет) -->
 
 <section class="quiz">
   <h2 class="quiz__title">Опрос, чтобы лучше<br>понять свою цель:</h2>
@@ -485,6 +485,7 @@ font-weight: 400;
     <div class="quiz__answers" id="quiz-answers"></div>
   </div>
 </section>
+
 <style>
 .quiz {
   background: #f4f4f4;
@@ -509,7 +510,8 @@ font-weight: 400;
   position: relative;
 }
 .quiz__progress-text {
-  font-size: 10pt;
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 11px;
   color: #1a1a1a;
 }
 .quiz__progress-bar {
@@ -527,8 +529,9 @@ font-weight: 400;
 }
 .quiz__question {
   font-family: 'Gilroy Semibold', sans-serif;
-  font-size: 14pt;
+  font-size: 17px;
   color: #1a1a1a;
+  transition: opacity 0.3s, transform 0.3s;
 }
 .quiz__answers {
   display: flex;
@@ -541,15 +544,40 @@ font-weight: 400;
   border-radius: 16px;
   padding: 10px 16px;
   font-family: 'Gilroy Medium', sans-serif;
-  font-size: 11pt;
+  font-size: 15px;
   color: #1a1a1a;
   cursor: pointer;
-  opacity: 0;
-  animation: slideIn 0.3s ease forwards;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background 0.3s, border-color 0.3s;
 }
-.quiz__answer:hover {
+.quiz__answer.active {
   background: #f88dad;
   border-color: #1a1a1a;
+}
+.quiz__radio {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #1a1a1a;
+  position: relative;
+  flex-shrink: 0;
+}
+.quiz__answer input[type="radio"] {
+  display: none;
+}
+.quiz__answer.selected .quiz__radio::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1a1a1a;
 }
 .quiz__input {
   width: 100%;
@@ -561,7 +589,7 @@ font-weight: 400;
   background: #ffeef3;
   box-sizing: border-box;
 }
-.quiz__submit {
+.quiz__submit--blue {
   width: 100%;
   padding: 14px;
   background: #1d2f6f;
@@ -576,80 +604,37 @@ font-weight: 400;
   font-family: 'Gilroy Regular', sans-serif;
   font-size: 14pt;
   color: #1a1a1a;
+  margin-top: 12px;
 }
-@keyframes slideIn {
+.fade-in {
+  animation: fadeIn 0.3s forwards;
+}
+.fade-out {
+  animation: fadeOut 0.3s forwards;
+}
+@keyframes fadeIn {
   from { opacity: 0; transform: translateX(30px); }
   to { opacity: 1; transform: translateX(0); }
 }
-@keyframes slideOut {
+@keyframes fadeOut {
   from { opacity: 1; transform: translateX(0); }
   to { opacity: 0; transform: translateX(-30px); }
 }
 </style>
+
 <script src="https://unpkg.com/imask"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   let currentStep = 0;
   const userAnswers = [];
-
   const quizQuestions = [
-    {
-      type: "question",
-      text: "Изучали Вы ранее английский язык?",
-      answers: [
-        "Да, в школе 🎒",
-        "Да, проходил(а) курсы 🇺🇸",
-        "Да, с репетитором 👩🏻‍🏫",
-        "Нет, только хочу начать 🏁"
-      ]
-    },
-    {
-      type: "question",
-      text: "Для какой цели Вам нужны знания английского языка?",
-      answers: [
-        "Для работы 👷🏻",
-        "Для путешествий 🛩️",
-        "В личных целях 🍿",
-        "Просто хочу знать 💡"
-      ]
-    },
-    {
-      type: "question",
-      text: "Сколько Вы готовы уделять времени изучению?",
-      answers: [
-        "Одно занятие в неделю 🕐",
-        "Два занятия в неделю 🕑",
-        "Три занятия в неделю 🕒",
-        "Четыре занятия в неделю и больше ♾️"
-      ]
-    },
-    {
-      type: "question",
-      text: "Выберите то, что больше подходит для Вас:",
-      answers: [
-        "Я понимаю речь, но сам(а) говорить не могу 💡",
-        "Умею только читать, на слух не воспринимаю 📕",
-        "С трудом, но могу говорить на английском 🗣️",
-        "Не умею читать и не умею говорить, но хочу научиться 🔥"
-      ]
-    },
-    {
-      type: "question",
-      text: "Какое время Вам подходит для обучения?",
-      answers: [
-        "Утро 🌅",
-        "День 🏙️",
-        "Вечер 🌆"
-      ]
-    },
-    {
-      type: "form"
-    },
-    {
-      type: "thankyou",
-      text: "Спасибо за прохождение нашего Quiz!",
-      description: "Мы определим ваш уровень на бесплатном пробном уроке. Скоро наш менеджер свяжется и подберет время!"
-    }
+    { type: "question", text: "Изучали Вы ранее английский язык?", answers: ["Да, в школе 🎒","Да, проходил(а) курсы 🇺🇸","Да, с репетитором 👩🏻‍🏫","Нет, только хочу начать 🏁"] },
+    { type: "question", text: "Для какой цели Вам нужны знания английского языка?", answers: ["Для работы 👷🏻","Для путешествий 🛩️","В личных целях 🍿","Просто хочу знать 💡"] },
+    { type: "question", text: "Сколько Вы готовы уделять времени изучению?", answers: ["Одно занятие в неделю 🕐","Два занятия в неделю 🕑","Три занятия в неделю 🕒","Четыре занятия в неделю и больше ♾️"] },
+    { type: "question", text: "Выберите то, что больше подходит для Вас:", answers: ["Я понимаю речь, но сам(а) говорить не могу 💡","Умею только читать, на слух не воспринимаю 📕","С трудом, но могу говорить на английском 🗣️","Не умею читать и не умею говорить, но хочу научиться 🔥"] },
+    { type: "question", text: "Какое время Вам подходит для обучения?", answers: ["Утро 🌅","День 🏙️","Вечер 🌆"] },
+    { type: "form" },
+    { type: "thankyou", text: "Спасибо за прохождение нашего Quiz!", description: "Мы определим ваш уровень на бесплатном пробном уроке. Скоро наш менеджер свяжется и подберет время!" }
   ];
 
   function updateProgress() {
@@ -666,79 +651,80 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const step = quizQuestions[currentStep];
     updateProgress();
-    questionEl.innerHTML = '';
-    answersEl.innerHTML = '';
 
-    if (step.type === 'question') {
-      questionEl.textContent = step.text;
-      step.answers.forEach(answer => {
-        const label = document.createElement('label');
-        label.className = 'quiz__answer';
-        label.innerHTML = `<input type="radio"><span class="quiz__radio"></span>${answer}`;
-        label.addEventListener('click', () => {
-          label.style.animation = 'slideOut 0.3s forwards';
-          setTimeout(() => {
-            userAnswers.push({ question: step.text, answer });
-            currentStep++;
-            renderQuizStep();
-          }, 300);
+    questionEl.classList.add('fade-out');
+    answersEl.classList.add('fade-out');
+
+    setTimeout(() => {
+      questionEl.classList.remove('fade-out');
+      answersEl.classList.remove('fade-out');
+
+      questionEl.innerHTML = '';
+      answersEl.innerHTML = '';
+
+      if (step.type === 'question') {
+        questionEl.textContent = step.text;
+        questionEl.classList.add('fade-in');
+        step.answers.forEach(answer => {
+          const label = document.createElement('label');
+          label.className = 'quiz__answer fade-in';
+          label.innerHTML = `<span class="quiz__radio"></span>${answer}`;
+          label.addEventListener('click', () => {
+            label.classList.add('selected');
+            setTimeout(() => {
+              userAnswers.push({ question: step.text, answer });
+              currentStep++;
+              renderQuizStep();
+            }, 300);
+          });
+          answersEl.appendChild(label);
         });
-        answersEl.appendChild(label);
-      });
-    }
-
-    else if (step.type === 'form') {
-      questionEl.textContent = "Чтобы узнать результат, заполните форму ниже:";
-
-      const nameInput = document.createElement('input');
-      nameInput.type = 'text';
-      nameInput.placeholder = 'Имя';
-      nameInput.className = 'quiz__input';
-      nameInput.id = 'quiz-name';
-
-      const phoneInput = document.createElement('input');
-      phoneInput.type = 'tel';
-      phoneInput.placeholder = '+7 (___) ___-__-__';
-      phoneInput.className = 'quiz__input';
-      phoneInput.id = 'quiz-phone';
-
-      const submitBtn = document.createElement('button');
-      submitBtn.className = 'quiz__submit--blue';
-      submitBtn.textContent = 'Узнать результаты';
-
-      answersEl.appendChild(nameInput);
-      answersEl.appendChild(phoneInput);
-      answersEl.appendChild(submitBtn);
-
-      // Маска для телефона
-      IMask(phoneInput, { mask: '+7 (000) 000-00-00' });
-
-      submitBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const name = nameInput.value.trim();
-        const phone = phoneInput.value.trim();
-        if (!name || cleanPhone(phone).length !== 10) {
-          alert('Пожалуйста, заполните корректно все поля!');
-          return;
-        }
-
-        const answersText = userAnswers.map((item, idx) => `${idx + 1}. ${item.question}\n➡️ ${item.answer}`).join('\n\n');
-        await sendLeadToTelegram(name, phone, answersText);
+      }
+      else if (step.type === 'form') {
+        questionEl.textContent = "Чтобы узнать результат, заполните форму ниже:";
+        questionEl.classList.add('fade-in');
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.placeholder = 'Имя';
+        nameInput.className = 'quiz__input';
+        nameInput.id = 'quiz-name';
+        const phoneInput = document.createElement('input');
+        phoneInput.type = 'tel';
+        phoneInput.placeholder = '+7 (___) ___-__-__';
+        phoneInput.className = 'quiz__input';
+        phoneInput.id = 'quiz-phone';
+        IMask(phoneInput, { mask: '+7 (000) 000-00-00' });
+        const submitBtn = document.createElement('button');
+        submitBtn.className = 'quiz__submit--blue';
+        submitBtn.textContent = 'Узнать результаты';
+        submitBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const name = nameInput.value.trim();
+          const phone = cleanPhone(phoneInput.value);
+          if (!name || phone.length !== 10) {
+            alert('Пожалуйста, заполните корректно все поля!');
+            return;
+          }
+          const answersText = userAnswers.map((item, idx) => `${idx + 1}. ${item.question}\n➡️ ${item.answer}`).join('\n\n');
+          await sendLeadToTelegram(name, phone, answersText);
+          launchEmojiConfetti();
+          currentStep++;
+          renderQuizStep();
+        });
+        answersEl.appendChild(nameInput);
+        answersEl.appendChild(phoneInput);
+        answersEl.appendChild(submitBtn);
+      }
+      else if (step.type === 'thankyou') {
+        questionEl.textContent = step.text;
+        questionEl.classList.add('fade-in');
+        const desc = document.createElement('p');
+        desc.className = 'quiz__description';
+        desc.textContent = step.description;
+        answersEl.appendChild(desc);
         launchEmojiConfetti();
-
-        currentStep++;
-        renderQuizStep();
-      });
-    }
-
-    else if (step.type === 'thankyou') {
-      questionEl.textContent = step.text;
-      const desc = document.createElement('p');
-      desc.className = 'quiz__description';
-      desc.textContent = step.description;
-      answersEl.appendChild(desc);
-      launchEmojiConfetti();
-    }
+      }
+    }, 300);
   }
 
   renderQuizStep();
