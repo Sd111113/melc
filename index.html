@@ -1085,7 +1085,8 @@ setTimeout(cycle, 400);
 <!-- 6й блок - отзывы -->
 <section class="reviews">
   <h2 class="reviews__title">Говорите по-английски<br>свободно</h2>
-  <div class="reviews__subtitle-wrapper">
+
+  <div class="reviews__subtitle-card">
     <p class="reviews__subtitle">
       Уже более 10 000+ наших учеников<br>
       прошли наши курсы, выражаются по-английски непринужденно,<br>
@@ -1127,11 +1128,15 @@ setTimeout(cycle, 400);
   margin-bottom: 10px;
   line-height: 1.3;
 }
-.reviews__subtitle-wrapper {
+
+/* Подзаголовок в карточке цвета #f9e9ec */
+.reviews__subtitle-card {
+  background: #f9e9ec;
+  border-radius: 20px;
+  padding: 14px 16px;
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  align-items: flex-end;
   margin-bottom: 20px;
 }
 .reviews__subtitle {
@@ -1139,15 +1144,17 @@ setTimeout(cycle, 400);
   font-size: 15px;
   color: #1a1a1a;
   line-height: 1.4;
-  max-width: 80%;
+  max-width: 75%;
 }
 .reviews__stars {
   width: 20%;
   max-width: 80px;
   height: auto;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin-right: 8px;
+  margin-bottom: 8px;
 }
+
+/* Карусель отзывов */
 .reviews__carousel-wrapper {
   position: relative;
   overflow: hidden;
@@ -1160,22 +1167,27 @@ setTimeout(cycle, 400);
 .reviews__track {
   display: flex;
   gap: 12px;
+  scroll-snap-align: start;
+  padding: 4px 0;
 }
 .reviews__item {
-  flex: 0 0 auto;
-  width: 260px;
-  aspect-ratio: 1 / 1;
+  flex: 0 0 200px;
+  aspect-ratio: 1/1;
   border-radius: 10px;
   background: white;
   overflow: hidden;
   position: relative;
+  scroll-snap-align: center;
 }
 .reviews__item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top left;
   background-color: white;
 }
+
+/* Белый градиент снизу */
 .reviews__item::after {
   content: '';
   position: absolute;
@@ -1198,42 +1210,56 @@ setTimeout(cycle, 400);
   padding: 2px 6px;
   border-radius: 4px;
 }
+
+/* Дымки слева и справа */
 .reviews__fade {
   position: absolute;
   top: 0;
-  width: 40px;
+  width: 48px;
   height: 100%;
-  background: linear-gradient(to right, #f4f4f4 0%, transparent 100%);
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.8) 0%, transparent 80%);
+  backdrop-filter: blur(4px);
+  opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s;
 }
 .reviews__fade--left {
   left: 0;
-  opacity: 0.8;
 }
 .reviews__fade--right {
   right: 0;
-  opacity: 0.8;
 }
+
+/* Кнопки с кастомными иконками */
 .reviews__nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   width: 36px;
   height: 36px;
-  background: rgba(255,255,255,0.8) url('images/review_arrow_icon.png') no-repeat center;
-  background-size: 50%;
   border: none;
   border-radius: 50%;
   cursor: pointer;
+  opacity: 0;
+  background-color: rgba(255,255,255,0.8);
+  background-size: 60% auto;
+  background-repeat: no-repeat;
+  background-position: center;
   transition: opacity 0.2s;
 }
 .reviews__nav--left {
   left: 8px;
-  display: none;
+  background-image: url('images/button_left.webp');
 }
 .reviews__nav--right {
   right: 8px;
+  background-image: url('images/button_right.webp');
+}
+
+/* Активные состояния для JS */
+.reviews__fade--visible,
+.reviews__nav--visible {
+  opacity: 1;
 }
 </style>
 <script src="https://unpkg.com/imask"></script>
