@@ -972,60 +972,13 @@ document.addEventListener('DOMContentLoaded', () => {
 </style>
 
 <script>
-const benefitsData = [
-  {
-    title: "Личный кабинет",
-    text: "Чтобы вы двигались уверенно и четко. Видео с ваших выступлений, чтобы вы могли видеть результаты своих достижений",
-    img: "images/myelc.net.webp",
-    sizeClass: "size-medium"
-  },
-  {
-    title: "До 5 преподавателей за 1 урок",
-    text: "Рецепт из 12 лет опыта и знаний: 5 преподавателей, 5 разных классов и упражнений. После каждого урока - экзамен для уверенности в новых знаниях",
-    img: "images/classes.webp",
-    sizeClass: "size-large"
-  },
-  {
-    title: "Сертификат за каждый уровень",
-    text: "По прохождению каждого уровня мы выдаем индивидуальный сертификат",
-    img: "images/certificate.webp",
-    sizeClass: "size-large"
-  }
-];
+// 1. Предзагрузка всех картинок при загрузке
+benefitsData.forEach(item => {
+  const img = new Image();
+  img.src = item.img;
+});
 
-const carousel = document.getElementById('benefits-carousel');
-const content = document.getElementById('benefits-content');
-const progressBars = carousel.querySelectorAll('.progress-bar');
-const heading = carousel.querySelector('.benefits__heading');
-const text = carousel.querySelector('.benefits__text');
-const img = carousel.querySelector('.benefits__image');
-
-let currentIndex = 0;
-let progressIndex = 0;
-
-async function updateContent(index) {
-  // 1. Исчезание старого контента
-  content.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
-  content.style.filter = 'blur(4px)';
-  content.style.opacity = '0';
-
-  // 2. Дожидаемся блюра + предзагрузки новой картинки
-  await preloadImage(benefitsData[index].img);
-
-  // 3. Меняем текст и картинку
-  heading.textContent = benefitsData[index].title;
-  text.textContent = benefitsData[index].text;
-  img.src = benefitsData[index].img;
-  img.className = 'benefits__image ' + benefitsData[index].sizeClass;
-
-  // 4. Мягкая пауза на рендер
-  setTimeout(() => {
-    content.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
-    content.style.filter = 'blur(0)';
-    content.style.opacity = '1';
-  }, 50);
-}
-
+// 2. Helper для предзагрузки одной картинки (для плавной смены)
 function preloadImage(src) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -1034,23 +987,50 @@ function preloadImage(src) {
   });
 }
 
-function fillProgress(bar) {
-  bar.classList.add('active');
+// 3. Основная функция смены карточки с разделённой анимацией (0.2s out + 0.2s in)
+async function updateContent(index) {
+  // 1️⃣ Уход старого контента (fade-out + blur)
+  content.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
+  content.style.filter = 'blur(4px)';
+  content.style.opacity = '0';
+
+  // 2️⃣ Ждём 0.2 секунды окончания анимации исчезновения
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  // 3️⃣ Предзагружаем новую картинку
+  await preloadImage(benefitsData[index].img);
+
+  // 4️⃣ Ставим новый контент мгновенно в скрытом виде
+  content.style.transition = 'none';
+  heading.textContent = benefitsData[index].title;
+  text.textContent = benefitsData[index].text;
+  img.src = benefitsData[index].img;
+  img.className = 'benefits__image ' + benefitsData[index].sizeClass;
+  content.style.filter = 'blur(4px)';
+  content.style.opacity = '0';
+
+  // 5️⃣ Пауза один кадр (чтобы DOM применился)
+  await new Promise(requestAnimationFrame);
+
+  // 6️⃣ Появление нового контента (fade-in + blur out)
+  content.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
+  content.style.filter = 'blur(0)';
+  content.style.opacity = '1';
 }
 
-function resetProgressBarsInstant() {
-  progressBars.forEach(bar => {
-    bar.classList.remove('active');
-    bar.querySelector('::after')?.removeAttribute('style');
-  });
+// 4. Функции для прогресс-баров
+function fillProgress(bar) {
+  bar.classList.add('active');
 }
 
 function resetProgressBars() {
   progressBars.forEach(bar => bar.classList.remove('active'));
 }
 
+// 5. Цикл показа карточек
 function cycle() {
   fillProgress(progressBars[progressIndex]);
+
   setTimeout(() => {
     currentIndex = (currentIndex + 1) % benefitsData.length;
     progressIndex++;
@@ -1069,7 +1049,21 @@ function cycle() {
   }, 4000);
 }
 
-setTimeout(cycle, 400);
+// 6. IntersectionObserver — запуск при появлении на 30% экрана
+let animationStarted = false;
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !animationStarted) {
+        animationStarted = true;
+        setTimeout(cycle, 400);
+      }
+    });
+  },
+  { threshold: 0.3 }
+);
+
+observer.observe(document.querySelector('.benefits'));
 </script>
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
