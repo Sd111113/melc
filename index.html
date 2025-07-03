@@ -978,7 +978,7 @@ benefitsData.forEach(item => {
   img.src = item.img;
 });
 
-// 2. Helper для предзагрузки одной картинки (для плавной смены)
+// 2. Helper для предзагрузки одной картинки
 function preloadImage(src) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -987,20 +987,20 @@ function preloadImage(src) {
   });
 }
 
-// 3. Основная функция смены карточки с разделённой анимацией (0.2s out + 0.2s in)
+// 3. Основная функция смены карточки с разделённой анимацией (0.2s fade-out + 0.2s fade-in)
 async function updateContent(index) {
-  // 1️⃣ Уход старого контента (fade-out + blur)
+  // === STEP 1: Исчезновение текущего контента ===
   content.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
   content.style.filter = 'blur(4px)';
   content.style.opacity = '0';
 
-  // 2️⃣ Ждём 0.2 секунды окончания анимации исчезновения
+  // Ждем завершения анимации "исчезновения"
   await new Promise(resolve => setTimeout(resolve, 200));
 
-  // 3️⃣ Предзагружаем новую картинку
+  // === STEP 2: Предзагрузка новой картинки ===
   await preloadImage(benefitsData[index].img);
 
-  // 4️⃣ Ставим новый контент мгновенно в скрытом виде
+  // === STEP 3: Установка нового контента мгновенно в скрытом виде ===
   content.style.transition = 'none';
   heading.textContent = benefitsData[index].title;
   text.textContent = benefitsData[index].text;
@@ -1009,10 +1009,10 @@ async function updateContent(index) {
   content.style.filter = 'blur(4px)';
   content.style.opacity = '0';
 
-  // 5️⃣ Пауза один кадр (чтобы DOM применился)
+  // Ждем один кадр для применения новых DOM-значений
   await new Promise(requestAnimationFrame);
 
-  // 6️⃣ Появление нового контента (fade-in + blur out)
+  // === STEP 4: Появление нового контента ===
   content.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
   content.style.filter = 'blur(0)';
   content.style.opacity = '1';
