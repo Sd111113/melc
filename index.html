@@ -1003,35 +1003,35 @@ const img = carousel.querySelector('.benefits__image');
 let currentIndex = 0;
 let progressIndex = 0;
 
+// 3. Основная функция смены карточки с разделённой анимацией (0.2s fade-out + 0.2s fade-in)
 async function updateContent(index) {
-  // 1. Исчезание старого контента
+  // === STEP 1: Исчезновение текущего контента ===
   content.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
   content.style.filter = 'blur(4px)';
   content.style.opacity = '0';
 
-  // 2. Дожидаемся блюра + предзагрузки новой картинки
+  // Ждем завершения анимации "исчезновения"
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  // === STEP 2: Предзагрузка новой картинки ===
   await preloadImage(benefitsData[index].img);
 
-  // 3. Меняем текст и картинку
+  // === STEP 3: Установка нового контента мгновенно в скрытом виде ===
+  content.style.transition = 'none';
   heading.textContent = benefitsData[index].title;
   text.textContent = benefitsData[index].text;
   img.src = benefitsData[index].img;
   img.className = 'benefits__image ' + benefitsData[index].sizeClass;
+  content.style.filter = 'blur(4px)';
+  content.style.opacity = '0';
 
-  // 4. Мягкая пауза на рендер
-  setTimeout(() => {
-    content.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
-    content.style.filter = 'blur(0)';
-    content.style.opacity = '1';
-  }, 50);
-}
+  // Ждем один кадр для применения новых DOM-значений
+  await new Promise(requestAnimationFrame);
 
-function preloadImage(src) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve();
-    img.src = src;
-  });
+  // === STEP 4: Появление нового контента ===
+  content.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
+  content.style.filter = 'blur(0)';
+  content.style.opacity = '1';
 }
 
 function fillProgress(bar) {
