@@ -1081,7 +1081,6 @@ function cycle() {
 }
 
 setTimeout(cycle, 400);
-</script>
 <!-- 6й блок - отзывы -->
 <section class="reviews">
   <h2 class="reviews__title">Говорите по-английски<br>свободно</h2>
@@ -1100,13 +1099,13 @@ setTimeout(cycle, 400);
     <button class="reviews__nav reviews__nav--left" aria-label="предыдущий отзыв"></button>
     <div class="reviews__carousel">
       <div class="reviews__track">
-        <div class="reviews__item review-expandable">
+        <div class="reviews__item expandable" data-expandable>
           <img src="images/rewiev_1.webp" alt="Отзыв 1">
-          <button class="reviews__read-more">Прочитать весь отзыв</button>
+          <button class="reviews__expand">Прочитать весь отзыв</button>
         </div>
-        <div class="reviews__item review-expandable">
+        <div class="reviews__item expandable" data-expandable>
           <img src="images/rewiev_2.webp" alt="Отзыв 2">
-          <button class="reviews__read-more">Прочитать весь отзыв</button>
+          <button class="reviews__expand">Прочитать весь отзыв</button>
         </div>
         <div class="reviews__item">
           <img src="images/rewiev_3.webp" alt="Отзыв 3">
@@ -1114,9 +1113,9 @@ setTimeout(cycle, 400);
         <div class="reviews__item">
           <img src="images/rewiev_4.webp" alt="Отзыв 4">
         </div>
-        <div class="reviews__item review-expandable">
+        <div class="reviews__item expandable" data-expandable>
           <img src="images/rewiev_5.webp" alt="Отзыв 5">
-          <button class="reviews__read-more">Прочитать весь отзыв</button>
+          <button class="reviews__expand">Прочитать весь отзыв</button>
         </div>
         <div class="reviews__item">
           <img src="images/rewiev_6.webp" alt="Отзыв 6">
@@ -1149,12 +1148,16 @@ setTimeout(cycle, 400);
 <style>
 .reviews {
   background: #f4f4f4;
-  padding: 0 25px;
+  padding: 0 20px;
 }
+
 .reviews__title {
-  font-family: 'Gilroy Bold', sans-serif;
+  font-family: 'Gilroy Semibold', sans-serif;
   font-size: 25px;
+  font-weight: 400;
+  color: #1a1a1a;
   margin-bottom: 10px;
+  line-height: 1.3;
 }
 
 .reviews__subtitle-card {
@@ -1165,57 +1168,72 @@ setTimeout(cycle, 400);
   justify-content: space-between;
   align-items: flex-end;
   margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.reviews__subtitle {
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 16px;
+  color: #1a1a1a;
+  line-height: 1.4;
+}
+
+.reviews__stars {
+  width: 48px;
+  max-width: 48px;
+  height: auto;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+
+.reviews__carousel-wrapper {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
 }
 
 .reviews__carousel {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.reviews__carousel::-webkit-scrollbar {
-  display: none;
+  padding: 0;
 }
 
 .reviews__track {
   display: flex;
   gap: 12px;
-  margin: 0 -25px;
-  padding: 4px 25px;
-  box-sizing: content-box;
+  padding: 0;
 }
 
 .reviews__item {
   flex: 0 0 210px;
+  height: 210px;
   border-radius: 10px;
   background: white;
   overflow: hidden;
   position: relative;
   scroll-snap-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  transition: height 0.2s ease;
+}
+
+.reviews__item.expanded {
+  height: 420px;
 }
 
 .reviews__item img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
-  object-position: top;
-  transition: max-height 0.2s ease;
-  max-height: 280px;
+  background-color: white;
 }
 
-.reviews__item.expanded img {
-  max-height: 800px;
-}
-
-.reviews__read-more {
+.reviews__expand {
   position: absolute;
   bottom: 8px;
   left: 12px;
   font-family: 'Gilroy Medium', sans-serif;
-  font-size: 11px;
+  font-size: 13px;
   color: #1a1a1a;
   background: rgba(255,255,255,0.85);
   padding: 2px 6px;
@@ -1230,23 +1248,32 @@ setTimeout(cycle, 400);
   width: 48px;
   height: 100%;
   background: linear-gradient(to right, rgba(255,255,255,0.85) 0%, transparent 100%);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(6px);
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.2s;
 }
-.reviews__fade--left { left: 0; }
+
+.reviews__fade--left {
+  left: 0;
+}
+
 .reviews__fade--right {
   right: 0;
   transform: rotateY(180deg);
 }
 
+.reviews__fade--visible,
+.reviews__nav--visible {
+  opacity: 1;
+}
+
 .reviews__nav {
-  --btn-size: 28px;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: var(--btn-size);
-  height: var(--btn-size);
+  width: 34px;
+  height: 34px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -1257,26 +1284,24 @@ setTimeout(cycle, 400);
   background-position: center;
   transition: opacity 0.2s;
 }
+
 .reviews__nav--left {
-  left: 8px;
+  left: 6px;
   background-image: url('images/button_left.webp');
 }
+
 .reviews__nav--right {
-  right: 8px;
+  right: 6px;
   background-image: url('images/button_right.webp');
 }
-.reviews__fade--visible,
-.reviews__nav--visible {
-  opacity: 1;
-}
 
-/* точки пагинации 2.5 раза меньше */
 .slider-dot {
   display: flex;
   justify-content: center;
   gap: 6px;
-  margin-top: 14px;
+  margin-top: 10px;
 }
+
 .slider-dot > span {
   width: 5px;
   height: 5px;
@@ -1285,8 +1310,9 @@ setTimeout(cycle, 400);
   transition: all 0.2s ease;
   cursor: pointer;
 }
+
 .slider-dot > span.active {
-  width: 15px;
+  width: 20px;
   border-radius: 8px;
   background: #f88dad;
 }
@@ -1294,30 +1320,27 @@ setTimeout(cycle, 400);
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const sliderDot = document.querySelector('.slider-dot');
-  const dots = sliderDot.querySelectorAll('span');
-  const carousel = document.querySelector('.reviews__carousel');
-  const track = document.querySelector('.reviews__track');
-  const items = document.querySelectorAll('.reviews__item');
+  const sliderDot = document.querySelector('.slider-dot')
+  const dots = sliderDot.querySelectorAll('span')
+  const carousel = document.querySelector('.reviews__carousel')
+  const track = document.querySelector('.reviews__track')
+  const items = document.querySelectorAll('.reviews__item')
+  let currentIndex = 0
 
-  let currentIndex = 0;
-
-  function setActiveDot(index) {
-    sliderDot.querySelector('.active')?.classList.remove('active');
-    dots[index].classList.add('active');
-  }
-
-  function scrollToIndex(index) {
-    items[index].scrollIntoView({ behavior: 'smooth', inline: 'center' });
-    setActiveDot(index);
-  }
-
+  // dots click
   dots.forEach((node, idx) => {
     node.addEventListener('click', () => {
-      currentIndex = idx;
-      scrollToIndex(currentIndex);
-    });
-  });
+      currentIndex = idx
+      items[idx].scrollIntoView({ behavior: 'smooth', inline: 'center' })
+      updateDots()
+      updateFades()
+    })
+  })
+
+  function updateDots() {
+    sliderDot.querySelector('.active')?.classList.remove('active')
+    dots[currentIndex].classList.add('active')
+  }
 
   const btnLeft = document.querySelector('.reviews__nav--left');
   const btnRight = document.querySelector('.reviews__nav--right');
@@ -1325,48 +1348,47 @@ document.addEventListener('DOMContentLoaded', () => {
   const fadeRight = document.querySelector('.reviews__fade--right');
 
   function updateFades() {
-    fadeLeft.classList.toggle('reviews__fade--visible', currentIndex > 0);
-    fadeRight.classList.toggle('reviews__fade--visible', currentIndex < items.length - 1);
-    btnLeft.classList.toggle('reviews__nav--visible', currentIndex > 0);
-    btnRight.classList.toggle('reviews__nav--visible', currentIndex < items.length - 1);
+    fadeLeft.classList.toggle('reviews__fade--visible', currentIndex > 0)
+    fadeRight.classList.toggle('reviews__fade--visible', currentIndex < items.length - 1)
+    btnLeft.classList.toggle('reviews__nav--visible', currentIndex > 0)
+    btnRight.classList.toggle('reviews__nav--visible', currentIndex < items.length - 1)
   }
 
   btnLeft.addEventListener('click', () => {
-    if (currentIndex > 0) {
-      currentIndex--;
-      scrollToIndex(currentIndex);
-      updateFades();
-    }
-  });
+    if (currentIndex > 0) currentIndex--
+    items[currentIndex].scrollIntoView({ behavior: 'smooth', inline: 'center' })
+    updateDots()
+    updateFades()
+  })
 
   btnRight.addEventListener('click', () => {
-    if (currentIndex < items.length - 1) {
-      currentIndex++;
-      scrollToIndex(currentIndex);
-      updateFades();
-    }
-  });
+    if (currentIndex < items.length - 1) currentIndex++
+    items[currentIndex].scrollIntoView({ behavior: 'smooth', inline: 'center' })
+    updateDots()
+    updateFades()
+  })
 
-  let startX = 0;
-  carousel.addEventListener('touchstart', (e) => startX = e.touches[0].clientX);
+  carousel.addEventListener('touchstart', (e) => startX = e.touches[0].clientX)
   carousel.addEventListener('touchend', (e) => {
-    const dx = e.changedTouches[0].clientX - startX;
-    if (dx < -30 && currentIndex < items.length - 1) currentIndex++;
-    else if (dx > 30 && currentIndex > 0) currentIndex--;
-    scrollToIndex(currentIndex);
-    updateFades();
-  });
+    const dx = e.changedTouches[0].clientX - startX
+    if (dx < -30 && currentIndex < items.length - 1) currentIndex++
+    else if (dx > 30 && currentIndex > 0) currentIndex--
+    items[currentIndex].scrollIntoView({ behavior: 'smooth', inline: 'center' })
+    updateDots()
+    updateFades()
+  })
 
-  document.querySelectorAll('.reviews__read-more').forEach(btn => {
+  // Expanding cards
+  document.querySelectorAll('.reviews__item[data-expandable]').forEach(item => {
+    const btn = item.querySelector('.reviews__expand')
     btn.addEventListener('click', () => {
-      const item = btn.closest('.reviews__item');
-      item.classList.toggle('expanded');
-    });
-  });
+      item.classList.toggle('expanded')
+    })
+  })
 
-  updateFades();
-  setActiveDot(currentIndex);
-});
+  updateFades()
+  updateDots()
+})
 </script>
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
