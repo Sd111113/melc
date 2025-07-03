@@ -1082,6 +1082,160 @@ function cycle() {
 
 setTimeout(cycle, 400);
 </script>
+<!-- 6й блок - отзывы -->
+<section class="reviews">
+  <h2 class="reviews__title">Говорите по-английски<br>свободно</h2>
+  <div class="reviews__subtitle-wrapper">
+    <p class="reviews__subtitle">
+      Уже более 10 000+ наших учеников<br>
+      прошли наши курсы, выражаются по-английски непринужденно,<br>
+      и понимают речь носителей
+    </p>
+    <img src="images/stars_icon.webp" alt="stars" class="reviews__stars">
+  </div>
+
+  <div class="reviews__carousel-wrapper">
+    <button class="reviews__nav reviews__nav--left" aria-label="предыдущий отзыв"></button>
+    <div class="reviews__carousel">
+      <div class="reviews__track">
+        <div class="reviews__item"><img src="images/rewiev_1.webp" alt="Отзыв 1"></div>
+        <div class="reviews__item"><img src="images/rewiev_2.webp" alt="Отзыв 2"></div>
+        <div class="reviews__item"><img src="images/rewiev_3.webp" alt="Отзыв 3"></div>
+        <div class="reviews__item"><img src="images/rewiev_4.webp" alt="Отзыв 4"></div>
+        <div class="reviews__item"><img src="images/rewiev_5.webp" alt="Отзыв 5"></div>
+        <div class="reviews__item"><img src="images/rewiev_6.webp" alt="Отзыв 6"></div>
+        <div class="reviews__item"><img src="images/rewiev_7.webp" alt="Отзыв 7"></div>
+        <div class="reviews__item"><img src="images/rewiev_8.webp" alt="Отзыв 8"></div>
+      </div>
+    </div>
+    <button class="reviews__nav reviews__nav--right" aria-label="следующий отзыв"></button>
+    <div class="reviews__fade reviews__fade--left"></div>
+    <div class="reviews__fade reviews__fade--right"></div>
+  </div>
+</section>
+
+<style>
+.reviews {
+  background: #f4f4f4;
+  padding: 0 25px;
+}
+.reviews__title {
+  font-family: 'Gilroy Bold', sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.reviews__subtitle-wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.reviews__subtitle {
+  font-family: 'Gilroy Semibold', sans-serif;
+  font-size: 15px;
+  color: #1a1a1a;
+  line-height: 1.4;
+  max-width: 80%;
+}
+.reviews__stars {
+  width: 20%;
+  max-width: 80px;
+  height: auto;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.reviews__carousel-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+.reviews__carousel {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.reviews__track {
+  display: flex;
+  gap: 12px;
+}
+.reviews__item {
+  flex: 0 0 auto;
+  width: 260px;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  background: white;
+  overflow: hidden;
+  position: relative;
+}
+.reviews__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: white;
+}
+.reviews__item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  background: linear-gradient(to top, white, transparent);
+  pointer-events: none;
+}
+.reviews__item::before {
+  content: 'Прочитать весь отзыв';
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 13px;
+  color: #1a1a1a;
+  background: rgba(255,255,255,0.8);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.reviews__fade {
+  position: absolute;
+  top: 0;
+  width: 40px;
+  height: 100%;
+  background: linear-gradient(to right, #f4f4f4 0%, transparent 100%);
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.reviews__fade--left {
+  left: 0;
+  opacity: 0.8;
+}
+.reviews__fade--right {
+  right: 0;
+  opacity: 0.8;
+}
+.reviews__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.8) url('images/review_arrow_icon.png') no-repeat center;
+  background-size: 50%;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.reviews__nav--left {
+  left: 8px;
+  display: none;
+}
+.reviews__nav--right {
+  right: 8px;
+}
+</style>
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
