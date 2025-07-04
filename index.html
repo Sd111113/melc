@@ -1229,12 +1229,15 @@ setTimeout(cycle, 400);
 .reviews__item img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: top;
+  transition: object-fit 0.3s ease;
 }
 
 .reviews__item.expanded {
   height: 320px;
+  object-fit: cover;
+  object-position: top;
 }
 
 .reviews__expand {
