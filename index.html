@@ -1081,14 +1081,13 @@ function cycle() {
 }
 
 setTimeout(cycle, 400);
-</script>
 <!-- 6й блок - отзывы -->
 <section class="reviews">
   <h2 class="reviews__title">Говорите по-английски<br>свободно</h2>
 
   <div class="reviews__subtitle-card">
     <p class="reviews__subtitle">
-      Уже более 10 000+ наших учеников<br> 
+      Уже более 10 000+ наших учеников<br> 
       прошли наши курсы, выражаются<br> 
       по-английски непринужденно,<br>
       и понимают речь носителей
@@ -1153,9 +1152,9 @@ setTimeout(cycle, 400);
 }
 
 .reviews__title {
-  font-family: 'Gilroy Semibold', sans-serif;
-  font-size: 25px;
-  font-weight: 400;
+  font-family: 'Gilroy Bold', sans-serif;
+  font-size: 23px;
+  font-weight: 700;
   color: #1a1a1a;
   margin-bottom: 10px;
   line-height: 1.3;
@@ -1164,25 +1163,25 @@ setTimeout(cycle, 400);
 .reviews__subtitle-card {
   background: #f9e9ec;
   border-radius: 20px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   position: relative;
   overflow: hidden;
 }
 
 .reviews__subtitle {
   font-family: 'Gilroy Medium', sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   color: #1a1a1a;
   line-height: 1.4;
 }
 
 .reviews__stars {
-  width: 48px;
-  max-width: 48px;
+  width: 40px;
+  max-width: 40px;
   height: auto;
   margin-right: 6px;
   margin-bottom: 6px;
@@ -1218,15 +1217,15 @@ setTimeout(cycle, 400);
   transition: height 0.2s ease;
 }
 
-.reviews__item.expanded {
-  height: 420px;
-}
-
 .reviews__item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background-color: white;
+  object-position: top;
+}
+
+.reviews__item.expanded {
+  height: 420px;
 }
 
 .reviews__expand {
@@ -1236,7 +1235,7 @@ setTimeout(cycle, 400);
   font-family: 'Gilroy Medium', sans-serif;
   font-size: 13px;
   color: #1a1a1a;
-  background: rgba(255,255,255,0.85);
+  background: rgba(248, 141, 173, 0.8);
   padding: 2px 6px;
   border-radius: 4px;
   border: none;
@@ -1249,7 +1248,7 @@ setTimeout(cycle, 400);
   width: 48px;
   height: 100%;
   background: linear-gradient(to right, rgba(255,255,255,0.85) 0%, transparent 100%);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s;
@@ -1264,8 +1263,7 @@ setTimeout(cycle, 400);
   transform: rotateY(180deg);
 }
 
-.reviews__fade--visible,
-.reviews__nav--visible {
+.reviews__fade--visible {
   opacity: 1;
 }
 
@@ -1273,8 +1271,8 @@ setTimeout(cycle, 400);
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -1283,7 +1281,7 @@ setTimeout(cycle, 400);
   background-size: 60% auto;
   background-repeat: no-repeat;
   background-position: center;
-  transition: opacity 0.2s;
+  transition: opacity 0.3s;
 }
 
 .reviews__nav--left {
@@ -1296,11 +1294,15 @@ setTimeout(cycle, 400);
   background-image: url('images/button_right.webp');
 }
 
+.reviews__nav--visible {
+  opacity: 0.8;
+}
+
 .slider-dot {
   display: flex;
   justify-content: center;
   gap: 6px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .slider-dot > span {
@@ -1319,6 +1321,80 @@ setTimeout(cycle, 400);
 }
 </style>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const sliderDot = document.querySelector('.slider-dot');
+  const dots = sliderDot.querySelectorAll('span');
+  const carousel = document.querySelector('.reviews__carousel');
+  const track = document.querySelector('.reviews__track');
+  const items = document.querySelectorAll('.reviews__item');
+  const btnLeft = document.querySelector('.reviews__nav--left');
+  const btnRight = document.querySelector('.reviews__nav--right');
+  const fadeLeft = document.querySelector('.reviews__fade--left');
+  const fadeRight = document.querySelector('.reviews__fade--right');
+
+  let currentIndex = 0;
+
+  function setActiveDot(index) {
+    sliderDot.querySelector('.active')?.classList.remove('active');
+    dots[index].classList.add('active');
+  }
+
+  function scrollToIndex(index) {
+    items[index].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+    setActiveDot(index);
+    updateFades();
+  }
+
+  function updateFades() {
+    fadeLeft.classList.toggle('reviews__fade--visible', currentIndex > 0);
+    fadeRight.classList.toggle('reviews__fade--visible', currentIndex < items.length - 1);
+    btnLeft.classList.toggle('reviews__nav--visible', currentIndex > 0);
+    btnRight.classList.toggle('reviews__nav--visible', currentIndex < items.length - 1);
+  }
+
+  dots.forEach((node, idx) => {
+    node.addEventListener('click', () => {
+      currentIndex = idx;
+      scrollToIndex(currentIndex);
+    });
+  });
+
+  btnLeft.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      scrollToIndex(currentIndex);
+    }
+  });
+
+  btnRight.addEventListener('click', () => {
+    if (currentIndex < items.length - 1) {
+      currentIndex++;
+      scrollToIndex(currentIndex);
+    }
+  });
+
+  carousel.addEventListener('touchstart', (e) => startX = e.touches[0].clientX);
+  carousel.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (dx < -30 && currentIndex < items.length - 1) currentIndex++;
+    else if (dx > 30 && currentIndex > 0) currentIndex--;
+    scrollToIndex(currentIndex);
+  });
+
+  // Expand / collapse
+  document.querySelectorAll('.reviews__expand').forEach(button => {
+    button.addEventListener('click', (e) => {
+      const item = e.target.closest('.reviews__item');
+      item.classList.toggle('expanded');
+      button.textContent = item.classList.contains('expanded') ? 'Свернуть отзыв' : 'Прочитать весь отзыв';
+    });
+  });
+
+  updateFades();
+  setActiveDot(currentIndex);
+});
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const sliderDot = document.querySelector('.slider-dot')
