@@ -1238,6 +1238,10 @@ setTimeout(cycle, 400);
   object-fit: cover;
 }
 
+.reviews__item.vertical-photo img {
+  object-fit: cover;
+}
+
 .reviews__item.expanded {
   height: 320px;
   object-fit: cover;
@@ -1334,6 +1338,28 @@ setTimeout(cycle, 400);
   width: 20px;
   border-radius: 8px;
   background: #f88dad;
+}
+.reviews__item.vertical-photo img {
+  object-fit: cover;
+}
+
+.reviews__item.vertical-photo.expanded {
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: white;
+}
+
+.reviews__item.vertical-photo.expanded img {
+  width: 100%;
+  height: auto;
+  max-height: 320px;
+  object-fit: cover;
+}
+
+.reviews__item.vertical-photo .reviews__expand {
+  margin-top: auto;
 }
 </style>
 
