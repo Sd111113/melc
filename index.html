@@ -1099,11 +1099,11 @@ setTimeout(cycle, 400);
     <button class="reviews__nav reviews__nav--left" aria-label="предыдущий отзыв"></button>
     <div class="reviews__carousel">
       <div class="reviews__track">
-        <div class="reviews__item expandable" data-expandable>
+        <div class="reviews__item expandable vertical-photo" data-expandable>
           <img src="images/rewiev_1.webp" alt="Отзыв 1">
           <button class="reviews__expand">Прочитать весь отзыв</button>
         </div>
-        <div class="reviews__item expandable" data-expandable>
+        <div class="reviews__item expandable vertical-photo" data-expandable>
           <img src="images/rewiev_2.webp" alt="Отзыв 2">
           <button class="reviews__expand">Прочитать весь отзыв</button>
         </div>
@@ -1113,7 +1113,7 @@ setTimeout(cycle, 400);
         <div class="reviews__item">
           <img src="images/rewiev_4.webp" alt="Отзыв 4">
         </div>
-        <div class="reviews__item expandable" data-expandable>
+        <div class="reviews__item expandable vertical-photo" data-expandable>
           <img src="images/rewiev_5.webp" alt="Отзыв 5">
           <button class="reviews__expand">Прочитать весь отзыв</button>
         </div>
@@ -1232,6 +1232,10 @@ setTimeout(cycle, 400);
   object-fit: contain;
   object-position: top;
   transition: object-fit 0.3s ease;
+}
+
+.reviews__item.vertical-photo img {
+  object-fit: cover;
 }
 
 .reviews__item.expanded {
