@@ -1196,8 +1196,7 @@ setTimeout(cycle, 400);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
-  touch-action: pan-x;
+  touch-action: pan-y;
 }
 
 .reviews__track {
@@ -1384,12 +1383,16 @@ document.addEventListener('DOMContentLoaded', () => {
     dots[index].classList.add('active');
   }
 
-  function scrollToIndex(index) {
-    items[index].scrollIntoView({ behavior: 'smooth', inline: 'center' });
-    currentIndex = index;
-    setActiveDot(index);
-    updateFades();
-  }
+ function scrollToIndex(index) {
+  items[index].scrollIntoView({
+    behavior: 'smooth',
+    block: 'nearest',
+    inline: 'center'
+  });
+  currentIndex = index;
+  setActiveDot(index);
+  updateFades();
+}
 
   function updateFades() {
     fadeLeft.classList.toggle('reviews__fade--visible', currentIndex > 0);
