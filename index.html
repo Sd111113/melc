@@ -1627,7 +1627,6 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 <section class="bonus-wrapper">
   <div class="bonus-container">
     <div class="bonus-stack">
-      <!-- 1 карточка -->
       <div class="bonus-card active bonus-card--big" id="bonus-card-1">
         <h2 class="bonus-title">
           Вы долистали до конца <br>и заслужили подарок! <br>58 фразовых глаголов <br>на все случаи жизни
@@ -1635,33 +1634,23 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
         <button class="bonus-button" id="bonus-next">Получить подарок</button>
         <img src="images/bonus_image.webp" alt="Подарок" class="bonus-image">
       </div>
-
-      <!-- 2 карточка -->
-      <div class="bonus-card bonus-card--small" id="bonus-card-2">
-        <form id="bonus-form">
-          <input type="text" id="bonus-name" placeholder="Имя" required>
-          <input type="tel" id="bonus-phone" placeholder="+7 (___) ___-__-__" required>
-          <button type="submit">Получить подарок</button>
-        </form>
-      </div>
-
-      <!-- 3 карточка -->
-      <div class="bonus-card bonus-card--small" id="bonus-card-3">
-        <h2 class="bonus-thankyou-title">Спасибо!</h2>
-        <p class="bonus-thankyou-text">
-          Вы на шаг ближе к изучению английского.<br>
-          Скоро наш менеджер свяжется и подберет время для 1 бесплатного урока!
-        </p>
-      </div>
-    </div>
-    <div class="bonus-pagination" id="bonus-pagination">
-      <span class="active"></span>
-      <span></span>
     </div>
   </div>
 </section>
 
+<!-- Модальное окно -->
+<div class="bonus-overlay" id="bonus-overlay"></div>
+<div class="bonus-modal" id="bonus-modal">
+  <h2 class="bonus-modal-title">Заполните форму, чтобы забрать подарок</h2>
+  <form id="bonus-form">
+    <input type="text" id="bonus-name" placeholder="Имя" required>
+    <input type="tel" id="bonus-phone" placeholder="+7 (___) ___-__-__" required>
+    <button type="submit">Получить подарок</button>
+  </form>
+</div>
+
 <style>
+/* Основной блок */
 .bonus-wrapper {
   background: #f4f4f4;
   padding: 0 25px;
@@ -1674,7 +1663,6 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   padding: 0;
   max-width: 500px;
   margin: 0 auto;
-  box-sizing: border-box;
   background: #ffffff;
   position: relative;
   overflow: hidden;
@@ -1690,8 +1678,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   top: 0;
   left: 0;
   width: 100%;
-  box-sizing: border-box;
-  padding: 16px 20px;
+  padding: 12px 16px;
   background: #fff;
   border-radius: 16px;
   opacity: 0;
@@ -1709,57 +1696,102 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   z-index: 2;
 }
 
-/* размеры карточек */
 .bonus-card--big {
   min-height: 360px;
 }
 
-.bonus-card--small {
-  min-height: 250px;
-}
-
-/* Текст */
 .bonus-title {
   font-family: 'Gilroy Bold', sans-serif;
   font-size: 25px;
-  font-weight: 400;
   color: #1a1a1a;
-  text-align: left;
   line-height: 1.25;
   margin: 0 0 12px 0;
+  text-align: left;
 }
 
 .bonus-button {
-  width: 100%;
+  width: 70%;
   padding: 14px;
   background: #fac748;
   color: black;
-  font-size: 20px;
+  font-size: 21px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   font-family: 'Gilroy Medium', sans-serif;
-  margin: 16px 0 0 0;
+  margin: 14px 0;
 }
 
 .bonus-image {
   width: 100%;
   max-width: 240px;
   height: auto;
-  margin: 12px auto 0;
+  margin: 0 auto;
   border-radius: 12px;
   display: block;
 }
 
-/* форма */
-.bonus-card form {
+/* Оверлей */
+.bonus-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease;
+  z-index: 1000;
+}
+
+/* Модалка */
+.bonus-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: #ffffff;
+  border: 4px solid #5999ff;
+  border-radius: 20px;
+  max-width: 500px;
+  width: calc(100% - 50px);
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease, transform 1s ease;
+  z-index: 1001;
+  box-sizing: border-box;
+}
+
+.bonus-modal.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.bonus-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.bonus-modal-title {
+  font-family: 'Gilroy Bold', sans-serif;
+  font-size: 22px;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+  text-align: left;
+  line-height: 1.3;
+}
+
+/* Форма внутри модалки */
+.bonus-modal form {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin-top: 8px;
 }
 
-.bonus-card input {
+.bonus-modal input {
   width: 100%;
   padding: 14px 16px;
   font-size: 18px;
@@ -1771,101 +1803,71 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   box-sizing: border-box;
 }
 
-.bonus-card input::placeholder {
+.bonus-modal input::placeholder {
   color: #838383;
   opacity: 1;
 }
 
-.bonus-card button {
+.bonus-modal button {
   width: 100%;
   padding: 14px;
   background: #fac748;
   color: black;
-  font-size: 20px;
+  font-size: 18px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  font-family: 'Gilroy Medium', sans-serif;
-}
-
-.bonus-thankyou-title {
-  font-family: 'Gilroy Bold', sans-serif;
-  font-size: 24px;
+  font-family: 'Gilroy Semibold', sans-serif;
   font-weight: 400;
-  color: #1a1a1a;
-  text-align: left;
-  margin: 0 0 8px 0;
-  line-height: 1.3;
-}
-
-.bonus-thankyou-text {
-  font-family: 'Gilroy Regular', sans-serif;
-  font-size: 16px;
-  color: #1a1a1a;
-  text-align: left;
-  line-height: 1.4;
-}
-
-/* пагинация */
-.bonus-pagination {
-  display: none;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 14px;
-}
-
-.bonus-pagination.show {
-  display: flex;
-}
-
-.bonus-pagination span {
-  width: 8px;
-  height: 8px;
-  background: #c5dbff;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.bonus-pagination span.active {
-  background: #5999ff;
-  width: 20px;
-  border-radius: 8px;
 }
 </style>
 
 <script src="https://unpkg.com/imask"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const cards = document.querySelectorAll('.bonus-card');
-  const dots = document.querySelectorAll('.bonus-pagination span');
-  const nextButton = document.getElementById('bonus-next');
+  const overlay = document.getElementById('bonus-overlay');
+  const modal = document.getElementById('bonus-modal');
+  const openBtn = document.getElementById('bonus-next');
   const form = document.getElementById('bonus-form');
-  const pagination = document.getElementById('bonus-pagination');
   const phoneInput = document.getElementById('bonus-phone');
-  let currentIndex = 0;
 
-  // Маска для телефона
+  // Маска
   let mask = IMask(phoneInput, {
     mask: '+7 (000) 000-00-00',
     lazy: true,
     placeholderChar: '_'
   });
 
-  phoneInput.addEventListener('focus', () => {
-    phoneInput.style.color = '#1a1a1a';
-    mask.updateOptions({ lazy: false, placeholderChar: ' ' });
+  openBtn.addEventListener('click', () => {
+    overlay.classList.add('show');
+    modal.classList.add('show');
   });
 
-  phoneInput.addEventListener('blur', () => {
-    let digits = cleanPhone(phoneInput.value);
-    if (digits.length < 10) {
-      phoneInput.value = '';
-      phoneInput.placeholder = '+7 (___) ___-__-__';
-      phoneInput.style.color = '#838383';
-      mask.updateOptions({ lazy: true });
-    } else {
-      phoneInput.value = formatPhoneFull(digits);
+  overlay.addEventListener('click', () => {
+    overlay.classList.remove('show');
+    modal.classList.remove('show');
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('bonus-name').value.trim();
+    const phone = cleanPhone(phoneInput.value);
+
+    if (name.length < 2 || phone.length !== 10) {
+      alert('Пожалуйста, заполните корректно все поля!');
+      return;
+    }
+
+    try {
+      await sendLeadToTelegram(name, formatPhoneFull(phone));
+      launchEmojiConfetti();
+      setTimeout(() => {
+        window.location.href = 'thanks.html';
+      }, 1000);
+    } catch (err) {
+      console.error(err);
+      alert('Ошибка отправки. Попробуйте позже.');
     }
   });
 
@@ -1881,42 +1883,30 @@ document.addEventListener('DOMContentLoaded', () => {
     return `+7 (${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
   }
 
-  function setActive(index) {
-    cards.forEach(card => card.classList.remove('active'));
-    cards[index].classList.add('active');
-
-    if (index > 0) {
-      pagination.classList.add('show');
-      dots.forEach(dot => dot.classList.remove('active'));
-      dots[index - 1].classList.add('active');
-    } else {
-      pagination.classList.remove('show');
-    }
+  async function sendLeadToTelegram(name, phone) {
+    const TOKEN = '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE';
+    const CHAT_ID = '-1002856948789';
+    const message = `📩 Новая заявка (подарок):\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
+    const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
+    await fetch(url);
   }
 
-  nextButton.addEventListener('click', () => {
-    if (currentIndex < 2) {
-      cards[currentIndex].style.transform = 'translateX(-100%)';
-      currentIndex++;
-      setTimeout(() => setActive(currentIndex), 300);
-    }
-  });
+  function launchEmojiConfetti() {
+    const emojis = ['🎉', '🇺🇸', '✨', '❤️', '🇬🇧'];
+    const emojiShapes = emojis.map(e => confetti.shapeFromText({ text: e, scalar: 1.8 }));
+    const count = 200;
+    const defaults = { origin: { y: 0.7 }, gravity: 0.85, decay: 0.9, shapes: emojiShapes };
 
-  document.querySelector('.bonus-container').addEventListener('touchstart', (e) => startX = e.touches[0].clientX);
-  document.querySelector('.bonus-container').addEventListener('touchend', (e) => {
-    const dx = e.changedTouches[0].clientX - startX;
-    if (dx < -30 && currentIndex < 2) {
-      cards[currentIndex].style.transform = 'translateX(-100%)';
-      currentIndex++;
-      setTimeout(() => setActive(currentIndex), 300);
-    } else if (dx > 30 && currentIndex > 0) {
-      cards[currentIndex].style.transform = 'translateX(100%)';
-      currentIndex--;
-      setTimeout(() => setActive(currentIndex), 300);
+    function fire(ratio, opts) {
+      confetti({ ...defaults, ...opts, particleCount: Math.floor(count * ratio) });
     }
-  });
 
-  setActive(currentIndex);
+    fire(0.25, { spread: 25, startVelocity: 60 });
+    fire(0.2, { spread: 45, startVelocity: 50 });
+    fire(0.35, { spread: 70, decay: 0.91, scalar: 0.9 });
+    fire(0.1, { spread: 90, startVelocity: 35, decay: 0.92, scalar: 1.2 });
+    fire(0.1, { spread: 90, startVelocity: 50 });
+  }
 });
 </script>
 
