@@ -1196,7 +1196,8 @@ setTimeout(cycle, 400);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  touch-action: none;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
 }
 
 .reviews__track {
