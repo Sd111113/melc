@@ -1626,17 +1626,18 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 <!-- 8й блок бонус -->
 <section class="bonus-wrapper">
   <div class="bonus-container">
-    <div class="bonus-carousel">
+    <div class="bonus-cards">
+      
       <!-- 1 карточка -->
-      <div class="bonus-card bonus-card--gift active">
+      <div class="bonus-card active" id="bonus-card-1">
         <h2 class="bonus-title">Вы долистали до конца<br>и заслужили подарок!</h2>
         <p class="bonus-subtitle">58 фразовых глаголов на все случаи жизни</p>
         <img src="images/bonus_image.webp" alt="Подарок" class="bonus-image">
         <button class="bonus-button" id="bonus-next">Получить подарок</button>
       </div>
 
-      <!-- 2 карточка -->
-      <div class="bonus-card bonus-card--form">
+      <!-- 2 карточка (форма) -->
+      <div class="bonus-card bonus-card--compact" id="bonus-card-2">
         <form id="bonus-form">
           <input type="text" id="bonus-name" placeholder="Имя" required />
           <input type="tel" id="bonus-phone" placeholder="+7 (___) ___-__-__" required />
@@ -1644,8 +1645,8 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
         </form>
       </div>
 
-      <!-- 3 карточка -->
-      <div class="bonus-card bonus-card--thankyou">
+      <!-- 3 карточка (спасибо) -->
+      <div class="bonus-card bonus-card--compact" id="bonus-card-3">
         <h2 class="bonus-thankyou-title">Спасибо!</h2>
         <p class="bonus-thankyou-text">
           Вы на шаг ближе к изучению английского. <br>
@@ -1675,35 +1676,43 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   padding: 16px;
   max-width: 500px;
   margin: 0 auto;
-  box-sizing: border-box;
-  overflow: hidden;
   position: relative;
   background: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-.bonus-carousel {
-  display: flex;
-  width: 300%;
-  transition: transform 0.3s ease;
+.bonus-cards {
+  position: relative;
+  min-height: 360px;
 }
 
 .bonus-card {
-  flex: 0 0 100%;
-  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   padding: 16px;
+  box-sizing: border-box;
+  background: white;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: transform 0.3s ease, opacity 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-  min-height: 360px;
-  opacity: 0;
-  transform: translateX(100%);
-  transition: all 0.3s ease;
 }
 
 .bonus-card.active {
   opacity: 1;
   transform: translateX(0);
+  z-index: 2;
+}
+
+.bonus-card--compact {
+  min-height: 320px;
+  height: auto;
 }
 
 .bonus-title {
@@ -1717,7 +1726,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 }
 
 .bonus-subtitle {
-  font-family: 'Gilroy Regular', sans-serif;
+  font-family: 'Gilroy Medium', sans-serif;
   font-size: 17px;
   color: #1a1a1a;
   text-align: left;
@@ -1751,9 +1760,9 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   gap: 14px;
 }
 
-.bonus-card--form input {
+.bonus-card--form input,
+.bonus-card--compact input {
   width: 100%;
-  display: block;
   padding: 14px 16px;
   font-size: 18px;
   border: none;
@@ -1764,12 +1773,14 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   box-sizing: border-box;
 }
 
-.bonus-card--form input::placeholder {
+.bonus-card--form input::placeholder,
+.bonus-card--compact input::placeholder {
   color: #838383;
   opacity: 1;
 }
 
-.bonus-card--form button {
+.bonus-card--form button,
+.bonus-card--compact button {
   width: 100%;
   padding: 14px;
   background: #fac748;
@@ -1825,9 +1836,8 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 <script src="https://unpkg.com/imask"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const carousel = document.querySelector('.bonus-carousel');
   const cards = document.querySelectorAll('.bonus-card');
-  const paginationDots = document.querySelectorAll('.bonus-pagination span');
+  const dots = document.querySelectorAll('.bonus-pagination span');
   const nextButton = document.getElementById('bonus-next');
   const form = document.getElementById('bonus-form');
   let currentIndex = 0;
@@ -1835,8 +1845,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function setActive(index) {
     cards.forEach(card => card.classList.remove('active'));
     cards[index].classList.add('active');
-    paginationDots.forEach(dot => dot.classList.remove('active'));
-    paginationDots[index].classList.add('active');
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[index].classList.add('active');
   }
 
   nextButton.addEventListener('click', () => {
@@ -1846,10 +1856,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Имитация свайпа назад (слева направо)
+  // swipe назад
   let startX;
-  carousel.addEventListener('touchstart', (e) => startX = e.touches[0].clientX);
-  carousel.addEventListener('touchend', (e) => {
+  document.querySelector('.bonus-cards').addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+  });
+  document.querySelector('.bonus-cards').addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - startX;
     if (dx > 30 && currentIndex > 0) {
       currentIndex--;
@@ -1857,9 +1869,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Маска и логика телефона
+  // Маска телефона
   const phoneInput = document.getElementById('bonus-phone');
-  let mask = IMask(phoneInput, {
+  const mask = IMask(phoneInput, {
     mask: '+7 (000) 000-00-00',
     lazy: true,
     placeholderChar: '_'
@@ -1867,17 +1879,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setGray() {
     phoneInput.style.color = '#838383';
-    mask.updateOptions({ lazy: true, placeholderChar: '_' });
+    mask.updateOptions({ lazy: true });
   }
 
   function setBlack() {
     phoneInput.style.color = '#1a1a1a';
-    mask.updateOptions({ lazy: false, placeholderChar: ' ' });
+    mask.updateOptions({ lazy: false });
   }
 
   setGray();
 
-  phoneInput.addEventListener('focus', () => setBlack());
+  phoneInput.addEventListener('focus', setBlack);
   phoneInput.addEventListener('blur', () => {
     let digits = cleanPhone(phoneInput.value);
     if (digits.length < 10) {
@@ -1890,7 +1902,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  phoneInput.addEventListener('paste', (e) => {
+  phoneInput.addEventListener('paste', e => {
     e.preventDefault();
     let pasted = (e.clipboardData || window.clipboardData).getData('text');
     let digits = cleanPhone(pasted);
@@ -1912,11 +1924,9 @@ document.addEventListener('DOMContentLoaded', () => {
     phoneInput.style.color = digits.length ? '#1a1a1a' : '#838383';
   });
 
-  // Отправка формы
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     const nameInput = document.getElementById('bonus-name');
-    const phoneInput = document.getElementById('bonus-phone');
 
     if (!isNameValid(nameInput.value)) {
       alert('Пожалуйста, введите корректное имя.');
@@ -1962,11 +1972,25 @@ document.addEventListener('DOMContentLoaded', () => {
     return cleanPhone(inputEl.value).length === 10;
   }
 
+  async function sendLeadToTelegram(name, phone) {
+    const TELEGRAM_TOKEN = 'YOUR_TELEGRAM_TOKEN';
+    const CHAT_ID = 'YOUR_CHAT_ID';
+    const message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
+    const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
+    await fetch(url);
+  }
+
   function download(filename) {
     const link = document.createElement('a');
     link.href = filename;
     link.download = filename;
     link.click();
+  }
+
+  function launchEmojiConfetti() {
+    if (typeof confetti !== 'undefined') {
+      confetti();
+    }
   }
 });
 </script>
