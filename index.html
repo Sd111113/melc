@@ -1628,7 +1628,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   <div class="bonus-container">
     <div class="bonus-stack">
       <!-- 1 карточка -->
-      <div class="bonus-card active" id="bonus-card-1">
+      <div class="bonus-card active bonus-card--big" id="bonus-card-1">
         <h2 class="bonus-title">
           Вы долистали до конца и заслужили подарок! 58 фразовых глаголов на все случаи жизни
         </h2>
@@ -1637,7 +1637,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
       </div>
 
       <!-- 2 карточка -->
-      <div class="bonus-card" id="bonus-card-2">
+      <div class="bonus-card bonus-card--small" id="bonus-card-2">
         <form id="bonus-form">
           <input type="text" id="bonus-name" placeholder="Имя" required>
           <input type="tel" id="bonus-phone" placeholder="+7 (___) ___-__-__" required>
@@ -1646,17 +1646,16 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
       </div>
 
       <!-- 3 карточка -->
-      <div class="bonus-card" id="bonus-card-3">
+      <div class="bonus-card bonus-card--small" id="bonus-card-3">
         <h2 class="bonus-thankyou-title">Спасибо!</h2>
         <p class="bonus-thankyou-text">
-          Вы на шаг ближе к изучению английского. <br>
+          Вы на шаг ближе к изучению английского.<br>
           Скоро наш менеджер свяжется и подберет время для 1 бесплатного урока!
         </p>
       </div>
     </div>
-    <div class="bonus-pagination">
+    <div class="bonus-pagination" id="bonus-pagination">
       <span class="active"></span>
-      <span></span>
       <span></span>
     </div>
   </div>
@@ -1672,7 +1671,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 .bonus-container {
   border: 4px solid #5999ff;
   border-radius: 20px;
-  padding: 5px;
+  padding: 0;
   max-width: 500px;
   margin: 0 auto;
   box-sizing: border-box;
@@ -1683,7 +1682,6 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 
 .bonus-stack {
   position: relative;
-  height: auto;
   min-height: 360px;
 }
 
@@ -1693,7 +1691,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   left: 0;
   width: 100%;
   box-sizing: border-box;
-  padding: 10px 10px 0px 10px;
+  padding: 12px 16px;
   background: #fff;
   border-radius: 16px;
   opacity: 0;
@@ -1711,14 +1709,24 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   z-index: 2;
 }
 
+/* размеры карточек */
+.bonus-card--big {
+  min-height: 360px;
+}
+
+.bonus-card--small {
+  min-height: 250px;
+}
+
+/* Текст */
 .bonus-title {
   font-family: 'Gilroy Bold', sans-serif;
   font-size: 25px;
   font-weight: 400;
   color: #1a1a1a;
   text-align: left;
-  line-height: 1.3;
-  margin-bottom: 12px;
+  line-height: 1.25;
+  margin: 0 0 12px 0;
 }
 
 .bonus-button {
@@ -1731,28 +1739,30 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   border-radius: 12px;
   cursor: pointer;
   font-family: 'Gilroy Medium', sans-serif;
-  margin: 16px 0;
+  margin: 14px 0;
 }
 
 .bonus-image {
   width: 100%;
   max-width: 240px;
   height: auto;
-  margin: 12px auto 0;
+  margin: 0 auto;
   border-radius: 12px;
   display: block;
 }
 
+/* форма */
 .bonus-card form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+  padding-top: 8px;
 }
 
 .bonus-card input {
   width: 100%;
-  padding: 14px 16px;
-  font-size: 18px;
+  padding: 12px 14px;
+  font-size: 17px;
   border: none;
   border-radius: 12px;
   background: #f2f2f2;
@@ -1771,7 +1781,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   padding: 14px;
   background: #fac748;
   color: black;
-  font-size: 21px;
+  font-size: 20px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
@@ -1780,27 +1790,32 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 
 .bonus-thankyou-title {
   font-family: 'Gilroy Bold', sans-serif;
-  font-size: 25px;
+  font-size: 24px;
   font-weight: 400;
   color: #1a1a1a;
   text-align: left;
-  margin-bottom: 12px;
+  margin: 0 0 8px 0;
   line-height: 1.3;
 }
 
 .bonus-thankyou-text {
   font-family: 'Gilroy Regular', sans-serif;
-  font-size: 17px;
+  font-size: 16px;
   color: #1a1a1a;
   text-align: left;
   line-height: 1.4;
 }
 
+/* пагинация */
 .bonus-pagination {
-  display: flex;
+  display: none;
   justify-content: center;
   gap: 6px;
-  margin-top: 16px;
+  margin-top: 14px;
+}
+
+.bonus-pagination.show {
+  display: flex;
 }
 
 .bonus-pagination span {
@@ -1819,20 +1834,26 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 }
 </style>
 
-<script src="https://unpkg.com/imask"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const cards = document.querySelectorAll('.bonus-card');
   const dots = document.querySelectorAll('.bonus-pagination span');
   const nextButton = document.getElementById('bonus-next');
   const form = document.getElementById('bonus-form');
+  const pagination = document.getElementById('bonus-pagination');
   let currentIndex = 0;
 
   function setActive(index) {
     cards.forEach(card => card.classList.remove('active'));
     cards[index].classList.add('active');
-    dots.forEach(dot => dot.classList.remove('active'));
-    dots[index].classList.add('active');
+
+    if (index > 0) {
+      pagination.classList.add('show');
+      dots.forEach(dot => dot.classList.remove('active'));
+      dots[index - 1].classList.add('active');
+    } else {
+      pagination.classList.remove('show');
+    }
   }
 
   nextButton.addEventListener('click', () => {
@@ -1852,112 +1873,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const phoneInput = document.getElementById('bonus-phone');
-  let mask = IMask(phoneInput, {
-    mask: '+7 (000) 000-00-00',
-    lazy: true,
-    placeholderChar: '_'
-  });
-
-  function setGray() {
-    phoneInput.style.color = '#838383';
-    mask.updateOptions({ lazy: true, placeholderChar: '_' });
-  }
-
-  function setBlack() {
-    phoneInput.style.color = '#1a1a1a';
-    mask.updateOptions({ lazy: false, placeholderChar: ' ' });
-  }
-
-  setGray();
-
-  phoneInput.addEventListener('focus', () => setBlack());
-  phoneInput.addEventListener('blur', () => {
-    let digits = cleanPhone(phoneInput.value);
-    if (digits.length < 10) {
-      phoneInput.value = '';
-      setGray();
-      phoneInput.placeholder = '+7 (___) ___-__-__';
-    } else {
-      phoneInput.value = formatPhoneFull(digits);
-      setBlack();
-    }
-  });
-
-  phoneInput.addEventListener('paste', (e) => {
-    e.preventDefault();
-    let pasted = (e.clipboardData || window.clipboardData).getData('text');
-    let digits = cleanPhone(pasted);
-    if (digits.length >= 10) {
-      digits = digits.slice(-10);
-      phoneInput.value = formatPhoneFull(digits);
-      mask.updateValue();
-      setBlack();
-    }
-  });
-
-  phoneInput.addEventListener('input', () => {
-    let digits = cleanPhone(phoneInput.value);
-    if (digits.length > 10) {
-      digits = digits.slice(-10);
-      phoneInput.value = formatPhoneFull(digits);
-      mask.updateValue();
-    }
-    phoneInput.style.color = digits.length ? '#1a1a1a' : '#838383';
-  });
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const nameInput = document.getElementById('bonus-name');
-    if (!isNameValid(nameInput.value)) {
-      alert('Пожалуйста, введите корректное имя.');
-      nameInput.focus();
-      return;
-    }
-    if (!isPhoneValid(phoneInput)) {
-      alert('Пожалуйста, введите корректный номер телефона.');
-      phoneInput.focus();
-      return;
-    }
-
-    try {
-      launchEmojiConfetti();
-      download("bonus.pdf");
-      setTimeout(() => {
-        currentIndex = 2;
-        setActive(currentIndex);
-      }, 300);
-    } catch (error) {
-      console.error(error);
-    }
-  });
-
-  function cleanPhone(raw) {
-    let digits = raw.replace(/\D/g, '');
-    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-    if (digits.startsWith('7')) digits = digits.slice(1);
-    return digits;
-  }
-
-  function formatPhoneFull(digits) {
-    if (digits.length !== 10) return '';
-    return `+7 (${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
-  }
-
-  function isNameValid(name) {
-    return name.trim().length > 1;
-  }
-
-  function isPhoneValid(inputEl) {
-    return cleanPhone(inputEl.value).length === 10;
-  }
-
-  function download(filename) {
-    const link = document.createElement('a');
-    link.href = filename;
-    link.download = filename;
-    link.click();
-  }
+  // инициализация
+  setActive(currentIndex);
 });
 </script>
 
