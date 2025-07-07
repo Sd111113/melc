@@ -1674,6 +1674,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   padding: 0;
   max-width: 500px;
   margin: 0 auto;
+  box-sizing: border-box;
   background: #ffffff;
   position: relative;
   overflow: hidden;
@@ -1682,7 +1683,6 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 .bonus-stack {
   position: relative;
   min-height: 360px;
-  overflow: hidden;
 }
 
 .bonus-card {
@@ -1691,12 +1691,12 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   left: 0;
   width: 100%;
   box-sizing: border-box;
-  padding: 12px 16px;
+  padding: 16px 20px;
   background: #fff;
   border-radius: 16px;
   opacity: 0;
   transform: translateX(100%);
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -1707,21 +1707,6 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   opacity: 1;
   transform: translateX(0);
   z-index: 2;
-}
-
-.bonus-card.exit-left {
-  transform: translateX(-100%);
-  opacity: 0;
-}
-
-.bonus-card.enter-right {
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-.bonus-card.enter-active {
-  transform: translateX(0);
-  opacity: 1;
 }
 
 /* размеры карточек */
@@ -1745,23 +1730,23 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 }
 
 .bonus-button {
-  width: 70%;
+  width: 100%;
   padding: 14px;
   background: #fac748;
   color: black;
-  font-size: 21px;
+  font-size: 20px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   font-family: 'Gilroy Medium', sans-serif;
-  margin: 14px 0;
+  margin: 16px 0 0 0;
 }
 
 .bonus-image {
   width: 100%;
   max-width: 240px;
   height: auto;
-  margin: 0 auto;
+  margin: 12px auto 0;
   border-radius: 12px;
   display: block;
 }
@@ -1770,14 +1755,14 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 .bonus-card form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-top: 8px;
+  gap: 14px;
+  margin-top: 8px;
 }
 
 .bonus-card input {
   width: 100%;
-  padding: 12px 14px;
-  font-size: 17px;
+  padding: 14px 16px;
+  font-size: 18px;
   border: none;
   border-radius: 12px;
   background: #f2f2f2;
@@ -1849,6 +1834,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 }
 </style>
 
+<script src="https://unpkg.com/imask"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const cards = document.querySelectorAll('.bonus-card');
@@ -1856,62 +1842,81 @@ document.addEventListener('DOMContentLoaded', () => {
   const nextButton = document.getElementById('bonus-next');
   const form = document.getElementById('bonus-form');
   const pagination = document.getElementById('bonus-pagination');
+  const phoneInput = document.getElementById('bonus-phone');
   let currentIndex = 0;
 
-  function showCard(newIndex) {
-    if (newIndex === currentIndex) return;
+  // Маска для телефона
+  let mask = IMask(phoneInput, {
+    mask: '+7 (000) 000-00-00',
+    lazy: true,
+    placeholderChar: '_'
+  });
 
-    const currentCard = cards[currentIndex];
-    const nextCard = cards[newIndex];
+  phoneInput.addEventListener('focus', () => {
+    phoneInput.style.color = '#1a1a1a';
+    mask.updateOptions({ lazy: false, placeholderChar: ' ' });
+  });
 
-    // Уход текущей влево
-    currentCard.classList.remove('active');
-    currentCard.classList.add('exit-left');
+  phoneInput.addEventListener('blur', () => {
+    let digits = cleanPhone(phoneInput.value);
+    if (digits.length < 10) {
+      phoneInput.value = '';
+      phoneInput.placeholder = '+7 (___) ___-__-__';
+      phoneInput.style.color = '#838383';
+      mask.updateOptions({ lazy: true });
+    } else {
+      phoneInput.value = formatPhoneFull(digits);
+    }
+  });
 
-    // Подготовка следующей справа
-    nextCard.classList.add('enter-right');
+  function cleanPhone(raw) {
+    let digits = raw.replace(/\D/g, '');
+    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+    if (digits.startsWith('7')) digits = digits.slice(1);
+    return digits;
+  }
 
-    requestAnimationFrame(() => {
-      nextCard.classList.add('active', 'enter-active');
-      nextCard.classList.remove('enter-right');
-    });
+  function formatPhoneFull(digits) {
+    if (digits.length !== 10) return '';
+    return `+7 (${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
+  }
 
-    setTimeout(() => {
-      currentCard.classList.remove('exit-left');
-      nextCard.classList.remove('enter-active');
-    }, 300);
+  function setActive(index) {
+    cards.forEach(card => card.classList.remove('active'));
+    cards[index].classList.add('active');
 
-    // Пагинация
-    if (newIndex > 0) {
+    if (index > 0) {
       pagination.classList.add('show');
       dots.forEach(dot => dot.classList.remove('active'));
-      dots[newIndex - 1].classList.add('active');
+      dots[index - 1].classList.add('active');
     } else {
       pagination.classList.remove('show');
     }
-
-    currentIndex = newIndex;
   }
 
   nextButton.addEventListener('click', () => {
-    if (currentIndex < cards.length - 1) {
-      showCard(currentIndex + 1);
+    if (currentIndex < 2) {
+      cards[currentIndex].style.transform = 'translateX(-100%)';
+      currentIndex++;
+      setTimeout(() => setActive(currentIndex), 300);
     }
   });
 
-  let startX;
   document.querySelector('.bonus-container').addEventListener('touchstart', (e) => startX = e.touches[0].clientX);
   document.querySelector('.bonus-container').addEventListener('touchend', (e) => {
     const dx = e.changedTouches[0].clientX - startX;
-    if (dx > 30 && currentIndex > 0) {
-      showCard(currentIndex - 1);
-    } else if (dx < -30 && currentIndex < cards.length - 1) {
-      showCard(currentIndex + 1);
+    if (dx < -30 && currentIndex < 2) {
+      cards[currentIndex].style.transform = 'translateX(-100%)';
+      currentIndex++;
+      setTimeout(() => setActive(currentIndex), 300);
+    } else if (dx > 30 && currentIndex > 0) {
+      cards[currentIndex].style.transform = 'translateX(100%)';
+      currentIndex--;
+      setTimeout(() => setActive(currentIndex), 300);
     }
   });
 
-  // инициализация
-  showCard(currentIndex);
+  setActive(currentIndex);
 });
 </script>
 
