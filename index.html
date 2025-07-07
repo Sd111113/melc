@@ -1623,6 +1623,232 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   }
 });
 </script>
+<!-- 8й блок бонус -->
+<section class="bonus">
+  <div class="bonus-container">
+    <!-- Карточка подарка -->
+    <div class="bonus-slide bonus-slide--gift active">
+      <h2 class="bonus__title">
+        Вы долистали до конца<br>
+        и заслужили подарок!<br>
+        58 фразовых глаголов<br>
+        на все случаи жизни
+      </h2>
+      <button class="bonus__button" id="bonus-get-btn">Получить подарок</button>
+      <img src="images/bonus_card.webp" alt="Подарок" class="bonus__image">
+    </div>
+
+    <!-- Карточка формы -->
+    <div class="bonus-slide bonus-slide--form">
+      <form id="bonus-form">
+        <input type="text" id="bonus-name" placeholder="Имя" required />
+        <input type="tel" id="bonus-phone" placeholder="+7 (___) ___-__-__" required />
+        <button type="submit">Получить подарок</button>
+      </form>
+    </div>
+
+    <!-- Пагинация -->
+    <div class="bonus__pagination">
+      <span class="bonus-dot active"></span>
+      <span class="bonus-dot"></span>
+    </div>
+  </div>
+</section>
+
+<style>
+.bonus {
+  background: #f4f4f4;
+  padding: 0 25px;
+  margin-top: 25px;
+}
+
+.bonus-container {
+  border: 8px solid #5999ff;
+  border-radius: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: white;
+}
+
+.bonus-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  transform: translateX(100%);
+  box-sizing: border-box;
+}
+
+.bonus-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  position: relative;
+}
+
+.bonus-slide--gift {
+  text-align: center;
+}
+
+.bonus__title {
+  font-family: 'Gilroy Bold', sans-serif;
+  font-size: 25px;
+  color: #1a1a1a;
+  line-height: 1.3;
+  margin-bottom: 20px;
+}
+
+.bonus__button {
+  background: #fac748;
+  color: black;
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 21px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.bonus__image {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  margin-top: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.bonus-slide--form form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.bonus-slide--form input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  background: #f2f2f2;
+  font-family: 'Gilroy Regular', sans-serif;
+  color: #1a1a1a;
+}
+
+.bonus-slide--form button {
+  background: #fac748;
+  color: black;
+  font-family: 'Gilroy Medium', sans-serif;
+  font-size: 21px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.bonus__pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.bonus-dot {
+  width: 8px;
+  height: 8px;
+  background: #c5dbff;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.bonus-dot.active {
+  background: #5999ff;
+  width: 20px;
+  border-radius: 8px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const giftSlide = document.querySelector('.bonus-slide--gift');
+  const formSlide = document.querySelector('.bonus-slide--form');
+  const getBtn = document.getElementById('bonus-get-btn');
+  const dots = document.querySelectorAll('.bonus-dot');
+  const form = document.getElementById('bonus-form');
+
+  // Переключение на форму
+  getBtn.addEventListener('click', () => {
+    giftSlide.classList.remove('active');
+    formSlide.classList.add('active');
+    dots[0].classList.remove('active');
+    dots[1].classList.add('active');
+  });
+
+  // Свайп справа налево на форму и обратно
+  let startX = null;
+  formSlide.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+  formSlide.addEventListener('touchend', e => {
+    if (!startX) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if (dx > 30) {
+      formSlide.classList.remove('active');
+      giftSlide.classList.add('active');
+      dots[1].classList.remove('active');
+      dots[0].classList.add('active');
+    }
+    startX = null;
+  });
+
+  // Маска телефона
+  IMask(document.querySelector('#bonus-phone'), {
+    mask: '+7 (000) 000-00-00',
+    lazy: true,
+    placeholderChar: '_'
+  });
+
+  // Сабмит формы
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const name = document.getElementById('bonus-name').value.trim();
+    const phone = cleanPhone(document.getElementById('bonus-phone').value);
+
+    if (name.length < 2 || phone.length !== 10) {
+      alert('Пожалуйста, введите корректные данные');
+      return;
+    }
+
+    try {
+      await sendLeadToTelegram(name, formatPhoneFull(phone));
+      launchEmojiConfetti();
+
+      // Скачивание PDF
+      const link = document.createElement('a');
+      link.href = 'your_bonus_file.pdf';  // Заменишь на твой путь
+      link.download = '';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Редирект
+      setTimeout(() => window.location.href = 'thanks.html', 700);
+    } catch (err) {
+      console.error(err);
+      alert('Ошибка отправки, попробуйте еще раз!');
+    }
+  });
+});
+</script>
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
