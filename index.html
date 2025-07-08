@@ -1653,6 +1653,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 </div>
 
 <style>
+/* ======= Основной блок ======= */
 .bonus-wrapper {
   background: #f4f4f4;
   padding: 0 25px;
@@ -1712,18 +1713,16 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   display: block;
 }
 
-/* Overlay */
+/* ======= Оверлей ======= */
 .bonus-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.3);
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.3);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease;
-  z-index: 999;
+  z-index: 1000;
 }
 
 .bonus-overlay.show {
@@ -1731,22 +1730,21 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   visibility: visible;
 }
 
-/* Modal */
+/* ======= Модалка ======= */
 .bonus-modal {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
   background: #ffffff;
   border: 3px solid #5999ff;
   border-radius: 20px;
-  padding: 20px;
   max-width: 500px;
   width: calc(100% - 50px);
-  box-sizing: border-box;
-  transform: translate(-50%, -50%) scale(0.8);
+  padding: 20px 20px 24px;
   opacity: 0;
   visibility: hidden;
-  z-index: 1000;
+  box-sizing: border-box;
+  z-index: 1001;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
@@ -1754,11 +1752,6 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, -50%) scale(1);
-}
-
-.bonus-modal.hide {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.8);
 }
 
 .bonus-modal-title {
@@ -1771,7 +1764,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   line-height: 1.3;
 }
 
-/* Form */
+/* ======= Форма ======= */
 .bonus-modal form {
   display: flex;
   flex-direction: column;
@@ -1795,7 +1788,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   opacity: 1;
 }
 
-.bonus-modal button {
+.bonus-modal button[type="submit"] {
   width: 100%;
   padding: 14px;
   background: #fac748;
@@ -1805,25 +1798,24 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   border-radius: 12px;
   cursor: pointer;
   font-family: 'Gilroy Semibold', sans-serif;
-  font-weight: 400;
 }
 
-/* Close button */
+/* ======= Кнопка закрытия ======= */
 .bonus-close {
   position: absolute;
   top: 12px;
   right: 12px;
   background: none;
   border: none;
-  font-size: 28px;
+  font-size: 26px;
   line-height: 1;
   cursor: pointer;
   color: #1a1a1a;
-  z-index: 1001;
 }
 </style>
 
 <script src="https://unpkg.com/imask"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('bonus-overlay');
@@ -1833,7 +1825,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('bonus-form');
   const phoneInput = document.getElementById('bonus-phone');
 
-  // Маска телефона с серым/черным цветом
+  // Маска телефона
   let mask = IMask(phoneInput, {
     mask: '+7 (000) 000-00-00',
     lazy: true,
@@ -1898,6 +1890,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return `+7 (${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
   }
 
+  // Открытие/закрытие
   openBtn.addEventListener('click', () => {
     overlay.classList.add('show');
     modal.classList.add('show');
@@ -1911,6 +1904,7 @@ document.addEventListener('DOMContentLoaded', () => {
   overlay.addEventListener('click', closeModal);
   closeBtn.addEventListener('click', closeModal);
 
+  // Отправка формы
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('bonus-name').value.trim();
@@ -1935,7 +1929,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   async function sendLeadToTelegram(name, phone) {
-    const TOKEN = 'ТВОЙ_TELEGRAM_BOT_TOKEN';
+    const TOKEN = 'ТВОЙ_TELEGRAM_BОТ_TOKEN';
     const CHAT_ID = 'ТВОЙ_CHAT_ID';
     const message = `📩 Новая заявка (подарок):\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
     const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
@@ -1943,7 +1937,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function launchEmojiConfetti() {
-    console.log('🎉 Confetti!');
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
   }
 });
 </script>
