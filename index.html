@@ -1937,6 +1937,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <h2 class="trust-title">Нам доверяют:</h2>
   <div class="slider">
     <div class="slide-track">
+      <!-- логотипы -->
       <div class="slide"><img src="images/Первое кредитное бюро.webp" alt="Первое Кредитное Бюро"></div>
       <div class="slide"><img src="images/ТОО АМДГ.webp" alt="ТОО АМДГ"></div>
       <div class="slide"><img src="images/Тоо Besins Healthcare.webp" alt="Besins Healthcare"></div>
@@ -1947,8 +1948,8 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="slide"><img src="images/тоо АзияТезМаш.webp" alt="АзияТезМаш"></div>
       <div class="slide"><img src="images/Тоо EvoPrint.webp" alt="EVO Print"></div>
       <div class="slide"><img src="images/ТОО Falcon Security Services.webp" alt="Falcon Security Services"></div>
-      <!-- повтори логотипы для бесконечной ленты -->
-     <div class="slide"><img src="images/Первое кредитное бюро.webp" alt="Первое Кредитное Бюро"></div>
+      <!-- повтор для бесконечной ленты -->
+      <div class="slide"><img src="images/Первое кредитное бюро.webp" alt="Первое Кредитное Бюро"></div>
       <div class="slide"><img src="images/ТОО АМДГ.webp" alt="ТОО АМДГ"></div>
       <div class="slide"><img src="images/Тоо Besins Healthcare.webp" alt="Besins Healthcare"></div>
       <div class="slide"><img src="images/тоо zepter international.webp" alt="Zepter International"></div>
@@ -1979,11 +1980,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 .slider {
   background: #f4f4f4;
-  height: 100px;
-  margin: auto;
   overflow: hidden;
   position: relative;
-  max-width: 960px;
+  width: 100%;
   box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
 }
 
@@ -1991,8 +1990,8 @@ document.addEventListener('DOMContentLoaded', () => {
 .slider::after {
   content: "";
   position: absolute;
-  width: 200px;
-  height: 100px;
+  width: 80px;
+  height: 100%;
   z-index: 2;
   pointer-events: none;
   background: linear-gradient(to right, #f4f4f4 0%, rgba(244, 244, 244, 0) 100%);
@@ -2011,30 +2010,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 .slide-track {
   display: flex;
-  width: calc(250px * 14);
-  animation: scroll 40s linear infinite;
+  gap: 40px;
+  animation: scroll 60s linear infinite;
+  align-items: center;
 }
 
 @keyframes scroll {
   0% { transform: translateX(0); }
-  100% { transform: translateX(calc(-250px * 7)); }
+  100% { transform: translateX(-50%); }
 }
 
 .slide {
-  height: 100px;
-  width: 250px;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .slide img {
-  height: 80px;
+  height: 24px;
   width: auto;
   object-fit: contain;
   display: block;
 }
 </style>
+
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
