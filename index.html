@@ -1833,12 +1833,70 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('bonus-form');
   const phoneInput = document.getElementById('bonus-phone');
 
-  // Маска
+  // Маска телефона с серым/черным цветом
   let mask = IMask(phoneInput, {
     mask: '+7 (000) 000-00-00',
     lazy: true,
     placeholderChar: '_'
   });
+
+  function setGray() {
+    phoneInput.style.color = '#838383';
+    mask.updateOptions({ lazy: true, placeholderChar: '_' });
+  }
+
+  function setBlack() {
+    phoneInput.style.color = '#1a1a1a';
+    mask.updateOptions({ lazy: false, placeholderChar: ' ' });
+  }
+
+  setGray();
+
+  phoneInput.addEventListener('focus', () => setBlack());
+  phoneInput.addEventListener('blur', () => {
+    let digits = cleanPhone(phoneInput.value);
+    if (digits.length < 10) {
+      phoneInput.value = '';
+      setGray();
+    } else {
+      phoneInput.value = formatPhoneFull(digits);
+      setBlack();
+    }
+  });
+
+  phoneInput.addEventListener('paste', (e) => {
+    e.preventDefault();
+    let pasted = (e.clipboardData || window.clipboardData).getData('text');
+    let digits = cleanPhone(pasted);
+    if (digits.length >= 10) {
+      digits = digits.slice(-10);
+      phoneInput.value = formatPhoneFull(digits);
+      mask.updateValue();
+      setBlack();
+    }
+  });
+
+  phoneInput.addEventListener('input', () => {
+    let digits = cleanPhone(phoneInput.value);
+    if (digits.length > 10) {
+      digits = digits.slice(-10);
+      phoneInput.value = formatPhoneFull(digits);
+      mask.updateValue();
+    }
+    phoneInput.style.color = digits.length ? '#1a1a1a' : '#838383';
+  });
+
+  function cleanPhone(raw) {
+    let digits = raw.replace(/\D/g, '');
+    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+    if (digits.startsWith('7')) digits = digits.slice(1);
+    return digits;
+  }
+
+  function formatPhoneFull(digits) {
+    if (digits.length !== 10) return '';
+    return `+7 (${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
+  }
 
   openBtn.addEventListener('click', () => {
     overlay.classList.add('show');
@@ -1876,18 +1934,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function cleanPhone(raw) {
-    let digits = raw.replace(/\D/g, '');
-    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-    if (digits.startsWith('7')) digits = digits.slice(1);
-    return digits;
-  }
-
-  function formatPhoneFull(digits) {
-    if (digits.length !== 10) return '';
-    return `+7 (${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
-  }
-
   async function sendLeadToTelegram(name, phone) {
     const TOKEN = 'ТВОЙ_TELEGRAM_BOT_TOKEN';
     const CHAT_ID = 'ТВОЙ_CHAT_ID';
@@ -1897,7 +1943,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function launchEmojiConfetti() {
-    // Реализуй анимацию по своему вкусу
     console.log('🎉 Confetti!');
   }
 });
