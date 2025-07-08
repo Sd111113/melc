@@ -1932,7 +1932,109 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
+<!-- 9й блок Нам доверяют -->
+<section class="trust-slider">
+  <h2 class="trust-title">Нам доверяют:</h2>
+  <div class="slider">
+    <div class="slide-track">
+      <div class="slide"><img src="images/Первое кредитное бюро.webp" alt="Первое Кредитное Бюро"></div>
+      <div class="slide"><img src="images/ТОО АМДГ.webp" alt="ТОО АМДГ"></div>
+      <div class="slide"><img src="images/Тоо Besins Healthcare.webp" alt="Besins Healthcare"></div>
+      <div class="slide"><img src="images/тоо zepter international.webp" alt="Zepter International"></div>
+      <div class="slide"><img src="images/Toyota Kazakhstan.webp" alt="Toyota Kazakhstan"></div>
+      <div class="slide"><img src="images/тоо MEDILAB IMMUN.webp" alt="Medilab Immun"></div>
+      <div class="slide"><img src="images/ТОО bcc.webp" alt="BCC"></div>
+      <div class="slide"><img src="images/тоо АзияТезМаш.webp" alt="АзияТезМаш"></div>
+      <div class="slide"><img src="images/Тоо EvoPrint.webp" alt="EVO Print"></div>
+      <div class="slide"><img src="images/ТОО Falcon Security Services.webp" alt="Falcon Security Services"></div>
+      <!-- повтори логотипы для бесконечной ленты -->
+     <div class="slide"><img src="images/Первое кредитное бюро.webp" alt="Первое Кредитное Бюро"></div>
+      <div class="slide"><img src="images/ТОО АМДГ.webp" alt="ТОО АМДГ"></div>
+      <div class="slide"><img src="images/Тоо Besins Healthcare.webp" alt="Besins Healthcare"></div>
+      <div class="slide"><img src="images/тоо zepter international.webp" alt="Zepter International"></div>
+      <div class="slide"><img src="images/Toyota Kazakhstan.webp" alt="Toyota Kazakhstan"></div>
+      <div class="slide"><img src="images/тоо MEDILAB IMMUN.webp" alt="Medilab Immun"></div>
+      <div class="slide"><img src="images/ТОО bcc.webp" alt="BCC"></div>
+      <div class="slide"><img src="images/тоо АзияТезМаш.webp" alt="АзияТезМаш"></div>
+      <div class="slide"><img src="images/Тоо EvoPrint.webp" alt="EVO Print"></div>
+      <div class="slide"><img src="images/ТОО Falcon Security Services.webp" alt="Falcon Security Services"></div>
+    </div>
+  </div>
+</section>
 
+<style>
+/* 9й блок Нам доверяют */
+.trust-slider {
+  background: #f4f4f4;
+  padding: 25px;
+}
+
+.trust-title {
+  font-family: 'Gilroy Semibold', sans-serif;
+  font-size: 15px;
+  color: #1a1a1a;
+  margin: 0 0 14px 0;
+  text-align: left;
+}
+
+.slider {
+  background: #f4f4f4;
+  height: 100px;
+  margin: auto;
+  overflow: hidden;
+  position: relative;
+  max-width: 960px;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+}
+
+.slider::before,
+.slider::after {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to right, #f4f4f4 0%, rgba(244, 244, 244, 0) 100%);
+}
+
+.slider::after {
+  right: 0;
+  top: 0;
+  transform: rotateZ(180deg);
+}
+
+.slider::before {
+  left: 0;
+  top: 0;
+}
+
+.slide-track {
+  display: flex;
+  width: calc(250px * 14);
+  animation: scroll 40s linear infinite;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-250px * 7)); }
+}
+
+.slide {
+  height: 100px;
+  width: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide img {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+</style>
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
