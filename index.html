@@ -141,6 +141,27 @@ h1 {
   height: 18px;
   margin-right: 5px;
 }
+#hero-title {
+  overflow: hidden;
+  border-right: .15em solid #c3dfff;
+  white-space: nowrap;
+  letter-spacing: -0.3px;
+  color: #fff;
+}
+
+.typing {
+  animation: typing 4s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  0%, 100% { border-color: transparent }
+  50% { border-color: #c3dfff }
+}
 
 .form-container {
   max-width: 500px;
@@ -259,7 +280,9 @@ font-weight: 400;
           <img src="images/2GIS_logo.png" alt="2GIS" class="logo-2gis">
         </div>
       </div>
-      <h1>Быстрый английский<br>за 2 месяца</h1>
+      <h1 id="hero-title">
+  <span id="typing-text">Быстрый английский за 2 месяца</span>
+</h1>
       <ul class="hero__features">
         <li><img src="images/lightning_icon.png" alt="">Гарантия результата: +1 уровень <br>за 2 месяца</li>
         <li><img src="images/lightning_icon.png" alt="">Бесплатная консультация с топовым преподавателем ELC</li>
@@ -2331,6 +2354,32 @@ if (form) {
     }
   });
 }
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const titles = [
+    "Быстрый английский за 2 месяца",
+    "Английский для путешествий",
+    "Английский без языковых барьеров",
+    "Английский для предпринимателей",
+    "Английский без многолетней зубрежки"
+  ];
+
+  const typingText = document.getElementById('typing-text');
+  let currentIndex = 0;
+
+  function typeTitle() {
+    typingText.classList.remove('typing');
+    setTimeout(() => {
+      typingText.textContent = titles[currentIndex];
+      typingText.classList.add('typing');
+      currentIndex = (currentIndex + 1) % titles.length;
+    }, 100);
+  }
+
+  typeTitle(); 
+  setInterval(typeTitle, 8000);
+});
 </script>
 </body>
 </html>
