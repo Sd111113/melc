@@ -1631,8 +1631,10 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
         <h2 class="bonus-title">
           Вы долистали до конца <br>и заслужили подарок! <br>58 фразовых глаголов <br>на все случаи жизни
         </h2>
-        <button class="bonus-button" id="bonus-next">Получить подарок</button>
-        <img src="images/bonus_image.webp" alt="Подарок" class="bonus-image">
+        <div class="bonus-center">
+          <button class="bonus-button" id="bonus-next">Получить подарок</button>
+          <img src="images/bonus_image.webp" alt="Подарок" class="bonus-image">
+        </div>
       </div>
     </div>
   </div>
@@ -1686,7 +1688,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch; /* Заголовок на всю ширину */
   justify-content: flex-start;
 }
 
@@ -1701,13 +1703,20 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 }
 
 .bonus-title {
-  font-family: 'Gilroy Bold', sans-serif;
+  font-family: 'Gilroy Regular', sans-serif;
+  font-weight: 400;
   font-size: 25px;
-font-weight: 400;
   color: #1a1a1a;
   line-height: 1.25;
   margin: 0 0 12px 0;
   text-align: left;
+}
+
+.bonus-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
 }
 
 .bonus-button {
@@ -1720,14 +1729,12 @@ font-weight: 400;
   border-radius: 12px;
   cursor: pointer;
   font-family: 'Gilroy Medium', sans-serif;
-  margin: 14px auto;
 }
 
 .bonus-image {
   width: 100%;
   max-width: 240px;
   height: auto;
-  margin: 0 auto;
   border-radius: 12px;
   display: block;
 }
@@ -1822,94 +1829,6 @@ font-weight: 400;
   font-weight: 400;
 }
 </style>
-
-<script src="https://unpkg.com/imask"></script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('bonus-overlay');
-  const modal = document.getElementById('bonus-modal');
-  const openBtn = document.getElementById('bonus-next');
-  const form = document.getElementById('bonus-form');
-  const phoneInput = document.getElementById('bonus-phone');
-
-  // Маска
-  let mask = IMask(phoneInput, {
-    mask: '+7 (000) 000-00-00',
-    lazy: true,
-    placeholderChar: '_'
-  });
-
-  openBtn.addEventListener('click', () => {
-    overlay.classList.add('show');
-    modal.classList.add('show');
-  });
-
-  overlay.addEventListener('click', () => {
-    overlay.classList.remove('show');
-    modal.classList.remove('show');
-  });
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('bonus-name').value.trim();
-    const phone = cleanPhone(phoneInput.value);
-
-    if (name.length < 2 || phone.length !== 10) {
-      alert('Пожалуйста, заполните корректно все поля!');
-      return;
-    }
-
-    try {
-      await sendLeadToTelegram(name, formatPhoneFull(phone));
-      launchEmojiConfetti();
-      setTimeout(() => {
-        window.location.href = 'thanks.html';
-      }, 1000);
-    } catch (err) {
-      console.error(err);
-      alert('Ошибка отправки. Попробуйте позже.');
-    }
-  });
-
-  function cleanPhone(raw) {
-    let digits = raw.replace(/\D/g, '');
-    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-    if (digits.startsWith('7')) digits = digits.slice(1);
-    return digits;
-  }
-
-  function formatPhoneFull(digits) {
-    if (digits.length !== 10) return '';
-    return `+7 (${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
-  }
-
-  async function sendLeadToTelegram(name, phone) {
-    const TOKEN = '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE';
-    const CHAT_ID = '-1002856948789';
-    const message = `📩 Новая заявка (подарок):\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
-    const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
-    await fetch(url);
-  }
-
-  function launchEmojiConfetti() {
-    const emojis = ['🎉', '🇺🇸', '✨', '❤️', '🇬🇧'];
-    const emojiShapes = emojis.map(e => confetti.shapeFromText({ text: e, scalar: 1.8 }));
-    const count = 200;
-    const defaults = { origin: { y: 0.7 }, gravity: 0.85, decay: 0.9, shapes: emojiShapes };
-
-    function fire(ratio, opts) {
-      confetti({ ...defaults, ...opts, particleCount: Math.floor(count * ratio) });
-    }
-
-    fire(0.25, { spread: 25, startVelocity: 60 });
-    fire(0.2, { spread: 45, startVelocity: 50 });
-    fire(0.35, { spread: 70, decay: 0.91, scalar: 0.9 });
-    fire(0.1, { spread: 90, startVelocity: 35, decay: 0.92, scalar: 1.2 });
-    fire(0.1, { spread: 90, startVelocity: 50 });
-  }
-});
-</script>
 
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
