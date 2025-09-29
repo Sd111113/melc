@@ -2363,6 +2363,8 @@ if (form) {
     e.preventDefault();
     const nameInput = form.querySelector('#name');
     const phoneInput = form.querySelector('#phone');
+    const citySelect = form.querySelector('#city');
+    const city = citySelect ? citySelect.value : ''; 
 
     if (!isNameValid(nameInput.value)) {
       alert('Пожалуйста, введите корректное имя.');
@@ -2376,7 +2378,9 @@ if (form) {
     }
 
     try {
-      await sendLeadToTelegram(nameInput.value.trim(), formatPhoneFull(cleanPhone(phoneInput.value)));
+      await sendLeadToTelegram(nameInput.value.trim(), fformatPhoneFull(cleanPhone(phoneInput.value)),
+        city
+      );
       launchEmojiConfetti();
       setTimeout(() => {
         window.location.href = 'thanks.html';
