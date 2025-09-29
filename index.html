@@ -213,13 +213,13 @@ font-weight: 400;
 }
 /* строка-обёртка (на будущее, если понадобится ещё половинки) */
 .form-row {
-  display: flex;
+  display: block; /* было flex — не нужно */
 }
 
-/* селект города: половина ширины поля Имя, стили как у инпутов */
+/* селект города: та же ширина, но в 2 раза ниже, как у “Имя” */
 .form-select {
-  width: 50%;
-  padding: 14px 16px;
+  width: 100%;           /* было 50% */
+  padding: 7px 16px;     /* было 14px 16px — половина высоты */
   font-size: 18px;
   border: none;
   border-radius: 12px;
@@ -229,12 +229,11 @@ font-weight: 400;
   color: #1a1a1a;
   cursor: pointer;
 
-  /* нативный селект, но без системной стрелки */
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 
-  /* рисуем маленькую стрелочку справа */
+  /* маленькая стрелка справа */
   background-image:
     linear-gradient(45deg, transparent 50%, #1a1a1a 50%),
     linear-gradient(135deg, #1a1a1a 50%, transparent 50%),
@@ -246,8 +245,9 @@ font-weight: 400;
   background-size: 6px 6px, 6px 6px, 100% 100%;
   background-repeat: no-repeat;
 }
+
 .form-select:focus { outline: none; }
-  }
+  
   
   .form-container button {
     width: 100%;
