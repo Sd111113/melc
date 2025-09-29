@@ -1635,7 +1635,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
       </h2>
       <div class="bonus-center">
         <button class="bonus-button" id="bonus-open">Получить подарок</button>
-        <img src="images/bonus_image.webp" alt="Подарок" class="bonus-image">
+        <img src="images/prepos.webp" alt="Подарок" class="bonus-image">
       </div>
     </div>
   </div>
@@ -1925,14 +1925,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Скачивание PDF
-  function downloadPDF() {
-    const link = document.createElement('a');
-    link.href = 'тут_позже_вставлю_название.pdf'; // замени на правильное название
-    link.download = 'тут_позже_вставлю_название.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
+function downloadPDF() {
+  const link = document.createElement('a');
+  link.href = 'files/Prepositions ELC.pdf';
+  link.download = 'Prepositions ELC.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 });
 </script>
 <!-- 9й блок Нам доверяют -->
