@@ -1710,7 +1710,7 @@ document.getElementById('doubts-form')?.addEventListener('submit', async (e) => 
 
 .bonus-image {
   width: 100%;
-  max-width: 200px;
+  max-width: clamp(140px, 40vw, 200px);
   height: auto;
   border-radius: 12px;
   display: block;
