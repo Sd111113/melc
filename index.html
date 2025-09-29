@@ -2355,31 +2355,5 @@ if (form) {
   });
 }
 </script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const titles = [
-    "Быстрый английский за 2 месяца",
-    "Английский для путешествий",
-    "Английский без языковых барьеров",
-    "Английский для предпринимателей",
-    "Английский без многолетней зубрежки"
-  ];
-
-  const typingText = document.getElementById('typing-text');
-  let currentIndex = 0;
-
-  function typeTitle() {
-    typingText.classList.remove('typing');
-    setTimeout(() => {
-      typingText.textContent = titles[currentIndex];
-      typingText.classList.add('typing');
-      currentIndex = (currentIndex + 1) % titles.length;
-    }, 100);
-  }
-
-  typeTitle(); 
-  setInterval(typeTitle, 8000);
-});
-</script>
 </body>
 </html>
