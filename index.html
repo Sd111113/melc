@@ -1266,30 +1266,32 @@ setTimeout(cycle, 400);
   cursor: pointer;
 }
 
+/* ===== ЗАМЕНЁННЫЙ КОД для «дымка» ===== */
 .reviews__fade {
   position: absolute;
   top: 0;
   width: 48px;
   height: 100%;
-  background: linear-gradient(to right, rgba(255,255,255,0.85) 0%, transparent 100%);
-  backdrop-filter: blur(8px);
-  opacity: 0;
   pointer-events: none;
+  opacity: 0;
   transition: opacity 0.3s;
+  z-index: 2;
 }
 
 .reviews__fade--left {
   left: 0;
+  background: linear-gradient(to right, #fff 0%, transparent 100%);
 }
 
 .reviews__fade--right {
   right: 0;
-  transform: rotateY(180deg);
+  background: linear-gradient(to left, #fff 0%, transparent 100%);
 }
 
 .reviews__fade--visible {
   opacity: 1;
 }
+/* ===== конец правки ===== */
 
 .reviews__nav {
   position: absolute;
@@ -1344,6 +1346,7 @@ setTimeout(cycle, 400);
   border-radius: 8px;
   background: #f88dad;
 }
+
 .reviews__item.vertical-photo img {
   object-fit: cover;
 }
