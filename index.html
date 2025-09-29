@@ -211,6 +211,44 @@ font-weight: 400;
 .form-container input[type="tel"] {
   color: #1a1a1a;
 }
+/* строка-обёртка (на будущее, если понадобится ещё половинки) */
+.form-row {
+  display: flex;
+}
+
+/* селект города: половина ширины поля Имя, стили как у инпутов */
+.form-select {
+  width: 50%;
+  padding: 14px 16px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  background: #f2f2f2;
+  box-sizing: border-box;
+  font-family: 'Gilroy Regular', sans-serif;
+  color: #1a1a1a;
+  cursor: pointer;
+
+  /* нативный селект, но без системной стрелки */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* рисуем маленькую стрелочку справа */
+  background-image:
+    linear-gradient(45deg, transparent 50%, #1a1a1a 50%),
+    linear-gradient(135deg, #1a1a1a 50%, transparent 50%),
+    linear-gradient(to right, transparent, transparent);
+  background-position:
+    calc(100% - 22px) calc(50% - 3px),
+    calc(100% - 16px) calc(50% - 3px),
+    0 0;
+  background-size: 6px 6px, 6px 6px, 100% 100%;
+  background-repeat: no-repeat;
+}
+.form-select:focus { outline: none; }
+  }
+  
   .form-container button {
     width: 100%;
     padding: 14px;
@@ -279,6 +317,12 @@ font-weight: 400;
       <form id="tg-form">
         <input type="text" id="name" placeholder="Имя" required />
 <input type="tel" id="phone" class="phone-input" placeholder="+7 (___) ___-__-__" required />
+         <div class="form-row">
+    <select id="city" class="form-select" aria-label="Город">
+      <option value="Алматы" selected>г. Алматы</option>
+      <option value="Астана">г. Астана</option>
+    </select>
+  </div>
         <button type="submit">Хочу на 1 бесплатный урок</button>
       </form>
     </div>
@@ -2206,8 +2250,9 @@ const TELEGRAM_SETTINGS = {
   chat_id: '-1002856948789'
 };
 
-async function sendLeadToTelegram(name, phone) {
-  const message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}`;
+async function sendLeadToTelegram(name, phone, city) {
+  const cityLine = city ? `\n🏙️ Город: ${city}` : '';
+  const message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}${cityLine}`;
   const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
   const response = await fetch(url);
   const data = await response.json();
@@ -2217,6 +2262,7 @@ async function sendLeadToTelegram(name, phone) {
     throw new Error(data.description);
   }
 }
+
 
 function launchEmojiConfetti() {
   const emojis = ['🎉', '🇺🇸', '✨', '❤️', '🇬🇧'];
