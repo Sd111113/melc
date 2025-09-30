@@ -217,13 +217,13 @@ font-weight: 400;
 }
 
 /* селект города: та же ширина, но в 2 раза ниже, как у “Имя” */
-.form-select {
+.doubts-container .form-select {
   width: 100%;           /* было 50% */
   padding: 7px 16px;     /* было 14px 16px — половина высоты */
   font-size: 16px;
   border: none;
   border-radius: 12px;
-  background: #f2f2f2;
+  background: white;
   box-sizing: border-box;
   font-family: 'Gilroy Regular', sans-serif;
   color: #838383;
@@ -1495,11 +1495,19 @@ document.addEventListener('DOMContentLoaded', () => {
       которые не оставят вас равнодушным<br>
       и поддержит ваш интерес к обучению
     </p>
-    <form id="doubts-form">
-      <input type="text" id="doubts-name" placeholder="Имя" required />
-      <input type="tel" id="doubts-phone" placeholder="+7 (___) ___-__-__" required />
-      <button type="submit">Хочу на 1 бесплатный урок</button>
-    </form>
+<form id="doubts-form">
+  <input type="text" id="doubts-name" placeholder="Имя" required />
+  <input type="tel" id="doubts-phone" placeholder="+7 (___) ___-__-__" required />
+
+  <div class="form-row">
+    <select id="doubts-city" class="form-select" aria-label="Город">
+      <option value="Алматы" selected>г. Алматы</option>
+      <option value="Астана">г. Астана</option>
+    </select>
+  </div>
+
+  <button type="submit">Хочу на 1 бесплатный урок</button>
+</form>
   </div>
 </section>
 
