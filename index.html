@@ -673,7 +673,43 @@ font-weight: 400;
   font-size: 14pt;
   color: #1a1a1a;
   margin-top: 12px;
+  
 
+}
+  .quiz-row {
+  width: 100%;
+}
+  .quiz-select {
+  width: 100%;
+  padding: 7px 16px;              /* половина высоты поля Имя */
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  background: #f9e9ec;            /* розовый фон как у полей квиза */
+  box-sizing: border-box;
+  font-family: 'Gilroy Regular', sans-serif;
+  color: #838383;                 /* серый текст как у placeholder */
+  cursor: pointer;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* стрелочка справа */
+  background-image:
+    linear-gradient(45deg, transparent 50%, #1a1a1a 50%),
+    linear-gradient(135deg, #1a1a1a 50%, transparent 50%),
+    linear-gradient(to right, transparent, transparent);
+  background-position:
+    calc(100% - 22px) 50%,
+    calc(100% - 16px) 50%,
+    0 0;
+  background-size: 6px 6px, 6px 6px, 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.quiz-select:focus {
+  outline: none;
 }
 .fade-in {
   animation: fadeIn 0.2s forwards;
@@ -782,6 +818,20 @@ document.addEventListener('DOMContentLoaded', () => {
         phoneInput.id = 'quiz-phone';
 
         setupPhoneMask(phoneInput);
+        const cityRow = document.createElement('div');
+cityRow.className = 'quiz-row';
+
+const citySelect = document.createElement('select');
+citySelect.id = 'quiz-city';
+citySelect.className = 'quiz-select';
+citySelect.setAttribute('aria-label', 'Город');
+
+citySelect.innerHTML = `
+  <option value="Алматы" selected>г. Алматы</option>
+  <option value="Астана">г. Астана</option>
+`;
+
+cityRow.appendChild(citySelect);
 
         const submitBtn = document.createElement('button');
         submitBtn.className = 'quiz__submit--blue';
@@ -812,6 +862,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         answersEl.appendChild(nameInput);
         answersEl.appendChild(phoneInput);
+        answersEl.appendChild(cityRow);
         answersEl.appendChild(submitBtn);
       }
 
