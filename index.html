@@ -219,14 +219,14 @@ font-weight: 400;
 /* общий аккуратный стиль для селекта города (обе формы) */
 .form-select{
   width: 100%;
-  padding: 14px 16px;           /* по высоте как поля Имя/Телефон */
-  font-size: 18px;
+  padding: 7px 16px;           /* половина высоты инпута */
+  font-size: 16px;
   border: none;
   border-radius: 12px;
   background: #f2f2f2;          /* как у инпутов первой формы */
   box-sizing: border-box;
   font-family: 'Gilroy Regular', sans-serif;
-  color: #1a1a1a;
+  color: #838383;
   cursor: pointer;
 
   appearance: none;
@@ -235,8 +235,8 @@ font-weight: 400;
 
   /* маленькая стрелка справа */
   background-image:
-    linear-gradient(45deg, transparent 50%, #1a1a1a 50%),
-    linear-gradient(135deg, #1a1a1a 50%, transparent 50%),
+    linear-gradient(45deg, transparent 50%, #838383 50%),
+    linear-gradient(135deg, #838383 50%, transparent 50%),
     linear-gradient(to right, transparent, transparent);
   background-position:
     calc(100% - 22px) 50%,
@@ -259,6 +259,7 @@ font-weight: 400;
 /* спец-правка для 7-го блока: на синем фоне селект белый */
 .doubts-container .form-select{ 
   background:#ffffff; 
+  color: #838383; 
 }
   
   .form-container button {
