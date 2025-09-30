@@ -216,17 +216,17 @@ font-weight: 400;
   display: block; /* было flex — не нужно */
 }
 
-/* селект города: та же ширина, но в 2 раза ниже, как у “Имя” */
-.doubts-container .form-select {
-  width: 100%;           /* было 50% */
-  padding: 7px 16px;     /* было 14px 16px — половина высоты */
-  font-size: 16px;
+/* общий аккуратный стиль для селекта города (обе формы) */
+.form-select{
+  width: 100%;
+  padding: 14px 16px;           /* по высоте как поля Имя/Телефон */
+  font-size: 18px;
   border: none;
   border-radius: 12px;
-  background: white;
+  background: #f2f2f2;          /* как у инпутов первой формы */
   box-sizing: border-box;
   font-family: 'Gilroy Regular', sans-serif;
-  color: #838383;
+  color: #1a1a1a;
   cursor: pointer;
 
   appearance: none;
@@ -239,15 +239,27 @@ font-weight: 400;
     linear-gradient(135deg, #1a1a1a 50%, transparent 50%),
     linear-gradient(to right, transparent, transparent);
   background-position:
-    calc(100% - 22px) calc(50% - 3px),
-    calc(100% - 16px) calc(50% - 3px),
+    calc(100% - 22px) 50%,
+    calc(100% - 16px) 50%,
     0 0;
   background-size: 6px 6px, 6px 6px, 100% 100%;
   background-repeat: no-repeat;
 }
 
-.form-select:focus { outline: none; }
-  
+.form-select:focus { 
+  outline: none; 
+  box-shadow: 0 0 0 2px rgba(33,132,249,.25); /* легкий акцент при фокусе */
+}
+
+/* чтобы текст в списке точно был тёмным */
+.form-select option{
+  color:#1a1a1a;
+}
+
+/* спец-правка для 7-го блока: на синем фоне селект белый */
+.doubts-container .form-select{ 
+  background:#ffffff; 
+}
   
   .form-container button {
     width: 100%;
