@@ -5,114 +5,153 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Спасибо!</title>
 
-  <!-- Шрифты Gilroy (пути как в основном сайте) -->
+  <!-- Шрифты Gilroy (пути при необходимости поправьте под свой проект) -->
   <style>
-    @font-face { font-family: 'Gilroy Bold'; src: url('fonts/Gilroy-Bold.ttf') format('truetype'); }
-    @font-face { font-family: 'Gilroy Semibold'; src: url('fonts/Gilroy-Semibold.ttf') format('truetype'); }
-    @font-face { font-family: 'Gilroy Regular'; src: url('fonts/Gilroy-Regular.ttf') format('truetype'); }
+    @font-face {
+      font-family: 'Gilroy Bold';
+      src: url('fonts/Gilroy-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Gilroy Semibold';
+      src: url('fonts/Gilroy-Semibold.ttf') format('truetype');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Gilroy Regular';
+      src: url('fonts/Gilroy-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
 
     :root{
-      --text:#1a1a1a;
-      --blue:#5999ff;
-      --grad1:#c6dcfe;
-      --grad2:#83b3ff;
-      --card-w: 260px;      /* размер квадрата с гифкой */
-      --radius: 18px;       /* скругление рамки (оставь 0, если нужен абсолютно квадрат) */
+      --text-main: #1a1a1a;
+      --brand: #5999ff;
+      --ring-a: #c6dcfe;
+      --ring-b: #83b3ff;
+      --page-pad: 24px;
     }
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      background:#fff;
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
+    *{ box-sizing: border-box; }
+
+    html, body{
+      height: 100%;
+      margin: 0;
+      background: #ffffff;
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    .wrap{
-      min-height:100svh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:28px 22px 40px;
+    .page{
+      min-height: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 24px var(--page-pad) 36px;
     }
+
     .card{
-      width:100%;
-      max-width:560px;
-      text-align:center;
+      width: 100%;
+      max-width: 560px;
+      text-align: center;
     }
 
-    /* ——— Квадратная гифка с градиентной рамкой ——— */
-    .gif-frame{
-      width:var(--card-w);
-      height:var(--card-w);
-      margin:0 auto 28px;
-      padding:6px; /* толщина рамки */
-      border-radius:calc(var(--radius) + 6px);
-      background:linear-gradient(135deg, var(--grad1), var(--grad2));
-      display:grid;
-      place-items:center;
+    /* Круглая гифка с градиентной рамкой */
+    .ty-gif{
+      width: min(70vw, 360px);
+      aspect-ratio: 1 / 1;
+      padding: 10px; /* толщина рамки */
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ring-a), var(--ring-b));
+      margin: 8px auto 18px;
+      box-shadow: 0 8px 24px rgba(89,153,255,.15);
     }
-    .gif-frame img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      border-radius:var(--radius);
-      background:#00000008;
-    }
-
-    .title{
-      margin:0 0 22px;
-      font: 23px/1.15 'Gilroy Bold', sans-serif; /* 23 px по ТЗ */
-      letter-spacing:0.2px;
+    .ty-gif img{
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 50%;
+      object-fit: cover;  /* квадратную гифку обрежет по кругу */
+      background: #fff;   /* белая “прослойка” под гифкой */
     }
 
-    .lead{
-      margin:0 auto 28px;
-      max-width:420px;
-      font: 16px/1.35 'Gilroy Semibold', sans-serif; /* 16 px по ТЗ */
+    /* Тексты */
+    .ty-title{
+      font-family: 'Gilroy Bold', system-ui, -apple-system, sans-serif;
+      font-size: 23px;
+      line-height: 1.15;
+      letter-spacing: .2px;
+      margin: 8px 0 16px;
+      color: var(--text-main);
     }
-    .lead .accent{
-      color:var(--blue);
-      text-decoration:none;
+    .ty-subtitle{
+      font-family: 'Gilroy Semibold', system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.45;
+      margin: 0 auto 22px;
+      color: var(--text-main);
+      max-width: 36ch; /* читаемая ширина текста на мобиле */
+    }
+    .ty-subtitle .accent{
+      color: var(--brand);
     }
 
-    .cta{
-      display:inline-block;
-      width:min(440px, 100%);
-      padding:16px 20px;
-      border-radius:999px;
-      background:var(--blue);
-      color:#fff;
-      text-decoration:none;
-      font: 18px/1 'Gilroy Bold', sans-serif;
-      box-shadow:0 8px 18px rgba(89,153,255,.28);
-      transition:transform .06s ease;
+    /* Кнопка — короче на ~25% и чуть менее скруглённая */
+    .ty-btn{
+      display: inline-block;
+      width: 75%;                 /* было бы 100% — теперь короче на ~25% */
+      max-width: 440px;
+      min-width: 260px;
+      padding: 16px 18px;
+      margin: 6px auto 0;
+      text-align: center;
+      text-decoration: none;
+      color: #fff;
+      background: var(--brand);
+      border-radius: 16px;        /* меньше «пилюля» */
+      font-family: 'Gilroy Semibold', system-ui, -apple-system, sans-serif;
+      font-size: 18px;
+      box-shadow: 0 10px 24px rgba(89,153,255,.22);
+      transition: transform .03s ease, box-shadow .2s ease;
     }
-    .cta:active{ transform:translateY(1px); }
+    .ty-btn:active{ transform: translateY(1px); }
+    .ty-btn:focus-visible{
+      outline: 2px solid var(--brand);
+      outline-offset: 3px;
+    }
 
-    @media (min-width:420px){
-      .title{ font-size:26px; }
-      .cta{ padding:18px 24px; font-size:19px; }
+    /* Немного адаптива для крупных экранов */
+    @media (min-width: 768px){
+      .page{ padding-top: 40px; }
+      .ty-gif{ width: 320px; }
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="card">
-      <!-- рамка и квадратная гифка -->
-      <div class="gif-frame">
-        <img src="images/cat.gif" alt="Спасибо">
+  <main class="page">
+    <section class="card" aria-labelledby="ty-title">
+      <!-- Круглая гифка с градиентной рамкой -->
+      <div class="ty-gif" role="img" aria-label="Милый котик">
+        <img src="images/cat.gif" alt="Cat gif">
       </div>
 
-      <h1 class="title">СПАСИБО!</h1>
+      <!-- Заголовок -->
+      <h1 id="ty-title" class="ty-title">СПАСИБО!</h1>
 
-      <p class="lead">
+      <!-- Подзаголовок -->
+      <p class="ty-subtitle">
         А может <span class="accent">Whatsapp?</span> Запись
         на 1 бесплатный урок <span class="accent">без лишних звонков</span>
       </p>
 
-      <a class="cta" href="https://wa.me/77017591063" target="_blank" rel="noopener">
+      <!-- Кнопка перехода -->
+      <a class="ty-btn" href="https://wa.me/77017591063" target="_blank" rel="noopener">
         Продолжить в WhatsApp
       </a>
     </section>
