@@ -77,13 +77,13 @@
   content:"";
   position:absolute;
   left:calc(50% + var(--h-x, 0px));  /* сдвиг по ширине */
-  top: calc(20% + var(--h-y, 0px));  /* сдвиг по высоте */
-  width:var(--h-size, 120vw);        /* масштаб по ширине/высоте */
-  height:var(--h-size, 120vw);
+  top: calc(20% + var(--h-y, -50px));  /* сдвиг по высоте */
+  width:var(--h-size, 200vw);        /* масштаб по ширине/высоте */
+  height:var(--h-size, 200vw);
   background:url("images/heart_ty.webp") no-repeat center / contain;
   transform:
     translate(-50%, -50%)            /* центрируем опорную точку */
-    rotate(var(--h-rot, 0deg))       /* поворот */
+    rotate(var(--h-rot, -10deg))       /* поворот */
     scale(var(--h-scale, 1));        /* дополнительный масштаб */
   opacity:1;
 }
