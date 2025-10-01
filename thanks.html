@@ -63,23 +63,31 @@
     }
 
     /* Круглая гифка с градиентной рамкой */
-    .ty-gif{
-      width: min(70vw, 360px);
-      aspect-ratio: 1 / 1;
-      padding: 10px; /* толщина рамки */
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--ring-a), var(--ring-b));
-      margin: 8px auto 18px;
-      box-shadow: 0 8px 24px rgba(89,153,255,.15);
-    }
-    .ty-gif img{
-      width: 100%;
-      height: 100%;
-      display: block;
-      border-radius: 50%;
-      object-fit: cover;  /* квадратную гифку обрежет по кругу */
-      background: #fff;   /* белая “прослойка” под гифкой */
-    }
+    .ty-gif {
+  width: min(70vw, 280px);  /* одинаковая ширина и высота */
+  height: min(70vw, 280px); /* убираем aspect-ratio */
+  border-radius: 50%;
+  border: 3px solid transparent; /* толщина рамки */
+  background: linear-gradient(135deg, var(--ring-a), var(--ring-b)) border-box;
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) padding-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px auto 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(89,153,255,.15);
+}
+
+.ty-gif img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover; /* не растянет, сохранит пропорции */
+}
 
     /* Тексты */
     .ty-title{
