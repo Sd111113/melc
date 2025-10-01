@@ -6,7 +6,7 @@
   <title>Спасибо!</title>
 
   <style>
-    /* Шрифты Gilroy (пути поправь под себя при необходимости) */
+    /* Шрифты Gilroy */
     @font-face {
       font-family: 'Gilroy Bold';
       src: url('fonts/Gilroy-Bold.ttf') format('truetype');
@@ -48,7 +48,7 @@
     }
 
 .page {
-  position: relative; /* добавь это */
+  position: relative;
   min-height: 100%;
   display: flex;
   align-items: flex-start;
@@ -56,77 +56,76 @@
   padding: 50px 24px 36px;
 }
 
-    .card{
-      width: 100%;
-      max-width: 560px;
-      text-align: center;
-    }
-    
-.page{ position:relative; }
+.card{
+  width: 100%;
+  max-width: 560px;
+  text-align: center;
+}
 
+/* Фон-сердце */
 .bg-heart{
   position:absolute;
   inset:0;
   pointer-events:none;
-  z-index:9999;    /* пока поверх, потом поставишь -1 */
-  overflow:hidden; /* обрезает выступающие части */
+  z-index:-1;         /* теперь под всем */
+  overflow:hidden;
 }
 
-/* Само сердечко */
 .bg-heart::before{
   content:"";
   position:absolute;
-  left:calc(50% + var(--h-x, -20px));  /* сдвиг по ширине */
-  top: calc(20% + var(--h-y, 85px));  /* сдвиг по высоте */
-  width:var(--h-size, 210vw);        /* масштаб по ширине/высоте */
+  left:calc(50% + var(--h-x, -20px));
+  top: calc(20% + var(--h-y, 85px));
+  width:var(--h-size, 210vw);
   height:var(--h-size, 210vw);
   background:url("images/heart_ty.webp") no-repeat center / contain;
   transform:
-    translate(-50%, -50%)            /* центрируем опорную точку */
-    rotate(var(--h-rot, -5deg))       /* поворот */
-    scale(var(--h-scale, 1));        /* дополнительный масштаб */
+    translate(-50%, -50%)
+    rotate(var(--h-rot, -5deg))
+    scale(var(--h-scale, 1));
   opacity:1;
 }
 
-    /* ==== Круглая гифка с градиентной рамкой (двухслойно) ==== */
-    .ty-gif{
-      width: min(70vw, 280px);
-      height: min(70vw, 280px);  /* одинаковые размеры => всегда круг */
-      padding: 6px;              /* толщина рамки (тоньше) */
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--ring-a), var(--ring-b));
-      margin: 8px auto 25px;
-      box-shadow: 0 8px 32px rgba(89,153,255,.15);
-      display: grid;
-      place-items: center;       /* центрируем внутренний круг */
-    }
+/* Гифка */
+.ty-gif{
+  width: min(70vw, 280px);
+  height: min(70vw, 280px);
+  padding: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ring-a), var(--ring-b));
+  margin: 8px auto 25px;
+  box-shadow: 0 8px 32px rgba(89,153,255,.15);
+  display: grid;
+  place-items: center;
+}
 
-    .ty-gif-inner{
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      overflow: hidden;          /* обрезаем гифку по кругу */
-      background: #fff;          /* белая подложка */
-    }
+.ty-gif-inner{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+}
 
-    .ty-gif-inner img{
-      width: 115%;
-      height: 115%;
-      display: block;
-      object-fit: cover;         /* не растягивает гифку */
-      transform: scale(1.15);
-    }
+.ty-gif-inner img{
+  width: 115%;
+  height: 115%;
+  display: block;
+  object-fit: cover;
+  transform: scale(1.15);
+}
 
-    /* Тексты */
-    .ty-title{
-      font-family: 'Gilroy Bold', system-ui, -apple-system, sans-serif;
-      font-size: 30px;
-      line-height: 1.15;
-      letter-spacing: .2px;
-      margin: 25px 0 50px;
-      color: var(--text-main);
-    }
+/* Заголовок */
+.ty-title{
+  font-family: 'Gilroy Bold', system-ui, -apple-system, sans-serif;
+  font-size: 30px;
+  line-height: 1.15;
+  letter-spacing: .2px;
+  margin: 25px 0 50px;
+  color: var(--text-main);
+}
 
+/* Подзаголовок */
 .ty-subtitle {
   font-family: 'Gilroy Semibold', system-ui, -apple-system, sans-serif;
   font-size: 20px;
@@ -140,43 +139,43 @@
   margin: 0 0 8px; 
 }
 
-    .ty-subtitle .accent{ color: var(--brand); }
+.ty-subtitle .accent{ color: var(--brand); }
 
-    /* Кнопка — короче и менее скруглённая */
-    .ty-btn{
-      display: inline-block;
-      width: 75%;                 /* короче на ~25% */
-      max-width: 440px;
-      min-width: 260px;
-      padding: 13px 18px;
-      margin: 6px auto 0;
-      text-align: center;
-      text-decoration: none;
-      color: #fff;
-      background: var(--brand);
-      border-radius: 16px;        /* меньше «пилюля» */
-      font-family: 'Gilroy Semibold', system-ui, -apple-system, sans-serif;
-      font-size: 15px;
-      box-shadow: 0 10px 24px rgba(89,153,255,.22);
-      transition: transform .03s ease, box-shadow .2s ease;
-    }
-    .ty-btn:active{ transform: translateY(1px); }
-    .ty-btn:focus-visible{
-      outline: 2px solid var(--brand);
-      outline-offset: 3px;
-    }
+/* Кнопка */
+.ty-btn{
+  display: inline-block;
+  width: 75%;
+  max-width: 440px;
+  min-width: 260px;
+  padding: 13px 18px;
+  margin: 6px auto 0;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background: var(--brand);
+  border-radius: 16px;
+  font-family: 'Gilroy Semibold', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  box-shadow: 0 10px 24px rgba(89,153,255,.22);
+  transition: transform .03s ease, box-shadow .2s ease;
+}
+.ty-btn:active{ transform: translateY(1px); }
+.ty-btn:focus-visible{
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
 
-    @media (min-width: 768px){
-      .page{ padding-top: 40px; }
-      .ty-gif{ width: 320px; height: 320px; }
-    }
+@media (min-width: 768px){
+  .page{ padding-top: 40px; }
+  .ty-gif{ width: 320px; height: 320px; }
+}
   </style>
 </head>
 <body>
   <div class="bg-heart"></div>
   <main class="page">
     <section class="card" aria-labelledby="ty-title">
-      <!-- Круглая гифка с градиентной рамкой -->
+      <!-- Круглая гифка -->
       <div class="ty-gif" role="img" aria-label="Милый котик">
         <div class="ty-gif-inner">
           <img src="images/cat.gif" alt="Cat gif">
@@ -187,14 +186,14 @@
       <h1 id="ty-title" class="ty-title">СПАСИБО!</h1>
 
       <!-- Подзаголовок -->
-<p class="ty-subtitle">
-  А может<br>
-  в <span class="accent">Whatsapp?</span> Запись<br>
-  на 1 бесплатный<br>
-  урок <span class="accent">без лишних звонков</span>
-</p>
+      <p class="ty-subtitle">
+        А может<br>
+        в <span class="accent">Whatsapp?</span> Запись<br>
+        на 1 бесплатный<br>
+        урок <span class="accent">без лишних звонков</span>
+      </p>
 
-      <!-- Кнопка перехода -->
+      <!-- Кнопка -->
       <a class="ty-btn" href="https://wa.me/77017591063" target="_blank" rel="noopener">
         Продолжить в WhatsApp
       </a>
