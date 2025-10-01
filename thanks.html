@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Спасибо!</title>
 
-  <!-- Шрифты Gilroy (пути при необходимости поправьте под свой проект) -->
   <style>
+    /* Шрифты Gilroy (пути поправь под себя при необходимости) */
     @font-face {
       font-family: 'Gilroy Bold';
       src: url('fonts/Gilroy-Bold.ttf') format('truetype');
@@ -34,7 +34,6 @@
       --brand: #5999ff;
       --ring-a: #c6dcfe;
       --ring-b: #83b3ff;
-      --page-pad: 24px;
     }
 
     *{ box-sizing: border-box; }
@@ -53,7 +52,7 @@
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding: 24px var(--page-pad) 36px;
+      padding: 24px 24px 36px;
     }
 
     .card{
@@ -62,32 +61,33 @@
       text-align: center;
     }
 
-    /* Круглая гифка с градиентной рамкой */
-    .ty-gif {
-  width: min(70vw, 280px);  /* одинаковая ширина и высота */
-  height: min(70vw, 280px); /* убираем aspect-ratio */
-  border-radius: 50%;
-  border: 3px solid transparent; /* толщина рамки */
-  background: linear-gradient(135deg, var(--ring-a), var(--ring-b)) border-box;
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) padding-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: destination-out;
-  mask-composite: exclude;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 8px auto 18px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(89,153,255,.15);
-}
+    /* ==== Круглая гифка с градиентной рамкой (двухслойно) ==== */
+    .ty-gif{
+      width: min(70vw, 280px);
+      height: min(70vw, 280px);  /* одинаковые размеры => всегда круг */
+      padding: 6px;              /* толщина рамки (тоньше) */
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ring-a), var(--ring-b));
+      margin: 8px auto 18px;
+      box-shadow: 0 8px 24px rgba(89,153,255,.15);
+      display: grid;
+      place-items: center;       /* центрируем внутренний круг */
+    }
 
-.ty-gif img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover; /* не растянет, сохранит пропорции */
-}
+    .ty-gif-inner{
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;          /* обрезаем гифку по кругу */
+      background: #fff;          /* белая подложка */
+    }
+
+    .ty-gif-inner img{
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;         /* не растягивает гифку */
+    }
 
     /* Тексты */
     .ty-title{
@@ -98,22 +98,22 @@
       margin: 8px 0 16px;
       color: var(--text-main);
     }
+
     .ty-subtitle{
       font-family: 'Gilroy Semibold', system-ui, -apple-system, sans-serif;
       font-size: 16px;
       line-height: 1.45;
       margin: 0 auto 22px;
       color: var(--text-main);
-      max-width: 36ch; /* читаемая ширина текста на мобиле */
-    }
-    .ty-subtitle .accent{
-      color: var(--brand);
+      max-width: 36ch;
     }
 
-    /* Кнопка — короче на ~25% и чуть менее скруглённая */
+    .ty-subtitle .accent{ color: var(--brand); }
+
+    /* Кнопка — короче и менее скруглённая */
     .ty-btn{
       display: inline-block;
-      width: 75%;                 /* было бы 100% — теперь короче на ~25% */
+      width: 75%;                 /* короче на ~25% */
       max-width: 440px;
       min-width: 260px;
       padding: 16px 18px;
@@ -134,10 +134,9 @@
       outline-offset: 3px;
     }
 
-    /* Немного адаптива для крупных экранов */
     @media (min-width: 768px){
       .page{ padding-top: 40px; }
-      .ty-gif{ width: 320px; }
+      .ty-gif{ width: 320px; height: 320px; }
     }
   </style>
 </head>
@@ -146,7 +145,9 @@
     <section class="card" aria-labelledby="ty-title">
       <!-- Круглая гифка с градиентной рамкой -->
       <div class="ty-gif" role="img" aria-label="Милый котик">
-        <img src="images/cat.gif" alt="Cat gif">
+        <div class="ty-gif-inner">
+          <img src="images/cat.gif" alt="Cat gif">
+        </div>
       </div>
 
       <!-- Заголовок -->
