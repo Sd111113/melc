@@ -1,28 +1,121 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Спасибо!</title>
+
+  <!-- Шрифты Gilroy (пути как в основном сайте) -->
   <style>
-    body {
-      margin: 0;
-      padding: 40px;
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
-      text-align: center;
+    @font-face { font-family: 'Gilroy Bold'; src: url('fonts/Gilroy-Bold.ttf') format('truetype'); }
+    @font-face { font-family: 'Gilroy Semibold'; src: url('fonts/Gilroy-Semibold.ttf') format('truetype'); }
+    @font-face { font-family: 'Gilroy Regular'; src: url('fonts/Gilroy-Regular.ttf') format('truetype'); }
+
+    :root{
+      --text:#1a1a1a;
+      --blue:#5999ff;
+      --grad1:#c6dcfe;
+      --grad2:#83b3ff;
+      --card-w: 260px;      /* размер квадрата с гифкой */
+      --radius: 18px;       /* скругление рамки (оставь 0, если нужен абсолютно квадрат) */
     }
-    h1 {
-      font-size: 32px;
-      color: #2184f9;
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      background:#fff;
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
     }
-    p {
-      font-size: 18px;
+
+    .wrap{
+      min-height:100svh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px 22px 40px;
+    }
+    .card{
+      width:100%;
+      max-width:560px;
+      text-align:center;
+    }
+
+    /* ——— Квадратная гифка с градиентной рамкой ——— */
+    .gif-frame{
+      width:var(--card-w);
+      height:var(--card-w);
+      margin:0 auto 28px;
+      padding:6px; /* толщина рамки */
+      border-radius:calc(var(--radius) + 6px);
+      background:linear-gradient(135deg, var(--grad1), var(--grad2));
+      display:grid;
+      place-items:center;
+    }
+    .gif-frame img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      border-radius:var(--radius);
+      background:#00000008;
+    }
+
+    .title{
+      margin:0 0 22px;
+      font: 23px/1.15 'Gilroy Bold', sans-serif; /* 23 px по ТЗ */
+      letter-spacing:0.2px;
+    }
+
+    .lead{
+      margin:0 auto 28px;
+      max-width:420px;
+      font: 16px/1.35 'Gilroy Semibold', sans-serif; /* 16 px по ТЗ */
+    }
+    .lead .accent{
+      color:var(--blue);
+      text-decoration:none;
+    }
+
+    .cta{
+      display:inline-block;
+      width:min(440px, 100%);
+      padding:16px 20px;
+      border-radius:999px;
+      background:var(--blue);
+      color:#fff;
+      text-decoration:none;
+      font: 18px/1 'Gilroy Bold', sans-serif;
+      box-shadow:0 8px 18px rgba(89,153,255,.28);
+      transition:transform .06s ease;
+    }
+    .cta:active{ transform:translateY(1px); }
+
+    @media (min-width:420px){
+      .title{ font-size:26px; }
+      .cta{ padding:18px 24px; font-size:19px; }
     }
   </style>
 </head>
 <body>
-  <h1>Спасибо за заявку!</h1>
-  <p>Мы свяжемся с вами в ближайшее время.</p>
+  <main class="wrap">
+    <section class="card">
+      <!-- рамка и квадратная гифка -->
+      <div class="gif-frame">
+        <img src="images/cat.gif" alt="Спасибо">
+      </div>
+
+      <h1 class="title">СПАСИБО!</h1>
+
+      <p class="lead">
+        А может <span class="accent">Whatsapp?</span> Запись
+        на 1 бесплатный урок <span class="accent">без лишних звонков</span>
+      </p>
+
+      <a class="cta" href="https://wa.me/77017591063" target="_blank" rel="noopener">
+        Продолжить в WhatsApp
+      </a>
+    </section>
+  </main>
 </body>
 </html>
