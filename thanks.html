@@ -62,18 +62,30 @@
       text-align: center;
     }
     
-.bg-heart {
-  position: absolute;
-  top: -100; 
-  left: -100;
-  width: 300%;
-  height: 300%;
-  background: url("images/heart_ty.webp") no-repeat center;
-  background-size: 50%;
-  background-position: 50% 15%;
-  z-index: 9999; /* теперь ПОВЕРХ всего */
-  pointer-events: none;
-  border: 2px solid red; /* временно, чтобы точно видеть блок */
+.page{ position:relative; }
+
+.bg-heart{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:9999;    /* пока поверх, потом поставишь -1 */
+  overflow:hidden; /* обрезает выступающие части */
+}
+
+/* Само сердечко */
+.bg-heart::before{
+  content:"";
+  position:absolute;
+  left:calc(50% + var(--h-x, 0px));  /* сдвиг по ширине */
+  top: calc(20% + var(--h-y, 0px));  /* сдвиг по высоте */
+  width:var(--h-size, 120vw);        /* масштаб по ширине/высоте */
+  height:var(--h-size, 120vw);
+  background:url("images/heart_ty.webp") no-repeat center / contain;
+  transform:
+    translate(-50%, -50%)            /* центрируем опорную точку */
+    rotate(var(--h-rot, 0deg))       /* поворот */
+    scale(var(--h-scale, 1));        /* дополнительный масштаб */
+  opacity:1;
 }
 
     /* ==== Круглая гифка с градиентной рамкой (двухслойно) ==== */
