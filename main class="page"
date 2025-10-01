@@ -47,13 +47,14 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    .page{
-      min-height: 100%;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 30px 24px 36px;
-    }
+.page {
+  position: relative; /* добавь это */
+  min-height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 30px 24px 36px;
+}
 
     .card{
       width: 100%;
