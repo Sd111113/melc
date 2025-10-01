@@ -76,7 +76,7 @@
 .bg-heart::before{
   content:"";
   position:absolute;
-  left:calc(50% + var(--h-x, -40px));  /* сдвиг по ширине */
+  left:calc(50% + var(--h-x, -30px));  /* сдвиг по ширине */
   top: calc(20% + var(--h-y, 60px));  /* сдвиг по высоте */
   width:var(--h-size, 210vw);        /* масштаб по ширине/высоте */
   height:var(--h-size, 210vw);
@@ -96,7 +96,7 @@
       border-radius: 50%;
       background: linear-gradient(135deg, var(--ring-a), var(--ring-b));
       margin: 8px auto 25px;
-      box-shadow: 0 8px 24px rgba(89,153,255,.15);
+      box-shadow: 0 8px 32px rgba(89,153,255,.15);
       display: grid;
       place-items: center;       /* центрируем внутренний круг */
     }
