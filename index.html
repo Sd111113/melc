@@ -328,6 +328,7 @@ font-weight: 400;
     <div class="form-container">
       <h2>Запишитесь на 1 бесплатный урок<br>+консультация</h2>
 <form action="elc-router.php" method="post" class="lead-form">
+  <form id="tg-form" action="elc-router.php" method="post" class="lead-form">
   <input type="text"  name="name"  id="name"  placeholder="Имя" required>
   <input type="tel"   name="phone" id="phone" class="phone-input" placeholder="+7 (___) ___-__-__" required>
   <select name="city" id="city" class="form-select" aria-label="Город">
@@ -1403,7 +1404,7 @@ setTimeout(cycle, 400);
   position: absolute;
   z-index: 5;
   top: 50%;
-  transform: translateY(-50%);
+  trans: translateY(-50%);
   width: 44px;
   height: 44px;
   border: none;
@@ -1558,6 +1559,7 @@ document.addEventListener('DOMContentLoaded', () => {
       и поддержит ваш интерес к обучению
     </p>
 <form action="elc-router.php" method="post" class="lead-form">
+  <form id="doubts-form" action="elc-router.php" method="post" class="lead-form">
   <input type="text"  name="name"  id="doubts-name"  placeholder="Имя" required>
   <input type="tel"   name="phone" id="doubts-phone" placeholder="+7 (___) ___-__-__" required>
   <select name="city" id="doubts-city" class="form-select" aria-label="Город">
