@@ -327,17 +327,15 @@ font-weight: 400;
   <section class="form-wrapper">
     <div class="form-container">
       <h2>Запишитесь на 1 бесплатный урок<br>+консультация</h2>
-      <form id="tg-form">
-        <input type="text" id="name" placeholder="Имя" required />
-<input type="tel" id="phone" class="phone-input" placeholder="+7 (___) ___-__-__" required />
-        <div class="form-row">
-  <select id="city" class="form-select" aria-label="Город">
+<form action="elc-router.php" method="post" class="lead-form">
+  <input type="text"  name="name"  id="name"  placeholder="Имя" required>
+  <input type="tel"   name="phone" id="phone" class="phone-input" placeholder="+7 (___) ___-__-__" required>
+  <select name="city" id="city" class="form-select" aria-label="Город">
     <option value="Алматы" selected>г. Алматы</option>
     <option value="Астана">г. Астана</option>
   </select>
-</div>
-        <button type="submit">Хочу на 1 бесплатный урок</button>
-      </form>
+  <button type="submit">Хочу на 1 бесплатный урок</button>
+</form>
     </div>
     <section class="consultation">
       <h2 class="consultation__title">Что будет на консультации?</h2>
@@ -1559,17 +1557,13 @@ document.addEventListener('DOMContentLoaded', () => {
       которые не оставят вас равнодушным<br>
       и поддержит ваш интерес к обучению
     </p>
-<form id="doubts-form">
-  <input type="text" id="doubts-name" placeholder="Имя" required />
-  <input type="tel" id="doubts-phone" placeholder="+7 (___) ___-__-__" required />
-
-  <div class="form-row">
-    <select id="doubts-city" class="form-select" aria-label="Город">
-      <option value="Алматы" selected>г. Алматы</option>
-      <option value="Астана">г. Астана</option>
-    </select>
-  </div>
-
+<form action="elc-router.php" method="post" class="lead-form">
+  <input type="text"  name="name"  id="doubts-name"  placeholder="Имя" required>
+  <input type="tel"   name="phone" id="doubts-phone" placeholder="+7 (___) ___-__-__" required>
+  <select name="city" id="doubts-city" class="form-select" aria-label="Город">
+    <option value="Алматы" selected>г. Алматы</option>
+    <option value="Астана">г. Астана</option>
+  </select>
   <button type="submit">Хочу на 1 бесплатный урок</button>
 </form>
   </div>
@@ -1650,101 +1644,6 @@ document.addEventListener('DOMContentLoaded', () => {
   font-weight: 400;
 }
 </style>
-
-<script>
-// Подключение маски и логики отправки
-// Мы используем уже существующие в коде функции:
-// - sendLeadToTelegram()
-// - launchEmojiConfetti()
-// - cleanPhone()
-// - formatPhoneFull()
-// - isNameValid()
-// - isPhoneValid()
-
-// Добавляем маску на поле телефона
-document.querySelectorAll('#doubts-phone').forEach(input => {
-  let mask = IMask(input, {
-    mask: '+7 (000) 000-00-00',
-    lazy: true,
-    placeholderChar: '_'
-  });
-
-  function setGray() {
-    input.style.color = '#838383';
-    mask.updateOptions({ lazy: true, placeholderChar: '_' });
-  }
-
-  function setBlack() {
-    input.style.color = '#1a1a1a';
-    mask.updateOptions({ lazy: false, placeholderChar: ' ' });
-  }
-
-  setGray();
-
-  input.addEventListener('focus', () => setBlack());
-  input.addEventListener('blur', () => {
-    let digits = cleanPhone(input.value);
-    if (digits.length < 10) {
-      input.value = '';
-      setGray();
-      input.placeholder = '+7 (___) ___-__-__';
-    } else {
-      input.value = formatPhoneFull(digits);
-      setBlack();
-    }
-  });
-
-  input.addEventListener('paste', (e) => {
-    e.preventDefault();
-    let pasted = (e.clipboardData || window.clipboardData).getData('text');
-    let digits = cleanPhone(pasted);
-    if (digits.length >= 10) {
-      digits = digits.slice(-10);
-      input.value = formatPhoneFull(digits);
-      mask.updateValue();
-      setBlack();
-    }
-  });
-
-  input.addEventListener('input', () => {
-    let digits = cleanPhone(input.value);
-    if (digits.length > 10) {
-      digits = digits.slice(-10);
-      input.value = formatPhoneFull(digits);
-      mask.updateValue();
-    }
-    input.style.color = digits.length ? '#1a1a1a' : '#838383';
-  });
-});
-
-// Добавляем обработчик отправки формы
-document.getElementById('doubts-form')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const nameInput = document.getElementById('doubts-name');
-  const phoneInput = document.getElementById('doubts-phone');
-
-  if (!isNameValid(nameInput.value)) {
-    alert('Пожалуйста, введите корректное имя.');
-    nameInput.focus();
-    return;
-  }
-  if (!isPhoneValid(phoneInput)) {
-    alert('Пожалуйста, введите корректный номер телефона.');
-    phoneInput.focus();
-    return;
-  }
-
-  try {
-    await sendLeadToTelegram(nameInput.value.trim(), formatPhoneFull(cleanPhone(phoneInput.value)));
-    launchEmojiConfetti();
-    setTimeout(() => {
-      window.location.href = 'thanks.html';
-    }, 1000);
-  } catch (error) {
-    console.error(error);
-  }
-});
-</script>
 <!-- 8й блок Бонус -->
 <section class="bonus-wrapper">
   <div class="bonus-container">
@@ -1936,113 +1835,7 @@ font-weight: 400;
   color: #1a1a1a;
 }
 </style>
-<script src="https://unpkg.com/imask"></script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('bonus-overlay');
-  const modal = document.getElementById('bonus-modal');
-  const openBtn = document.getElementById('bonus-open');
-  const closeBtn = document.getElementById('bonus-close');
-  const form = document.getElementById('bonus-form');
-  const phoneInput = document.getElementById('bonus-phone');
-
-  // Маска номера
-  let mask = IMask(phoneInput, {
-    mask: '+7 (000) 000-00-00',
-    lazy: true,
-    placeholderChar: '_'
-  });
-
-  function setGray() {
-    phoneInput.style.color = '#838383';
-    mask.updateOptions({ lazy: true, placeholderChar: '_' });
-  }
-
-  function setBlack() {
-    phoneInput.style.color = '#1a1a1a';
-    mask.updateOptions({ lazy: false, placeholderChar: ' ' });
-  }
-
-  setGray();
-
-  phoneInput.addEventListener('focus', setBlack);
-  phoneInput.addEventListener('blur', () => {
-    let digits = cleanPhone(phoneInput.value);
-    if (digits.length < 10) {
-      phoneInput.value = '';
-      setGray();
-    } else {
-      phoneInput.value = formatPhoneFull(digits);
-      setBlack();
-    }
-  });
-
-  phoneInput.addEventListener('paste', (e) => {
-    e.preventDefault();
-    let pasted = (e.clipboardData || window.clipboardData).getData('text');
-    let digits = cleanPhone(pasted);
-    if (digits.length >= 10) {
-      digits = digits.slice(-10);
-      phoneInput.value = formatPhoneFull(digits);
-      mask.updateValue();
-      setBlack();
-    }
-  });
-
-  phoneInput.addEventListener('input', () => {
-    let digits = cleanPhone(phoneInput.value);
-    if (digits.length > 10) {
-      digits = digits.slice(-10);
-      phoneInput.value = formatPhoneFull(digits);
-      mask.updateValue();
-    }
-    phoneInput.style.color = digits.length ? '#1a1a1a' : '#838383';
-  });
-
-  // Открытие/закрытие окна
-  openBtn.addEventListener('click', () => {
-    overlay.classList.add('show');
-    modal.classList.add('show');
-  });
-
-  function closeModal() {
-    modal.classList.remove('show');
-    overlay.classList.remove('show');
-  }
-
-  overlay.addEventListener('click', closeModal);
-  closeBtn.addEventListener('click', closeModal);
-
-  // Отправка формы
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('bonus-name').value.trim();
-    const phone = cleanPhone(phoneInput.value);
-
-    if (!isNameValid(name)) {
-      alert('Пожалуйста, введите корректное имя.');
-      return;
-    }
-    if (!isPhoneValid(phoneInput)) {
-      alert('Пожалуйста, введите корректный номер телефона.');
-      return;
-    }
-
-    try {
-      await sendLeadToTelegram(name, formatPhoneFull(phone));
-      launchEmojiConfetti();
-      downloadPDF();
-      closeModal();
-      setTimeout(() => {
-        window.location.href = 'thanks.html';
-      }, 1000);
-    } catch (err) {
-      console.error(err);
-      alert('Ошибка отправки. Попробуйте позже.');
-    }
-  });
-
   // Скачивание PDF
 function downloadPDF() {
   const link = document.createElement('a');
@@ -2312,156 +2105,161 @@ font-weight: 400;
   text-decoration: underline;
 }
 </style>
-
 <script src="https://unpkg.com/imask"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
+
 <script>
-// Telegram settings
-const TELEGRAM_SETTINGS = {
-  token: '8068373381:AAFVDpiC2C7wKxfBbYKKjmNLb4zzJbe-OdE',
-  chat_id: '-1002856948789'
-};
-
-async function sendLeadToTelegram(name, phone, city) {
-  const cityLine = city ? `\n🏙️ Город: ${city}` : '';
-  const message = `📩 Новая заявка:\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}${cityLine}`;
-  const url = `https://api.telegram.org/bot${TELEGRAM_SETTINGS.token}/sendMessage?chat_id=${TELEGRAM_SETTINGS.chat_id}&text=${encodeURIComponent(message)}`;
-  const response = await fetch(url);
-  const data = await response.json();
-
-  if (!data.ok) {
-    alert('Ошибка отправки в Telegram:\n' + JSON.stringify(data, null, 2));
-    throw new Error(data.description);
-  }
+// =========== ХЕЛПЕРЫ ===========
+function cleanPhone(raw) {
+  let d = String(raw).replace(/\D/g, '');
+  if (d.startsWith('8')) d = '7' + d.slice(1);
+  if (d.startsWith('7')) d = d.slice(1);
+  return d.slice(0, 10); // только 10 цифр
 }
+function formatPhoneFull(d) {
+  if (d.length !== 10) return '';
+  return `+7 (${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6,8)}-${d.slice(8,10)}`;
+}
+function isNameValid(name){ return String(name).trim().length > 1; }
+function isPhoneValid(inputEl){ return cleanPhone(inputEl.value).length === 10; }
 
+function attachPhoneMask(selector = 'input[type="tel"], .phone-input') {
+  document.querySelectorAll(selector).forEach(input => {
+    const mask = IMask(input, { mask: '+7 (000) 000-00-00', lazy: true, placeholderChar: '_' });
+    const setGray  = () => { input.style.color = '#838383'; mask.updateOptions({ lazy: true,  placeholderChar: '_' }); };
+    const setBlack = () => { input.style.color = '#1a1a1a'; mask.updateOptions({ lazy: false, placeholderChar: ' ' }); };
+
+    setGray();
+    input.addEventListener('focus', setBlack);
+
+    input.addEventListener('blur', () => {
+      const d = cleanPhone(input.value);
+      if (d.length < 10) {
+        input.value = '';
+        setGray();
+        input.placeholder = '+7 (___) ___-__-__';
+      } else {
+        input.value = formatPhoneFull(d);
+        setBlack();
+      }
+    });
+
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      let pasted = (e.clipboardData || window.clipboardData).getData('text');
+      let d = cleanPhone(pasted);
+      if (d.length >= 10) {
+        d = d.slice(-10);
+        input.value = formatPhoneFull(d);
+        mask.updateValue();
+        setBlack();
+      }
+    });
+
+    input.addEventListener('input', () => {
+      let d = cleanPhone(input.value);
+      if (d.length > 10) {
+        d = d.slice(-10);
+        input.value = formatPhoneFull(d);
+        mask.updateValue();
+      }
+      input.style.color = d.length ? '#1a1a1a' : '#838383';
+    });
+  });
+}
 
 function launchEmojiConfetti() {
-  const emojis = ['🎉', '🇺🇸', '✨', '❤️', '🇬🇧'];
-  const emojiShapes = emojis.map(e => confetti.shapeFromText({ text: e, scalar: 1.8 }));
-  const count = 200;
-  const defaults = { origin: { y: 0.7 }, gravity: 0.85, decay: 0.9, shapes: emojiShapes };
-
-  function fire(ratio, opts) {
-    confetti({ ...defaults, ...opts, particleCount: Math.floor(count * ratio) });
+  try {
+    const emojis = ['🎉','🇺🇸','✨','❤️','🇬🇧'];
+    const shapes = emojis.map(e => confetti.shapeFromText({ text: e, scalar: 1.8 }));
+    const count = 200;
+    const defaults = { origin: { y: 0.7 }, gravity: 0.85, decay: 0.9, shapes };
+    const fire = (ratio, opts) => confetti({ ...defaults, ...opts, particleCount: Math.floor(count * ratio) });
+    fire(0.25, { spread: 25, startVelocity: 60 });
+    fire(0.2,  { spread: 45, startVelocity: 50 });
+    fire(0.35, { spread: 70, decay: 0.91, scalar: 0.9 });
+    fire(0.1,  { spread: 90, startVelocity: 35, decay: 0.92, scalar: 1.2 });
+    fire(0.1,  { spread: 90, startVelocity: 50 });
+  } catch {
+    confetti({ particleCount: 180, spread: 70, origin: { y: 0.7 } });
   }
-
-  fire(0.25, { spread: 25, startVelocity: 60 });
-  fire(0.2, { spread: 45, startVelocity: 50 });
-  fire(0.35, { spread: 70, decay: 0.91, scalar: 0.9 });
-  fire(0.1, { spread: 90, startVelocity: 35, decay: 0.92, scalar: 1.2 });
-  fire(0.1, { spread: 90, startVelocity: 50 });
 }
 
-function cleanPhone(raw) {
-  let digits = raw.replace(/\D/g, '');
-  if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-  if (digits.startsWith('7')) digits = digits.slice(1);
-  return digits;
-}
-
-function formatPhoneFull(digits) {
-  if (digits.length !== 10) return '';
-  return `+7 (${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
-}
-
-document.querySelectorAll('.phone-input, #phone').forEach(input => {
-  let mask = IMask(input, {
-    mask: '+7 (000) 000-00-00',
-    lazy: true,
-    placeholderChar: '_'
+// =========== ОТПРАВКА В elc-router.php ===========
+async function postLeadToRouter(payload) {
+  const res = await fetch('/elc-router.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
   });
-
-  function setGray() {
-    input.style.color = '#838383';
-    mask.updateOptions({ lazy: true, placeholderChar: '_' });
+  // ожидаем, что роутер вернёт JSON {ok:true} (или {ok:false, error:"..."})
+  let data = null;
+  try { data = await res.json(); } catch(_) {}
+  if (!res.ok || !data || data.ok !== true) {
+    const msg = (data && data.error) ? data.error : ('HTTP ' + res.status);
+    throw new Error('elc-router.php error: ' + msg);
   }
-
-  function setBlack() {
-    input.style.color = '#1a1a1a';
-    mask.updateOptions({ lazy: false, placeholderChar: ' ' });
-  }
-
-  setGray();
-
-  input.addEventListener('focus', () => setBlack());
-
-  input.addEventListener('blur', () => {
-    let digits = cleanPhone(input.value);
-    if (digits.length < 10) {
-      input.value = '';
-      setGray();
-      input.placeholder = '+7 (___) ___-__-__';
-    } else {
-      input.value = formatPhoneFull(digits);
-      setBlack();
-    }
-  });
-
-  input.addEventListener('paste', (e) => {
-    e.preventDefault();
-    let pasted = (e.clipboardData || window.clipboardData).getData('text');
-    let digits = cleanPhone(pasted);
-    if (digits.length >= 10) {
-      digits = digits.slice(-10);
-      input.value = formatPhoneFull(digits);
-      mask.updateValue();
-      setBlack();
-    }
-  });
-
-  input.addEventListener('input', () => {
-    let digits = cleanPhone(input.value);
-    if (digits.length > 10) {
-      digits = digits.slice(-10);
-      input.value = formatPhoneFull(digits);
-      mask.updateValue();
-    }
-    input.style.color = digits.length ? '#1a1a1a' : '#838383';
-  });
-});
-
-function isNameValid(name) {
-  return name.trim().length > 1;
+  return data; // можно вернуть affiliate_id, lead_id и т.п.
 }
 
-function isPhoneValid(inputEl) {
-  return cleanPhone(inputEl.value).length === 10;
-}
+// Привязываем любую форму с именем, телефоном, городом
+function bindLeadForm(formSelector, nameSel, phoneSel, citySel) {
+  const form = document.querySelector(formSelector);
+  if (!form) return;
 
-const form = document.getElementById('tg-form');
-if (form) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const nameInput = form.querySelector('#name');
-    const phoneInput = form.querySelector('#phone');
-    const citySelect = form.querySelector('#city');
-    const city = citySelect ? citySelect.value : ''; 
 
-    if (!isNameValid(nameInput.value)) {
+    const nameEl  = form.querySelector(nameSel);
+    const phoneEl = form.querySelector(phoneSel);
+    const cityEl  = form.querySelector(citySel);
+
+    const name  = (nameEl?.value || '').trim();
+    const digits = cleanPhone(phoneEl?.value || '');
+    const city  = (cityEl?.value || '').trim();
+
+    if (!isNameValid(name)) {
       alert('Пожалуйста, введите корректное имя.');
-      nameInput.focus();
+      nameEl?.focus();
       return;
     }
-    if (!isPhoneValid(phoneInput)) {
+    if (digits.length !== 10) {
       alert('Пожалуйста, введите корректный номер телефона.');
-      phoneInput.focus();
+      phoneEl?.focus();
       return;
     }
+
+    // Собираем «чистый» payload — без филиалов. Всё решает сервер.
+    const payload = {
+      name,
+      phone_raw10: digits,               // 10 цифр (без +7)
+      phone_pretty: formatPhoneFull(digits),
+      city                                       // в CRM это и есть филиал
+    };
 
     try {
-      await sendLeadToTelegram(nameInput.value.trim(), fformatPhoneFull(cleanPhone(phoneInput.value)),
-        city
-      );
+      await postLeadToRouter(payload);          // elc-router.php сам разрулит филиал и отдаст в CRM
       launchEmojiConfetti();
-      setTimeout(() => {
-        window.location.href = 'thanks.html';
-      }, 1000);
-    } catch (error) {
-      console.error(error);
+      setTimeout(() => { window.location.href = 'thanks.html'; }, 900);
+    } catch (err) {
+      console.error(err);
+      alert('Не удалось отправить заявку. Попробуйте ещё раз.');
     }
   });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  attachPhoneMask();
+
+  // Hero-форма
+  bindLeadForm('#tg-form', '#name', '#phone', '#city');
+
+  // Форма «Остались сомнения?»
+  bindLeadForm('#doubts-form', '#doubts-name', '#doubts-phone', '#doubts-city');
+
+  // Если нужен квиз: раскомментируй и подставь актуальные id
+  // bindLeadForm('#quiz-form-id', '#quiz-name', '#quiz-phone', '#quiz-city');
+});
 </script>
 </body>
 </html>
