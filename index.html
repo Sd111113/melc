@@ -327,8 +327,7 @@ font-weight: 400;
   <section class="form-wrapper">
     <div class="form-container">
       <h2>Запишитесь на 1 бесплатный урок<br>+консультация</h2>
-<form action="elc-router.php" method="post" class="lead-form">
-  <form id="tg-form" action="elc-router.php" method="post" class="lead-form">
+<form id="tg-form" action="elc-router.php" method="post" class="lead-form">
   <input type="text"  name="name"  id="name"  placeholder="Имя" required>
   <input type="tel"   name="phone" id="phone" class="phone-input" placeholder="+7 (___) ___-__-__" required>
   <select name="city" id="city" class="form-select" aria-label="Город">
@@ -1558,8 +1557,7 @@ document.addEventListener('DOMContentLoaded', () => {
       которые не оставят вас равнодушным<br>
       и поддержит ваш интерес к обучению
     </p>
-<form action="elc-router.php" method="post" class="lead-form">
-  <form id="doubts-form" action="elc-router.php" method="post" class="lead-form">
+<form id="doubts-form" action="elc-router.php" method="post" class="lead-form">
   <input type="text"  name="name"  id="doubts-name"  placeholder="Имя" required>
   <input type="tel"   name="phone" id="doubts-phone" placeholder="+7 (___) ___-__-__" required>
   <select name="city" id="doubts-city" class="form-select" aria-label="Город">
@@ -1838,7 +1836,6 @@ font-weight: 400;
 }
 </style>
 <script>
-  // Скачивание PDF
 function downloadPDF() {
   const link = document.createElement('a');
   link.href = 'files/Prepositions ELC.pdf';
@@ -1847,7 +1844,6 @@ function downloadPDF() {
   link.click();
   document.body.removeChild(link);
 }
-});
 </script>
 <!-- 9й блок Нам доверяют -->
 <section class="trust-slider">
@@ -1973,10 +1969,6 @@ function downloadPDF() {
     <div class="footer-address-block">
       <p class="footer-address">г. Алматы: ул. Желтоксан 118, 4-этаж, офис 407</p>
       <a class="footer-phone" href="tel:+77017591063">+7 (701) 759-10-63</a>
-    </div>
-    <div class="footer-address-block">
-      <p class="footer-address">г. Алматы: ул. Розыбакиева 247, блок 2, 2-этаж</p>
-      <a class="footer-phone" href="tel:+77273272663">+7 (727) 327-26-63</a>
     </div>
     <div class="footer-address-block">
       <p class="footer-address">г. Астана: ул. Сыганак 47, 4-этаж, офис 402</p>
@@ -2242,7 +2234,7 @@ function bindLeadForm(formSelector, nameSel, phoneSel, citySel) {
     try {
       await postLeadToRouter(payload);          // elc-router.php сам разрулит филиал и отдаст в CRM
       launchEmojiConfetti();
-      setTimeout(() => { window.location.href = 'thanks.html'; }, 900);
+      setTimeout(() => { window.location.href = 'thanks.html'; }, 1600);
     } catch (err) {
       console.error(err);
       alert('Не удалось отправить заявку. Попробуйте ещё раз.');
